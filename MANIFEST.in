@@ -1,0 +1,18 @@
+include MANIFEST.in
+include requirements.txt
+include *.json
+include *.md
+include *.py
+include *.txt
+recursive-include lifefair *.css
+recursive-include lifefair *.csv
+recursive-include lifefair *.html
+recursive-include lifefair *.ico
+recursive-include lifefair *.js
+recursive-include lifefair *.json
+recursive-include lifefair *.md
+recursive-include lifefair *.png
+recursive-include lifefair *.py
+recursive-include lifefair *.svg
+recursive-include lifefair *.txt
+recursive-exclude lifefair *.pyc
