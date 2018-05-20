@@ -7,7 +7,6 @@ def get_data():
 		{
 			"module_name": "Lifefair",
 			"color": "#f88c00",
-			#"icon": "fa fa-lightbulb",
 			"icon": "octicon octicon-light-bulb",
 			"type": "module",
 			"label": _("Lifefair")
@@ -15,9 +14,19 @@ def get_data():
 		{
 			"module_name": "Person",
 			"_doctype": "Person",
+			"label": _("Person"),
 			"color": "#f88c00",
 			"icon": "octicon octicon-person",
 			"type": "link",
 			"link": "List/Person"
-		}
+		},
+		{
+			"module_name": "Organisation",
+			"_doctype": "organisation",
+			"label": _("Organisation"),
+			"color": "#f88c00",
+			"icon": "octicon octicon-organization",
+			"type": "link",
+			"link": "List/Organisation"
+	   }
 	]
