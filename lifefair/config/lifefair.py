@@ -25,7 +25,7 @@ def get_data():
                    }
             ]
         },
-	{
+        {
             "label": _("Events"),
             "icon": "octicon octicon-broadcast",
             "items": [
