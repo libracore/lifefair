@@ -5,11 +5,11 @@ def get_data():
     return[
         {
             "label": _("Contacts"),
-            "icon": "octicon octicon-light-bulb",
+            "icon": "octicon octicon-organization",
             "items": [
                    {
                        "type": "doctype",
-                       "name": "person",
+                       "name": "Person",
                        "label": _("Person"),
                        "color": "#f88c00",
                        "icon": "octicon octicon-person",
@@ -17,7 +17,7 @@ def get_data():
                    },
                    {
                        "type": "doctype",
-                       "name": "organisation",
+                       "name": "Organisation",
                        "label": _("Organisation"),
                        "color": "#f88c00",
                        "icon": "octicon octicon-organization",
@@ -31,7 +31,15 @@ def get_data():
             "items": [
                    {
                        "type": "doctype",
-                       "name": "block",
+                       "name": "Meeting",
+                       "label": _("Meeting"),
+                       "color": "#f88c00",
+                       "icon": "octicon octicon-broadcast",
+                       "description": _("Meeting")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Block",
                        "label": _("Block"),
                        "color": "#f88c00",
                        "icon": "octicon octicon-clippy",
@@ -40,4 +48,3 @@ def get_data():
             ]
         }
     ]
-    
