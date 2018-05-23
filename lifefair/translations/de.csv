@@ -1,0 +1,19 @@
+Module: Lifefair,Events,Anlässe
+Module: Lifefair,Meeting,Anlass
+DocType: Person,Full name,Name
+DocType: Person,First name,Vorname
+DocType: Person,Last name,Nachname
+DocType: Person,First 4 characters,Erste 4 Zeichen
+DocType: Person,Function,Funktion
+DocType: Person,Company phone,Telefon geschäftlich
+DocType: Person,Private phone,Telefon privat
+DocType: Person,Mobile phone,Mobiltelefon
+DocType: Person,Reference person,Bezugsperson
+DocType: Organisation,Official name,Name
+DocType: Organisation,Alternative names,Alternative Namen
+DocType: Organisation,Street,Strasse
+DocType: Organisation,Additional address,Zusätzliche Adresse
+DocType: Organisation,Post box,Postfach
+DocType: Organisation,PIN code,Postleitzahl
+DocType: Organisation,Contact person,Kontaktperson
+DocType: Organisation,Contact person function,Funktion der Kontaktperson
