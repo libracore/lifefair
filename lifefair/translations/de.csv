@@ -9,6 +9,10 @@ DocType: Person,Company phone,Telefon geschäftlich
 DocType: Person,Private phone,Telefon privat
 DocType: Person,Mobile phone,Mobiltelefon
 DocType: Person,Reference person,Bezugsperson
+DocType: Person,Organisations,Organisationen
+DocType: Person,Contact details,Kontaktdetails
+DocType: Person,Letter salutation,Anrede Brief
+DocType: Person,Image B&W,Bild schwarzweiss
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,Street,Strasse
@@ -17,3 +21,9 @@ DocType: Organisation,Post box,Postfach
 DocType: Organisation,PIN code,Postleitzahl
 DocType: Organisation,Contact person,Kontaktperson
 DocType: Organisation,Contact person function,Funktion der Kontaktperson
+DocType: Organisation,Post box PIN code,Postleitzahl Postfach
+DocType: Organisation,Post box city,Ort Postfach
+DocType: Person Group,Person Group,Personengruppe
+DocType: Person Group,Linked People,Verknüpfte Personen
+DocType: Organisation Type,Organisation Type,Organisationstyp
+DocType: Organisation Type,Linked Organisations,Verknüpfte Organisationen
