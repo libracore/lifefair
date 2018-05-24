@@ -5,7 +5,7 @@ def get_data():
       'fieldname': 'person_group',
       'transactions': [
          {
-            'label': _('Linked people'),
+            'label': _('Linked People'),
             'items': ['Person']
          }
       ]

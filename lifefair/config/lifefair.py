@@ -46,5 +46,23 @@ def get_data():
                        "description": _("Block")
                    }
             ]
+        },
+        {
+            "label": _("Settings"),
+            "icon": "octicon octicon-tools",
+            "items": [
+                   {
+                       "type": "doctype",
+                       "name": "Person Group",
+                       "label": _("Person Group"),
+                       "description": _("Person Group")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Organisation Type",
+                       "label": _("Organisation Type"),
+                       "description": _("Organisation Type")
+                   }
+            ]
         }
     ]
