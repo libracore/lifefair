@@ -7,4 +7,20 @@ import frappe
 from frappe.model.document import Document
 
 class Organisation(Document):
-	pass
+	def get_addresses(self):
+		sql_query = ("""SELECT *  
+			FROM `tabOrganisation Address` 
+			WHERE `organisation` = '{0}'""".format(self.name))
+		addresses = frappe.db.sql(sql_query, as_dict=True)
+		return { 'addresses': addresses }
+		
+	def get_people(self):
+		sql_query = ("""SELECT 
+		      `t2`.`name`, 
+		      `t2`.`full_name`,
+		      `t1`.`function` AS `role`,
+		      `t1`.`is_primary`       
+			FROM (SELECT * FROM `tabPerson Organisation` WHERE `organisation` = '{0}') AS `t1`			
+			LEFT JOIN `tabPerson` AS `t2` ON `t1`.`parent` = `t2`.`name` """.format(self.name))
+		people = frappe.db.sql(sql_query, as_dict=True)
+		return { 'people': people }
