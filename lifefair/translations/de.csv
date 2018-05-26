@@ -13,16 +13,22 @@ DocType: Person,Organisations,Organisationen
 DocType: Person,Contact details,Kontaktdetails
 DocType: Person,Letter salutation,Anrede Brief
 DocType: Person,Image B&W,Bild schwarzweiss
+DocType: Person,Usage,Verwendung
+DocType: Person,Show on website,Auf Webseite anzeigen
+DocType: Person,Website description,Webseitenbeschreibung
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
-DocType: Organisation,Street,Strasse
-DocType: Organisation,Additional address,Zusätzliche Adresse
-DocType: Organisation,Post box,Postfach
-DocType: Organisation,PIN code,Postleitzahl
-DocType: Organisation,Contact person,Kontaktperson
-DocType: Organisation,Contact person function,Funktion der Kontaktperson
-DocType: Organisation,Post box PIN code,Postleitzahl Postfach
-DocType: Organisation,Post box city,Ort Postfach
+DocType: Organisation,People,Personen
+DocType: Organisation Address,Street,Strasse
+DocType: Organisation Address,Additional address,Zusätzliche Adresse
+DocType: Organisation Address,Post box,Postfach
+DocType: Organisation Address,PIN code,Postleitzahl
+DocType: Organisation Address,Contact person,Kontaktperson
+DocType: Organisation Address,Contact person function,Funktion der Kontaktperson
+DocType: Organisation Address,Post box PIN code,Postleitzahl Postfach
+DocType: Organisation Address,Post box city,Ort Postfach
+DocType: Organisation Address,Organisation Address,Organisationsadresse
+DocType: Organisation Address,Post box country,Land Postfach
 DocType: Person Group,Person Group,Personengruppe
 DocType: Person Group,Linked People,Verknüpfte Personen
 DocType: Organisation Type,Organisation Type,Organisationstyp

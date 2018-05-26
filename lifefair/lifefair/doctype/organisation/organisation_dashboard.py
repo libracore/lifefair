@@ -5,7 +5,7 @@ def get_data():
       'fieldname': 'organisation',
       'transactions': [
          {
-            'label': _('Address'),
+            'label': _('Addresses'),
             'items': ['Organisation Address']
          }
       ]
