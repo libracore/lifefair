@@ -37,14 +37,14 @@ function display_addresses(frm) {
 					}
 					html += ", " + address.pin_code + " "  + address.city + ", " + address.country;
 					if (address.postbox) {
-						html += "(" + address.postbox;
+						html += "&nbsp;(" + address.postbox;
 						if (address.postbox_pin_code) {
 							html += ", " + address.postbox_pin_code;
 						}
 						if (address.postbox_city) {
 							html += " " + address.postbox_city;
 						}
-						html += ", " + address.postbox_country + ")";
+						html += ", " + address.post_box_country + ")";
 					}
 					html += "</a></p>";
 				});
