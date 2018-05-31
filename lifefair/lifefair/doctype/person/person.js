@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Person', {
 	refresh: function(frm) {
-        frm.add_custom_button(__("Send mail"), function() {
+        frm.add_custom_button(__("Send Mail"), function() {
 			send_mail(frm);
 		}).addClass("btn-warning");
 	},
