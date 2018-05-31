@@ -16,6 +16,7 @@ DocType: Person,Image B&W,Bild schwarzweiss
 DocType: Person,Usage,Verwendung
 DocType: Person,Show on website,Auf Webseite anzeigen
 DocType: Person,Website description,Webseitenbeschreibung
+DocType: Person,Send mail,Mail senden
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen

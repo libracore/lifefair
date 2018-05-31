@@ -3,7 +3,9 @@
 
 frappe.ui.form.on('Person', {
 	refresh: function(frm) {
-
+        frm.add_custom_button(__("Send mail"), function() {
+			send_mail(frm);
+		}).addClass("btn-warning");
 	},
 	validate: function(frm) {
 		// set full name
@@ -24,4 +26,8 @@ function find_primary_company(frm) {
 			break;
 		} 
 	} 
+}
+
+function send_mail(frm) {
+    window.location.href = "mailto:" + frm.doc.email;
 }
