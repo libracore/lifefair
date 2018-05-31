@@ -3,9 +3,13 @@
 
 frappe.ui.form.on('Person', {
 	refresh: function(frm) {
+		// add send mail button
         frm.add_custom_button(__("Send Mail"), function() {
 			send_mail(frm);
 		}).addClass("btn-warning");
+		// load addresses
+		display_addresses(frm);
+		
 	},
 	validate: function(frm) {
 		// set full name
@@ -30,4 +34,60 @@ function find_primary_company(frm) {
 
 function send_mail(frm) {
     window.location.href = "mailto:" + frm.doc.email;
+}
+
+function display_addresses(frm) {
+	// render addresses
+	frappe.call({
+		method: 'get_addresses',
+		doc: frm.doc,
+		callback: function(r) {
+			if (r.message) {
+				var html = "";
+				if (r.message.addresses.length == 0) {
+					html = __("<p>No addresses found</p>");
+				} else {
+					r.message.addresses.forEach(function (address) {
+						// address code generator
+						html += '<p>';
+						if (address.is_private) {
+							html += '<span class="octicon octicon-home"></span>&nbsp;';
+						}
+						if (address.is_primary) {
+							html += '<span class="octicon octicon-star"></span>&nbsp;';
+						}
+						if (address.for_shipping) {
+							html += '<span class="octicon octicon-mail"></span>&nbsp;';
+						}
+						if (!address.is_private) {
+							html += address.organisation + ", &nbsp;";
+						}
+						html += '<a href="/desk#Form/Organisation Address/' + address.name + '">';
+						html += address.street + " " + address.number;
+						if (address.additional_address) { 
+							html += ", " + address.additional_address;
+						}
+						html += ", " + address.pin_code + " "  + address.city + ", " + address.country;
+						if (address.postbox) {
+							html += "&nbsp;(" + address.postbox;
+							if (address.postbox_pin_code) {
+								html += ", " + address.postbox_pin_code;
+							}
+							if (address.postbox_city) {
+								html += " " + address.postbox_city;
+							}
+							html += ", " + address.post_box_country + ")";
+						}
+						html += "</a></p>";
+					});
+				}					
+				if (frm.fields_dict['address_html']) {
+					$(frm.fields_dict['address_html'].wrapper).html(html);
+				}
+
+			}
+
+		}
+	});
+	
 }

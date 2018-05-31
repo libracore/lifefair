@@ -21,33 +21,37 @@ function display_addresses(frm) {
 				//console.log(r.message);
 				
 				var html = "";
-				r.message.addresses.forEach(function (address) {
-					// address code generator
-					html += '<p>';
-					if (address.is_primary) {
-						html += '<span class="octicon octicon-star"></span>&nbsp;';
-					}
-					if (address.for_shipping) {
-						html += '<span class="octicon octicon-mail"></span>&nbsp;';
-					}
-					html += '<a href="/desk#Form/Organisation Address/' + address.name + '">';
-					html += address.street + " " + address.number;
-					if (address.additional_address) { 
-						html += ", " + address.additional_address;
-					}
-					html += ", " + address.pin_code + " "  + address.city + ", " + address.country;
-					if (address.postbox) {
-						html += "&nbsp;(" + address.postbox;
-						if (address.postbox_pin_code) {
-							html += ", " + address.postbox_pin_code;
+				if (r.message.addresses.length == 0) {
+					html = __("<p>No addresses found</p>");
+				} else {
+					r.message.addresses.forEach(function (address) {
+						// address code generator
+						html += '<p>';
+						if (address.is_primary) {
+							html += '<span class="octicon octicon-star"></span>&nbsp;';
 						}
-						if (address.postbox_city) {
-							html += " " + address.postbox_city;
+						if (address.for_shipping) {
+							html += '<span class="octicon octicon-mail"></span>&nbsp;';
 						}
-						html += ", " + address.post_box_country + ")";
-					}
-					html += "</a></p>";
-				});
+						html += '<a href="/desk#Form/Organisation Address/' + address.name + '">';
+						html += address.street + " " + address.number;
+						if (address.additional_address) { 
+							html += ", " + address.additional_address;
+						}
+						html += ", " + address.pin_code + " "  + address.city + ", " + address.country;
+						if (address.postbox) {
+							html += "&nbsp;(" + address.postbox;
+							if (address.postbox_pin_code) {
+								html += ", " + address.postbox_pin_code;
+							}
+							if (address.postbox_city) {
+								html += " " + address.postbox_city;
+							}
+							html += ", " + address.post_box_country + ")";
+						}
+						html += "</a></p>";
+					});
+				}
 				
 				if (frm.fields_dict['address_html']) {
 					$(frm.fields_dict['address_html'].wrapper).html(html);

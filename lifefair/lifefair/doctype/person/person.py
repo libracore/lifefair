@@ -7,7 +7,16 @@ import frappe
 from frappe.model.document import Document
 
 class Person(Document):
-	pass
+	def get_addresses(self):
+		sql_query = ("""SELECT *  
+			FROM `tabOrganisation Address` 
+			WHERE `person` = '{1}'
+			UNION SELECT *  
+			FROM `tabOrganisation Address` 
+			WHERE `organisation` = '{0}' AND `for_shipping` = '1'
+			ORDER BY `is_private` DESC, `city` ASC""".format(self.primary_organisation, self.name))
+		addresses = frappe.db.sql(sql_query, as_dict=True)
+		return { 'addresses': addresses }
 
 # this is a public API for the actors list for the website
 #
