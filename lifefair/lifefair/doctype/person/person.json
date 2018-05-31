@@ -464,7 +464,7 @@
    "reqd": 0, 
    "search_index": 0, 
    "set_only_once": 0, 
-   "unique": 0
+   "unique": 1
   }, 
   {
    "allow_bulk_edit": 0, 
@@ -1471,7 +1471,7 @@
  "issingle": 0, 
  "istable": 0, 
  "max_attachments": 0, 
- "modified": "2018-05-31 22:04:36.011409", 
+ "modified": "2018-05-31 22:13:36.011409", 
  "modified_by": "Administrator", 
  "module": "Lifefair", 
  "name": "Person", 
