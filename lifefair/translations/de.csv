@@ -32,6 +32,7 @@ DocType: Organisation Address,Post box PIN code,Postleitzahl Postfach
 DocType: Organisation Address,Post box city,Ort Postfach
 DocType: Organisation Address,Organisation Address,Organisationsadresse
 DocType: Organisation Address,Post box country,Land Postfach
+DocType: Organisation Address,Please select a link to an organisation or person.,Bitte setzen Sie eine Verknüpfung zu einer Organisation oder Person.
 DocType: Person Group,Person Group,Personengruppe
 DocType: Person Group,Linked People,Verknüpfte Personen
 DocType: Organisation Type,Organisation Type,Organisationstyp
