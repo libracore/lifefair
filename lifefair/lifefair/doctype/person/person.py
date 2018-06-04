@@ -7,16 +7,36 @@ import frappe
 from frappe.model.document import Document
 
 class Person(Document):
-	def get_addresses(self):
-		sql_query = ("""SELECT *  
+    def get_addresses(self):
+        sql_query = ("""SELECT *  
 			FROM `tabOrganisation Address` 
-			WHERE `person` = '{1}'
+			WHERE `parent` = '{1}'
 			UNION SELECT *  
-			FROM `tabOrganisation Address` 
+			FROM `tabOrganisation Address`
 			WHERE `organisation` = '{0}' AND `for_shipping` = '1'
-			ORDER BY `is_private` DESC, `city` ASC""".format(self.primary_organisation, self.name))
-		addresses = frappe.db.sql(sql_query, as_dict=True)
-		return { 'addresses': addresses }
+            ORDER BY `is_private` DESC, `city` ASC""".format(self.primary_organisation, self.name))
+        addresses = frappe.db.sql(sql_query, as_dict=True)
+        return { 'addresses': addresses }
+    
+    def get_contacts(self):
+        sql_query = ("""SELECT 
+              '1' AS `direct`, 
+              `t3`.`person` AS `person`, 
+              `t3`.`person_name` AS `person_name`,
+              `t3`.`function` AS `function`
+			FROM `tabPerson Contact` AS `t3`
+			WHERE `parent` = '{0}'
+			UNION SELECT 
+              '0' AS `direct`, 
+              `t1`.`parent` AS `person`, 
+              `t2`.`full_name` AS `person_name`,
+              `t1`.`function` AS `function`
+			FROM `tabPerson Contact` AS `t1`
+            LEFT JOIN `tabPerson` AS `t2` ON `t2`.`name` = `t1`.`parent`
+            WHERE `t1`.`person` = '{0}'
+			ORDER BY `person_name` ASC""".format(self.name))
+        contacts = frappe.db.sql(sql_query, as_dict=True)
+        return { 'contacts': contacts }
 
 # this is a public API for the actors list for the website
 #

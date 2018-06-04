@@ -24,6 +24,10 @@ DocType: Person,Preferred language,Bevorzugte Sprache
 DocType: Person,Primary Organisation,Primäre Organisation
 DocType: Person,CV,Lebenslauf
 DocType: Person,Quotes,Zitate
+DocType: Person,No addresses found,Keine Adressen gefunden
+DocType: Person,No linked contacts found,Keine verknüpfte Kontakte gefunden
+DocType: Person,is,ist
+DocType: Person,of,von
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen

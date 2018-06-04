@@ -9,7 +9,8 @@ frappe.ui.form.on('Person', {
 		}).addClass("btn-warning");
 		// load addresses
 		display_addresses(frm);
-		
+		// load contacts
+        display_contacts(frm);
 	},
 	validate: function(frm) {
 		// set full name
@@ -83,6 +84,47 @@ function display_addresses(frm) {
 				}					
 				if (frm.fields_dict['address_html']) {
 					$(frm.fields_dict['address_html'].wrapper).html(html);
+				}
+
+			}
+
+		}
+	});
+	
+}
+
+function display_contacts(frm) {
+	// render contacts
+	frappe.call({
+		method: 'get_contacts',
+		doc: frm.doc,
+		callback: function(r) {
+			if (r.message) {
+				var html = "";
+				if (r.message.contacts.length == 0) {
+					html = __("<p>No linked contacts found</p>");
+				} else {
+					r.message.contacts.forEach(function (contact) {
+						// contacts code generator
+						html += '<p>';
+						if (contact.direct == "1") {
+							html += '<span class="octicon octicon-arrow-small-left"></span>&nbsp;';
+                            html += '<a href="/desk#Form/Person/' + contact.person + '">';
+                            html += contact.person_name + "</a>&nbsp;";
+                            html += __("is") + "&nbsp;" + contact.function + "&nbsp;" + __("of");
+                            html += "&nbsp;" + frm.doc.full_name;
+						} else {
+                            html += '<p><span class="octicon octicon-arrow-small-right"></span>&nbsp;';
+                            html += frm.doc.full_name + "&nbsp;";
+                            html += __("is") + "&nbsp;" + contact.function + "&nbsp;" + __("of") + "&nbsp;";
+                            html += '<a href="/desk#Form/Person/' + contact.person + '">';
+                            html += contact.person_name + "</a>";
+                        }
+                        html +=  "</p>"
+					});
+				}					
+				if (frm.fields_dict['contact_html']) {
+					$(frm.fields_dict['contact_html'].wrapper).html(html);
 				}
 
 			}
