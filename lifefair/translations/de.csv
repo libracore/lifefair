@@ -17,13 +17,19 @@ DocType: Person,Usage,Verwendung
 DocType: Person,Show on website,Auf Webseite anzeigen
 DocType: Person,Website description,Webseitenbeschreibung
 DocType: Person,Send Mail,Mail senden
-DocType: Person,CV Date,Datum CV
+DocType: Person,CV Date,Datum Lebenslaufe
 DocType: Person,Do not contact,Nicht kontaktieren
 DocType: Person,Academic Title,Akademischer Titel
 DocType: Person,Preferred language,Bevorzugte Sprache
+DocType: Person,Primary Organisation,Primäre Organisation
+DocType: Person,CV,Lebenslauf
+DocType: Person,Quotes,Zitate
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen
+DocType: Organisation,French name,Französischer Name
+DocType: Organisation,English name,Englischer Name
+DocType: Organisation,Italian name,Italienischer Name
 DocType: Organisation Address,Street,Strasse
 DocType: Organisation Address,Additional address,Zusätzliche Adresse
 DocType: Organisation Address,Post box,Postfach
