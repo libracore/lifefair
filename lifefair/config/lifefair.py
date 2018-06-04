@@ -48,6 +48,20 @@ def get_data():
             ]
         },
         {
+            "label": _("Reports"),
+            "icon": "octicon octicon-book",
+            "items": [
+                   {
+                       "type": "report",
+                       "doctype": "Meeting",
+                       "name": "Actors per Meeting",
+                       "label": _("Actors per Meeting"),
+                       "description": _("Actors per Meeting"),
+                        "is_query_report": True
+                   }
+            ]
+        },
+        {
             "label": _("Settings"),
             "icon": "octicon octicon-tools",
             "items": [
