@@ -31,6 +31,8 @@ DocType: Person,No linked contacts found,Keine verknüpfte Kontakte gefunden
 DocType: Person,is,ist
 DocType: Person,of,von
 DocType: Person,Download vCard,vCard herunterladen
+DocType: Person,Participation,Teilnahme
+DocType: Person,Registration,Anmeldung
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen
@@ -57,3 +59,4 @@ DocType: Person Group,Person Group,Personengruppe
 DocType: Person Group,Linked People,Verknüpfte Personen
 DocType: Organisation Type,Organisation Type,Organisationstyp
 DocType: Organisation Type,Linked Organisations,Verknüpfte Organisationen
+Report: Actors per Meeting,Description,Beschreibung
