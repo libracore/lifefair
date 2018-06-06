@@ -7,6 +7,10 @@ frappe.ui.form.on('Person', {
         frm.add_custom_button(__("Send Mail"), function() {
 			send_mail(frm);
 		}).addClass("btn-warning");
+		// add download vCard buton
+        frm.add_custom_button(__("Download vCard"), function() {
+			download_vcard(frm);
+		}).addClass("btn-warning");		
 		// load addresses
 		display_addresses(frm);
 		// load contacts
@@ -24,17 +28,49 @@ frappe.ui.form.on('Person', {
 	}
 });
 
+// find the primary organisation
 function find_primary_company(frm) {
 	for (i = 0; i < frm.doc.organisations.length; i++) {
 		if (frm.doc.organisations[i].is_primary) {
 			cur_frm.set_value('primary_organisation', frm.doc.organisations[i].organisation);
+			cur_frm.set_value('primary_function', frm.doc.organisations[i].function);
 			break;
 		} 
 	} 
 }
 
+// open email with local email client
 function send_mail(frm) {
     window.location.href = "mailto:" + frm.doc.email;
+}
+
+// create vCard and push to download
+function download_vcard(frm) {
+    frappe.call({
+		method: 'get_vcard',
+		doc: frm.doc,
+		callback: function(r) {
+			if (r.message.vcard) {
+				download(frm.doc.name + ".vcf", 
+					'data:text/v-card;charset=utf-8,', 
+					r.message.vcard);
+			}
+		}
+	});
+}
+
+// create a downloadable file that directly opens in the browser
+function download(filename, type, content) {
+  var element = document.createElement('a');
+  element.setAttribute('href', type + encodeURIComponent(content));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
 }
 
 function display_addresses(frm) {

@@ -30,6 +30,7 @@ DocType: Person,No addresses found,Keine Adressen gefunden
 DocType: Person,No linked contacts found,Keine verknüpfte Kontakte gefunden
 DocType: Person,is,ist
 DocType: Person,of,von
+DocType: Person,Download vCard,vCard herunterladen
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen
