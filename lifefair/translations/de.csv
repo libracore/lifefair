@@ -1,6 +1,7 @@
 Module: Lifefair,Events,Anlässe
 Module: Lifefair,Meeting,Anlass
 Module: Lifefair,Actors per Meeting,Akteure pro Anlass
+Module: Lifefair,Person,Kontakt KNT
 DocType: Person,Full name,Ganzer Name
 DocType: Person,First name,Vorname
 DocType: Person,Last name,Nachname
