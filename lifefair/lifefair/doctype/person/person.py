@@ -39,6 +39,16 @@ class Person(Document):
         contacts = frappe.db.sql(sql_query, as_dict=True)
         return { 'contacts': contacts }
 
+    def get_active_participation(self):
+        sql_query = ("""SELECT 
+              `t2`.`name` AS `block`, 
+              `t2`.`meeting` AS `meeting`
+	    FROM `tabBlock Actor` AS `t1`
+            LEFT JOIN `tabBlock` AS `t2` ON `t2`.`name` = `t1`.`parent`
+            WHERE `t1`.`person` = '{0}' ORDER BY `t2`.`name` ASC""".format(self.name))
+        participations = frappe.db.sql(sql_query, as_dict=True)
+        return { 'participations': participations }
+	
     # generates a vCard record (UTF-8, not Outlook configuration)
     def get_vcard(self):
 	vcard_content = "BEGIN:VCARD\nVERSION:3.0\n"

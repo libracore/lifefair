@@ -34,6 +34,8 @@ DocType: Person,Download vCard,vCard herunterladen
 DocType: Person,Participation,Teilnahme
 DocType: Person,Registration,Anmeldung
 DocType: Person,Notes,Notizen
+DocType: Person,This person was not active in any listed meetings.Dieser Kontakt war nicht aktiv in einem Anlass.,
+DocType: Person,Active participation,Aktive Teilnahme
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen
