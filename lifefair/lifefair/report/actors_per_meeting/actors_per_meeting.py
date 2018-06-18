@@ -8,13 +8,13 @@ import frappe
 def execute(filters=None):
     columns, data = [], []
     
-    columns = ["Meeting::100", 
-               "Block::200", 
-               "Person:Link/Person:100", 
-               "Name::200", 
+    columns = ["Block::150",
+               "Name::200",  
+               "Website description::200",                
                "Role::200", 
+               "Person:Link/Person:100",
                "Show on website",
-               "Description",
+               "Meeting::100",
                "Image"]
     if filters:
         data = get_actors(meeting=filters.meeting, as_list=True)
@@ -26,13 +26,13 @@ def execute(filters=None):
 # use as_list=True in case of later Export to Excel
 def get_actors(meeting=None, as_list=True):
     sql_query = """SELECT 
-                `t1`.`title` AS `Meeting`,
                 `t2`.`title` AS `Block`,
-                `t3`.`person` AS `Person`,
-                `t3`.`person_name` AS `Name`,
+                `t4`.`long_name` AS `Name`,
+                `t4`.`website_description` AS `Website description`,
                 `t3`.`role` AS `Role`,
+                `t3`.`person` AS `Person`,
                 `t4`.`show_on_website` AS `Show on website`,
-                `t4`.`website_description` AS `Description`,
+                `t1`.`name` AS `Name`,
                 `t4`.`image` AS `Image`
             FROM `tabMeeting` AS `t1`
             INNER JOIN `tabBlock` AS `t2` ON `t1`.`title` = `t2`.`meeting` 

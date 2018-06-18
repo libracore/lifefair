@@ -28,6 +28,10 @@ frappe.ui.form.on('Person', {
 		cur_frm.set_value('long_name', long_name);
 		// set primary company
 		find_primary_company(frm);
+        // update website description
+        if (!frm.doc.website_description) {
+            update_website_description(frm);
+        }
 	},
 	/* update first characters when changing the name */
 	last_name: function(frm) {
@@ -185,4 +189,15 @@ function display_contacts(frm) {
 		}
 	});
 	
+}
+
+function update_website_description(frm) {
+    var description = "";
+    frm.doc.organisations.forEach(function(organisation) {
+        if (!description == "") {
+            description += ", ";
+        }
+        description += organisation.function + ", " + organisation.organisation;
+    });
+    cur_frm.set_value('website_description', description);
 }

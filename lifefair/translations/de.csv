@@ -61,3 +61,4 @@ DocType: Person Group,Linked People,Verknüpfte Personen
 DocType: Organisation Type,Organisation Type,Organisationstyp
 DocType: Organisation Type,Linked Organisations,Verknüpfte Organisationen
 Report: Actors per Meeting,Description,Beschreibung
+Report: Actors per Meeting,Website description,Webseitenbeschreibung
