@@ -42,6 +42,7 @@ DocType: Organisation,People,Personen
 DocType: Organisation,French name,Französischer Name
 DocType: Organisation,English name,Englischer Name
 DocType: Organisation,Italian name,Italienischer Name
+DocType: Organisation,Common contact,Gemeinsamer Kontakt
 DocType: Organisation Address,Street,Strasse
 DocType: Organisation Address,Additional address,Zusätzliche Adresse
 DocType: Organisation Address,Post box,Postfach
