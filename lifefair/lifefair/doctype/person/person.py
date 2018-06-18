@@ -48,7 +48,7 @@ class Person(Document):
 	    title = self.gender + " "
 	else:
 	    title = ""
-	vcard_content += "N:{0};{1};;{2};\nFN:{2}{0} {1}\n".format(
+	vcard_content += "N:{0};{1};;{2};\nFN:{2}{1} {0}\n".format(
 	    self.last_name, self.first_name, title)
 	if self.primary_organisation:
 	    vcard_content += "ORG:{0}\n".format(self.primary_organisation)
@@ -70,6 +70,7 @@ class Person(Document):
 	vcard_content += "REV:{0:04d}-{1:02d}-{2:02d}T{3:02d}:{4:02d}:{5:02d}Z\n".format(
 	    modified_date.year, modified_date.month, modified_date.day, 
 	    modified_date.hour, modified_date.minute, modified_date.second)
+	vcard_content += "NOTE:{0}\n".format(self.notes)
 	vcard_content += "END:VCARD"
 	return { 'vcard': vcard_content }
 

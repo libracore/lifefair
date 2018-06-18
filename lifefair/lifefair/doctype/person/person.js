@@ -19,13 +19,30 @@ frappe.ui.form.on('Person', {
 	validate: function(frm) {
 		// set full name
 		cur_frm.set_value('full_name', frm.doc.first_name + " " + frm.doc.last_name);
+        // set long  name
+        if (frm.doc.salutation) {
+            var long_name = frm.doc.salutation + " " + frm.doc.first_name + " " + frm.doc.last_name;
+        } else {
+            var long_name = frm.doc.first_name + " " + frm.doc.last_name;
+        }
+		cur_frm.set_value('long_name', long_name);
 		// set primary company
 		find_primary_company(frm);
 	},
 	/* update first characters when changing the name */
 	last_name: function(frm) {
 		cur_frm.set_value('first_characters', frm.doc.last_name.substring(0, 4).toUpperCase());
-	}
+	},
+    gender: function(frm) {
+        if (frm.doc.gender) {
+            if (frm.doc.gender == "Frau") {
+                cur_frm.set_value('letter_salutation', "Sehr geehrte Frau");
+            }
+            else if (frm.doc.gender == "Herr") {
+                cur_frm.set_value('letter_salutation', "Sehr geehrter Herr");
+            }
+        }
+    }
 });
 
 // find the primary organisation

@@ -23,7 +23,7 @@ DocType: Person,CV Date,Datum Lebenslaufe
 DocType: Person,Do not contact,Nicht kontaktieren
 DocType: Person,Academic Title,Akademischer Titel
 DocType: Person,Preferred language,Bevorzugte Sprache
-DocType: Person,Primary Organisation,Primäre Organisation
+DocType: Person,Primary Organisation,Hauptorganisation
 DocType: Person,CV,Lebenslauf
 DocType: Person,Quotes,Zitate
 DocType: Person,No addresses found,Keine Adressen gefunden
@@ -33,6 +33,7 @@ DocType: Person,of,von
 DocType: Person,Download vCard,vCard herunterladen
 DocType: Person,Participation,Teilnahme
 DocType: Person,Registration,Anmeldung
+DocType: Person,Notes,Notizen
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen
@@ -51,9 +52,9 @@ DocType: Organisation Address,Organisation Address,Organisationsadresse
 DocType: Organisation Address,Post box country,Land Postfach
 DocType: Organisation Address,Please select a link to an organisation or person.,Bitte setzen Sie eine Verknüpfung zu einer Organisation oder Person.
 DocType: Organisation Address,Private Address,Private Adresse
-DocType: Organisation Address,Is primary,Primär
+DocType: Organisation Address,Is primary,Hauptadresse
 DocType: Organisation Address,For shipping,Versandadresse
-DocType: Organisation Address,Set if this is the primary address,Als primäre Adresse setzen
+DocType: Organisation Address,Set if this is the primary address,Als Hauptadresse setzen
 DocType: Organisation Address,Set if this is the shipping address,Als Versandadresse nutzen
 DocType: Person Group,Person Group,Personengruppe
 DocType: Person Group,Linked People,Verknüpfte Personen
