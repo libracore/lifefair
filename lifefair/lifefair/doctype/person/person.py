@@ -90,16 +90,18 @@ class Person(Document):
 #   /api/method/lifefair.lifefair.doctype.person.person.website_actors
 @frappe.whitelist(allow_guest=True)
 def website_actors():
-	sql_query = """SELECT 
-	     `t1`.`full_name`, 
-		 `t2`.`organisation`,
-	     `t2`.`function`,
-	     `t1`.`website_description`, 
-	     `t1`.`image`
-	   FROM (SELECT * FROM `tabPerson` WHERE `show_on_website` = 1) AS `t1` 
-	   LEFT JOIN 
-	      (SELECT * FROM `tabPerson Organisation` WHERE `is_primary` = 1) AS `t2`
-	      ON `t1`.`name` = `t2`.`parent`"""
-	people = frappe.db.sql(sql_query, as_dict=True)
-	
-	return people
+    sql_query = """SELECT 
+	 `t1`.`long_name`, 
+	     `t2`.`organisation`,
+	 `t2`.`function`,
+	 `t1`.`website_description`, 
+	 `t1`.`image`,
+	 `t1`.`first_characters`
+       FROM (SELECT * FROM `tabPerson` WHERE `show_on_website` = 1) AS `t1` 
+       LEFT JOIN 
+	  (SELECT * FROM `tabPerson Organisation` WHERE `is_primary` = 1) AS `t2`
+	  ON `t1`.`name` = `t2`.`parent`
+       ORDER BY `t1`.`first_characters` ASC"""
+    people = frappe.db.sql(sql_query, as_dict=True)
+
+    return people
