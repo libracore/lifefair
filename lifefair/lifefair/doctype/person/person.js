@@ -19,21 +19,21 @@ frappe.ui.form.on('Person', {
 	display_active_participation(frm);
     },
     validate: function(frm) {
-	// set full name
-	cur_frm.set_value('full_name', frm.doc.first_name + " " + frm.doc.last_name);
-	// set long  name
-	if (frm.doc.salutation) {
-	    var long_name = frm.doc.salutation + " " + frm.doc.first_name + " " + frm.doc.last_name;
-	} else {
-	    var long_name = frm.doc.first_name + " " + frm.doc.last_name;
-	}
-	cur_frm.set_value('long_name', long_name);
-	// set primary company
-	find_primary_company(frm);
-	// update website description
-	if (!frm.doc.website_description) {
-	    update_website_description(frm);
-	}
+        // set full name
+        cur_frm.set_value('full_name', frm.doc.first_name + " " + frm.doc.last_name);
+        // set long  name
+        if (frm.doc.salutation) {
+            var long_name = frm.doc.salutation + " " + frm.doc.first_name + " " + frm.doc.last_name;
+        } else {
+            var long_name = frm.doc.first_name + " " + frm.doc.last_name;
+        }
+        cur_frm.set_value('long_name', long_name);
+        // set primary company
+        find_primary_company(frm);
+        // update website description
+        if (!frm.doc.website_description) {
+            update_website_description(frm);
+        }
 	},
 	/* update first characters when changing the name */
 	last_name: function(frm) {
@@ -194,20 +194,20 @@ function display_active_participation(frm) {
 	doc: frm.doc,
 	callback: function(r) {
 	    if (r.message) {
-		var html = "";
-		if (r.message.participations.length == 0) {
-		    html = "<p>" + __("This person was not active in any listed meetings.") + "</p>";
-		} else {
-		    r.message.participations.forEach(function (participation) {
-			// participation code generator
-			html += '<p>';
-			html += '<a href="/desk#Form/Block/' + participation.block + '">';
-			html += participation.block + " (" + participation.meeting + ")</a></p>";
-		    });
-		}					
-		if (frm.fields_dict['actor_html']) {
-		    $(frm.fields_dict['actor_html'].wrapper).html(html);
-		}
+            var html = "";
+            if (r.message.participations.length == 0) {
+                html = "<p>" + __("This person was not active in any listed meetings.") + "</p>";
+            } else {
+                r.message.participations.forEach(function (participation) {
+                    // participation code generator
+                    html += '<p>';
+                    html += '<a href="/desk#Form/Block/' + participation.block + '">';
+                    html += participation.block + " (" + participation.meeting + ")</a></p>";
+                });
+            }					
+            if (frm.fields_dict['actor_html']) {
+                $(frm.fields_dict['actor_html'].wrapper).html(html);
+            }
 	    }
 	}
     });	
@@ -217,7 +217,7 @@ function update_website_description(frm) {
     var description = "";
     frm.doc.organisations.forEach(function(organisation) {
         if (!description == "") {
-            description += ", ";
+            description += "; ";
         }
         description += organisation.function + ", " + organisation.organisation;
     });
