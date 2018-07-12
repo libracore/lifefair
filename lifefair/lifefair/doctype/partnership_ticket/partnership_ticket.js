@@ -7,6 +7,8 @@ frappe.ui.form.on('Partnership Ticket', {
 	},
 	validate: function(frm) {
 		secure_items(frm);
+		
+		apply_owner(frm);
 	}
 });
 
@@ -17,4 +19,11 @@ function secure_items(frm) {
 		frappe.model.set_value(entry.doctype, entry.name, "ticket_no", ticket_no);
 		ticket_no++;
 	});
+}
+
+function apply_owner(frm) {
+	frappe.call({
+		method: 'apply_owner',
+		doc: frm.doc
+    });
 }
