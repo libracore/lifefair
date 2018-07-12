@@ -64,3 +64,9 @@ DocType: Person Group,Linked People,Verknüpfte Personen
 DocType: Organisation Type,Organisation Type,Organisationstyp
 DocType: Organisation Type,Linked Organisations,Verknüpfte Organisationen
 Report: Actors per Meeting,Description,Beschreibung
+DocType: Partnership Ticket,Partnership Ticket,Partner-Ticket
+DocType: Partnership Ticket,Partnership Tickets,Partner-Tickets
+DocType: Partnership Ticket,"Please fill in the table below with the people who should receive the partnership ticket. Without a valid email address, the ticket cannot be issued.","Bitte füllen Sie die Tabelle unten mit den Personen aus, die ein Partner-Ticket erhalten sollen. Ohne gültige Email-Adresse kann das Ticket nicht ausgestellt werden."
+DocType: Partnership Ticket,Responsible,Verantwortlicher Benutzer
+DocType: Partnership Ticket,Identify people,Teilnehmer identifizeren
+DocType: Partnership Ticket,The selected responsible person is not yet a user. Please add the email as new user.,Der verantwortliche Benutzer ist im System nicht verfügbar. Bitte fügen Sie den Benutzer hinzu.
