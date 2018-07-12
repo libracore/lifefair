@@ -3,7 +3,10 @@
 
 frappe.ui.form.on('Partnership Ticket', {
 	refresh: function(frm) {
-
+		// add download vCard buton
+		frm.add_custom_button( __("Identify people"), function() {
+			identify_people(frm);
+		}).addClass("btn-primary");
 	},
 	validate: function(frm) {
 		secure_items(frm);
@@ -24,6 +27,13 @@ function secure_items(frm) {
 function apply_owner(frm) {
 	frappe.call({
 		method: 'apply_owner',
+		doc: frm.doc
+    });
+}
+
+function identify_people(frm) {
+	frappe.call({
+		method: 'identify_people',
 		doc: frm.doc
     });
 }

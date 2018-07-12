@@ -44,6 +44,14 @@ def get_data():
                        "color": "#f88c00",
                        "icon": "octicon octicon-clippy",
                        "description": _("Block")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Partnership Ticket",
+                       "label": _("Partnership Ticket"),
+                       "color": "#f88c00",
+                       "icon": "octicon octicon-clippy",
+                       "description": _("Partnership Ticket")
                    }
             ]
         },
