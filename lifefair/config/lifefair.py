@@ -47,11 +47,11 @@ def get_data():
                    },
                    {
                        "type": "doctype",
-                       "name": "Partnership Ticket",
-                       "label": _("Partnership Ticket"),
+                       "name": "Partnershipticket",
+                       "label": _("Partnershipticket"),
                        "color": "#f88c00",
                        "icon": "octicon octicon-clippy",
-                       "description": _("Partnership Ticket")
+                       "description": _("Partnershipticket")
                    }
             ]
         },
