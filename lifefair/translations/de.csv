@@ -71,3 +71,7 @@ DocType: Partnershipticket,Responsible,Verantwortlicher Benutzer
 DocType: Partnershipticket,Identify people,Teilnehmer identifizeren
 DocType: Partnershipticket,The selected responsible person is not yet a user. Please add the email as new user.,Der verantwortliche Benutzer ist im System nicht verfügbar. Bitte fügen Sie den Benutzer hinzu.
 DocType: Partnershipticket,Partnershipticket,Partner-Ticket
+DocType: Registration,Ticket number,Ticketnummer
+DocType: Registration,Invoice number,Rechnungsnummer
+DocType: Block,Official title,Offizieller Titel
+DocType: Block,Use,Nutzen
