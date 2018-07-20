@@ -53,7 +53,7 @@ def add_guest(ticket=None, fname=None, lname=None, email=None):
             'communication_type': 'Comment',
             'comment_type': 'Comment',
             'subject': 'Website Ticket Entry',
-            'content': 'Partnership ticket entry from Webpage (unsecured)',
+            'content': 'Partnership ticket entry from Webpage (unsecured): {0}, {1}, {2}'.format(fname, lname, email),
             'reference_doctype': 'Partnershipticket',
             'status': 'Linked',
             'reference_name': ticket,
