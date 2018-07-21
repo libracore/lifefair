@@ -15,6 +15,10 @@ def get_data():
          {
             'label': _('Participation'),
             'items': ['Registration', 'Partnershipticket']
+         },
+         {
+            'label': _('Marketing'),
+            'items': ['Follow Up']
          }
       ]
    }

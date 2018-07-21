@@ -28,5 +28,14 @@ def get_data():
 			"icon": "octicon octicon-organization",
 			"type": "link",
 			"link": "List/Organisation"
-	   }
+	   },
+	   {
+			"module_name": "Follow Up",
+			"_doctype": "follow up",
+			"label": _("Follow Up"),
+			"color": "#f88c00",
+			"icon": "octicon octicon-megaphone",
+			"type": "link",
+			"link": "List/Follow Up"
+	   }   
 	]
