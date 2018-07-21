@@ -70,6 +70,18 @@ def get_data():
             ]
         },
         {
+            "label": _("Marketing"),
+            "icon": "octicon octicon-megaphone",
+            "items": [
+                   {
+                       "type": "doctype",
+                       "name": "Follow Up",
+                       "label": _("Follow Up"),
+                       "description": _("Follow Up")
+                   }
+            ]
+        },
+        {
             "label": _("Settings"),
             "icon": "octicon octicon-tools",
             "items": [
