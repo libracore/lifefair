@@ -14,7 +14,7 @@ def get_data():
          },
          {
             'label': _('Participation'),
-            'items': ['Registration', 'Partnership Ticket']
+            'items': ['Registration', 'Partnershipticket']
          }
       ]
    }
