@@ -66,3 +66,26 @@ def add_guest(ticket=None, fname=None, lname=None, email=None):
         return _('Data received')
     else:
         return _('Invalid API call')
+
+# this is a public API to read ticket entries
+#
+# call the API from
+#   /api/method/lifefair.lifefair.doctype.partnershipticket.partnershipticket.get_guests?ticket=<ticket id>&title=<title>
+@frappe.whitelist(allow_guest=True)
+def get_guests(ticket=None, title=None):
+    if ticket and title:
+        # for security: crosscheck name/id against title
+        tickets = frappe.get_all("Partnershipticket", filters={'name': ticket, 'title': title}, fields=['name'])
+        if tickets:
+            code = "<table style='width: 100%; '>"
+            code += "<tr><th>Nr.</th><th>Vorname</th><th>Nachname</th><th>Email</th></tr>"
+            entries = frappe.get_all('Partnership Ticket Item', filters={'parent': ticket}, fields=['first_name', 'last_name', 'email'])
+            for i in range(0, len(entries)):
+                code += "<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td></tr>".format(
+                    (i+1), entries[i]['first_name'], entries[i]['last_name'], entries[i]['email'])
+            code += "</table>"
+            return code
+        else:
+            return _('Invalid credentials')
+    else:
+        return _('Invalid API call')
