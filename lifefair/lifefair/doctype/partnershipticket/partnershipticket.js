@@ -9,7 +9,7 @@ frappe.ui.form.on('Partnershipticket', {
 		}).addClass("btn-primary");
 	},
 	validate: function(frm) {
-		secure_items(frm);
+		//secure_items(frm);
 		
 		apply_owner(frm);
 	}
