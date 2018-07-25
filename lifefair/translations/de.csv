@@ -75,6 +75,7 @@ DocType: Registration,Ticket number,Ticketnummer
 DocType: Registration,Invoice number,Rechnungsnummer
 DocType: Block,Official title,Offizieller Titel
 DocType: Block,Use,Nutzen
+DocType: Block,Tile text,Kacheltext
 DocType: Follow Up,Follow Up,Nachfassen
 DocType: Follow Up,Action date,Aktionsdatum
 DocType: Follow Up,Action status,Bearbeitungsstatus
