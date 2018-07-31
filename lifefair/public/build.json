@@ -1,3 +1,5 @@
 {
-    
+    "js/xlsx.min.js": [
+        "public/js/xlsx.min.js"
+    ]
 }

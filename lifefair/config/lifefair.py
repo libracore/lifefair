@@ -47,6 +47,14 @@ def get_data():
                    },
                    {
                        "type": "doctype",
+                       "name": "Registration",
+                       "label": _("Registration"),
+                       "color": "#f88c00",
+                       "icon": "octicon octicon-clippy",
+                       "description": _("Registration")
+                   },
+                   {
+                       "type": "doctype",
                        "name": "Partnershipticket",
                        "label": _("Partnershipticket"),
                        "color": "#f88c00",
