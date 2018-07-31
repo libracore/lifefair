@@ -51,16 +51,16 @@ def import_xing(content, meeting):
             isfirst = False;
             continue
         # check if the ticket is already in the database
-        db_regs = frappe.get_all("Registration", filters={'ticket_number': element[TICKETNO]}, fields=['name'])
+        db_regs = frappe.get_all("Registration", filters={'ticket_number': element[TICKETNO].decode('utf-8')}, fields=['name'])
         if db_regs:
             # ticket is already in the database, update
             reg = frappe.get_doc("Registration", db_regs[0]['name'])
-            status = parse_status(element[STATUS])
+            status = parse_status(element[STATUS].decode('utf-8'))
             reg.status = status
-            reg.type = element[TYPE],
-            reg.payment = element[PAYMENT],
-            reg.invoice_number = element[INVOICENO],
-            reg.phone = element[PHONE],
+            reg.type = element[TYPE].decode('utf-8'),
+            reg.payment = element[PAYMENT].decode('utf-8'),
+            reg.invoice_number = element[INVOICENO].decode('utf-8'),
+            reg.phone = element[PHONE].decode('utf-8'),
             reg.save()
             frappe.db.commit()
         else:
@@ -71,58 +71,67 @@ def import_xing(content, meeting):
                 person_name = db_person[0]['name']
             else:
                 # person not found, create new person
-                full_name = "{0} {1}".format(element[FIRST_NAME], element[LAST_NAME])
+                frappe.log_error("{0}".format(element))
+                full_name = "{0} {1}".format(element[FIRST_NAME].decode('utf-8'), element[LAST_NAME].decode('utf-8'))
                 if element[TITLE]:
-                    long_name = "{0} {1} {2}".format(element[TITLE], element[FIRST_NAME], element[LAST_NAME])
+                    long_name = "{0} {1} {2}".format(element[TITLE].decode('utf-8'), element[FIRST_NAME].decode('utf-8'), element[LAST_NAME].decode('utf-8'))
+                else:
+                    long_name = full_name
                 try:
-                    first_characters = element[LAST_NAME][0:4].upper()
+                    first_characters = element[LAST_NAME].decode('utf-8')[0:4].upper()
                 except:
                     try:
-                        first_characters = element[LAST_NAME].upper()
+                        first_characters = element[LAST_NAME].decode('utf-8').upper()
                     except:
                         first_characters = "NN"
                 person = frappe.get_doc({
                     'doctype': "Person",
-                    'first_name': element[FIRST_NAME],
-                    'last_name': element[LAST_NAME],
+                    'first_name': element[FIRST_NAME].decode('utf-8'),
+                    'last_name': element[LAST_NAME].decode('utf-8'),
                     'full_name': full_name,
                     'long_name': long_name,
                     'first_characters': first_characters,
-                    'email': element[EMAIL],
-                    'company_phone': element[PHONE],
-                    'title': element[TITLE],
-                    'remarks': "From Xing, {1} @ {0}, {2}, {3} {4}".format(element[COMPANY], element[FUNCTION], 
-                        element[STREET], element[PINCODE], element[CITY])
+                    'email': element[EMAIL].decode('utf-8'),
+                    'company_phone': element[PHONE].decode('utf-8'),
+                    'title': element[TITLE].decode('utf-8'),
+                    'remarks': "From Xing, {1} @ {0}, {2}, {3} {4}".format(element[COMPANY].decode('utf-8'), element[FUNCTION].decode('utf-8'), 
+                        element[STREET].decode('utf-8'), element[PINCODE].decode('utf-8'), element[CITY].decode('utf-8'))
                 })
-                person_name = person.insert()
+                person = person.insert()
+                person_name = person.name
                 frappe.db.commit()
                 new_pers.append(person_name)
             # create the new registration
             # find block
-            match_block = p.match(element[BLOCK])
+            match_block = p.match(element[BLOCK].decode('utf-8'))
             if match_block:
                 block = "SGES 2018 {0}".format(match_block)
+            else:
+                block = None
             # parse date stamp (13.07.2018, 16:56)
-            date_fields = element[DATE].split(',')[0].split('.')
+            date_fields = element[DATE].decode('utf-8').split(',')[0].split('.')
             date = "{0}-{1}-{2}".format(date_fields[2], date_fields[1], date_fields[0])
             # parse status ['Bezahlt', 'Storniert', 'Versendet'] > [Tentative, Confirmed, Cancelled, Paid, Sent]
-            status = parse_status(element[STATUS])
+            status = parse_status(element[STATUS].decode('utf-8'))
+            frappe.log_error(person_name)
             registration = frappe.get_doc({
                 'doctype': "Registration",
                 'person': person_name,
                 'meeting': meeting,
                 'block': block,
                 'date': date,
-                'remarks': element[REMARKS],
-                'ticket_number': element[TICKETNO],
-                'barcode': element[BARCODE],
-                'type': element[TYPE],
-                'payment': element[PAYMENT],
-                'invoice_number': element[INVOICENO],
-                'phone': element[PHONE],
+                'remarks': element[REMARKS].decode('utf-8'),
+                'ticket_number': element[TICKETNO].decode('utf-8'),
+                'barcode': element[BARCODE].decode('utf-8'),
+                'type': element[TYPE].decode('utf-8'),
+                'payment': element[PAYMENT].decode('utf-8'),
+                'invoice_number': element[INVOICENO].decode('utf-8'),
+                'phone': element[PHONE].decode('utf-8'),
                 'status': status
             })
-            reg_name = registration.insert()
+
+            registration = registration.insert()
+            reg_name = registration.name
             frappe.db.commit()
             new_regs.append(reg_name)
 

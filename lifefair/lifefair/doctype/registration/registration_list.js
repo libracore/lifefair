@@ -25,11 +25,7 @@ frappe.listview_settings['Registration'] = {
     }
 }
 
-function import_xing(file, meeting) {
-    
-    console.log(file);
-    console.log(meeting);
-    
+function import_xing(file, meeting) {    
     // read the file
     if (file) {
         // create new reader instance 
@@ -53,9 +49,24 @@ function import_xing(file, meeting) {
                 },
                 "callback": function(response) {
                     if (response.message) {
-                        console.log("Response: " + response.message);
-                        frappe.msgprint(__("New registrations: ") + response.message.registrations + "<br>" +
-                            __("New people: ") + response.message.people)
+                        var reg_code = "";
+                        if ((response.message.registrations) && (response.message.registrations.length > 0))  {
+                            response.message.registrations.forEach(function(registration) {
+                                reg_code += "<a href='/desk#Form/Registration/" + registration + "'>" + registration + "</a> ";
+                            });
+                        } else {
+                            reg_code = __("None");
+                        }
+                        var pers_code = "";
+                        if ((response.message.people) && (response.message.people.length > 0)) {
+                            response.message.people.forEach(function(person) {
+                                pers_code += "<a href='/desk#Form/Person/" + person + "'>" + person + "</a> ";
+                            });
+                        } else {
+                            pers_code = __("None");
+                        }
+                        frappe.msgprint(__("New registrations: ") + reg_code + "<br>" +
+                            __("New people: ") + pers_code)
                     }
                 }
             });
