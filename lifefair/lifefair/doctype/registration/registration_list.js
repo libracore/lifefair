@@ -65,8 +65,8 @@ function import_xing(file, meeting) {
                         } else {
                             pers_code = __("None");
                         }
-                        frappe.msgprint(__("New registrations: ") + reg_code + "<br>" +
-                            __("New people: ") + pers_code)
+                        frappe.msgprint(__("New registrations: ") + "&nbsp;" + reg_code + "<br>" +
+                            __("New people: ") + "&nbsp;" + pers_code)
                     }
                 }
             });
