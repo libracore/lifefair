@@ -35,6 +35,7 @@ function import_xing(file, meeting) {
         // create new reader instance 
         var reader = new FileReader();
         reader.onload = function(e) {
+            console.log("Reading...");
             // read the file 
             var data = e.target.result;
             // load the workbook
@@ -42,7 +43,7 @@ function import_xing(file, meeting) {
             var first_sheet_name = workbook.SheetNames[0];
             // convert content to csv 
             var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[first_sheet_name]);
-            
+            console.log("Got csv...");
             // fetch test apparatus parameters 
             frappe.call({
                 "method": "lifefair.lifefair.doctype.registration.registration.import_xing",
@@ -51,8 +52,8 @@ function import_xing(file, meeting) {
                     "meeting": meeting
                 },
                 "callback": function(response) {
-                    if (r.message) {
-                        console.log("Response: " + r.message);
+                    if (response.message) {
+                        console.log("Response: " + response.message);
                     }
                 }
             });
