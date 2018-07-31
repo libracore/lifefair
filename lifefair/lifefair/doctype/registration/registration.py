@@ -36,8 +36,7 @@ def import_xing(content, meeting):
     
     isfirst = True
     # read csv
-    elements = csv.reader(content.splitlines(), dialect='excel')
-    frappe.log_error(content)
+    elements = csv.reader(content.encode('utf-8').splitlines(), dialect='excel')
     # process elements
     for element in elements:
         if isfirst:
@@ -46,26 +45,4 @@ def import_xing(content, meeting):
         # check if the ticket is already in the database
         frappe.log_error("Ticket: " + element[TICKETNO])
         
-        return { 'new_registrations': new_regs }
-    else:
-        return { 'result': _('Parsing file failed') }
-
-def split_line(line):
-    cells = []
-    old_pos = 0
-    pos = -1
-    while True:
-        pos = line.find(',', pos + 1)
-        if pos == -1:
-            break
-        new_cell = line[oldpos:pos]
-        cells.append(new_cell)
-        old_pos = pos
-        if line[(pos + 1):(pos + 2)] == '"':
-            pos = line.find('"', pos + 2)
-            if pos == -1:
-                break
-            new_cell = line[oldpos:pos]
-            cells.append(new_cell)
-            old_pos = pos
-    return cells
+    return { 'new_registrations': new_regs }
