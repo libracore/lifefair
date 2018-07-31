@@ -54,6 +54,8 @@ function import_xing(file, meeting) {
                 "callback": function(response) {
                     if (response.message) {
                         console.log("Response: " + response.message);
+                        frappe.msgprint(__("New registrations: ") + response.message.registrations + "<br>" +
+                            __("New people: ") + response.message.people)
                     }
                 }
             });
