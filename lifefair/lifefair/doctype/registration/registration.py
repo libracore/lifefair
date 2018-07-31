@@ -7,4 +7,10 @@ import frappe
 from frappe.model.document import Document
 
 class Registration(Document):
-	pass
+    pass
+
+@frappe.whitelist()
+def import_xing(content, meeting):
+    new_regs = []
+    
+    return { 'new_registrations': new_regs }
