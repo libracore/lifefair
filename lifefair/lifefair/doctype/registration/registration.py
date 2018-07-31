@@ -57,10 +57,17 @@ def import_xing(content, meeting):
             reg = frappe.get_doc("Registration", db_regs[0]['name'])
             status = parse_status(element[STATUS].decode('utf-8'))
             reg.status = status
-            reg.type = element[TYPE].decode('utf-8'),
-            reg.payment = element[PAYMENT].decode('utf-8'),
-            reg.invoice_number = element[INVOICENO].decode('utf-8'),
-            reg.phone = element[PHONE].decode('utf-8'),
+            reg.type = element[TYPE].decode('utf-8')
+            reg.payment = element[PAYMENT].decode('utf-8')
+            reg.invoice_number = element[INVOICENO].decode('utf-8')
+            reg.phone = element[PHONE].decode('utf-8')
+            # find block
+            match_block = p.match(element[BLOCK].decode('utf-8'))
+            if match_block:
+                block = "{0} {1}".format(meeting, match_block)
+            else:
+                block = None
+            reg.block = block
             reg.save()
             frappe.db.commit()
         else:
@@ -71,7 +78,6 @@ def import_xing(content, meeting):
                 person_name = db_person[0]['name']
             else:
                 # person not found, create new person
-                frappe.log_error("{0}".format(element))
                 full_name = "{0} {1}".format(element[FIRST_NAME].decode('utf-8'), element[LAST_NAME].decode('utf-8'))
                 if element[TITLE]:
                     long_name = "{0} {1} {2}".format(element[TITLE].decode('utf-8'), element[FIRST_NAME].decode('utf-8'), element[LAST_NAME].decode('utf-8'))
@@ -105,7 +111,7 @@ def import_xing(content, meeting):
             # find block
             match_block = p.match(element[BLOCK].decode('utf-8'))
             if match_block:
-                block = "SGES 2018 {0}".format(match_block)
+                block = "{0} {1}".format(meeting, match_block)
             else:
                 block = None
             # parse date stamp (13.07.2018, 16:56)
@@ -113,7 +119,6 @@ def import_xing(content, meeting):
             date = "{0}-{1}-{2}".format(date_fields[2], date_fields[1], date_fields[0])
             # parse status ['Bezahlt', 'Storniert', 'Versendet'] > [Tentative, Confirmed, Cancelled, Paid, Sent]
             status = parse_status(element[STATUS].decode('utf-8'))
-            frappe.log_error(person_name)
             registration = frappe.get_doc({
                 'doctype': "Registration",
                 'person': person_name,

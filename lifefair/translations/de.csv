@@ -73,6 +73,13 @@ DocType: Partnershipticket,The selected responsible person is not yet a user. Pl
 DocType: Partnershipticket,Partnershipticket,Partner-Ticket
 DocType: Registration,Ticket number,Ticketnummer
 DocType: Registration,Invoice number,Rechnungsnummer
+,Import Xing Registrations,Xing-Anmeldungen importieren
+,New registrations: ,Neue Anmeldungen: 
+,New people: ,Neue Kontakte: 
+,None,Keine
+,Error reading file,Fehler beim Lesen der Datei
+,Error,Fehler
+,Please select a file.,Bitte eine Datei auswählen.
 DocType: Block,Official title,Offizieller Titel
 DocType: Block,Use,Nutzen
 DocType: Block,Tile text,Kacheltext

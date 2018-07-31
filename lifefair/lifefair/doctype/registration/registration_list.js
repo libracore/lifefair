@@ -40,7 +40,7 @@ function import_xing(file, meeting) {
             // convert content to csv 
             var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[first_sheet_name]);
             console.log("Got csv...");
-            // fetch test apparatus parameters 
+            // process Xing file
             frappe.call({
                 "method": "lifefair.lifefair.doctype.registration.registration.import_xing",
                 "args": {
