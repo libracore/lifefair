@@ -62,6 +62,13 @@ class Person(Document):
 	    self.last_name, self.first_name, title)
 	if self.primary_organisation:
 	    vcard_content += "ORG:{0}\n".format(self.primary_organisation)
+	    address = frappe.get_all("Organisation Address", 
+		filters={'organisation': self.primary_organisation},
+		fields=['street', 'number', 'additional_address', 'pin_code', 'city', 'country'])
+	    if address:
+		vcard_content += "ADR;TYPE=WORK:;;{street} {number};{city};;{pincode};{country}\n".format(
+		    street=address[0].street, number=address[0].number, additional=address[0].additional_address, 
+		    city=address[0].city, pincode=address[0].pin_code, country=address[0].country)
 	if self.primary_function:
 	    vcard_content += "TITLE:{0}\n".format(self.primary_function)
 	if self.image:

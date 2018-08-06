@@ -17,6 +17,8 @@ frappe.ui.form.on('Person', {
 	display_contacts(frm);
 	// load active participation
 	display_active_participation(frm);
+	// load business card
+	display_business_card(frm);
     },
     validate: function(frm) {
         // set full name
@@ -222,4 +224,34 @@ function update_website_description(frm) {
         description += organisation.function + ", " + organisation.organisation;
     });
     cur_frm.set_value('website_description', description);
+}
+
+function display_business_card(frm) {
+    // render business card
+    var html = '<p>';
+    html += frm.doc.long_name;
+    if (frm.doc.website_description) {
+	html += " (" + frm.doc.website_description + ")<br>";
+    } else {
+	html += "<br>";
+    }
+    if (frm.doc.company_phone) {
+	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.company_phone;
+    } else if (frm.doc.mobile_phone) {
+	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.mobile_phone;
+    } else if (frm.doc.private_phone) {
+	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.private_phone;
+    }
+    html += '&nbsp;<span class="octicon octicon-mail"></span>&nbsp;';
+    if (frm.doc.email) {
+	html += "<a href=\"mailto:" + frm.doc.email + "\">" + frm.doc.email + "</a>";
+    } else if (frm.doc.email2) {
+	html += "<a href=\"mailto:" + frm.doc.email2 + "\">" + frm.doc.email2 + "</a>";
+    } else if (frm.doc.email3) {
+	html += "<a href=\"mailto:" + frm.doc.email3 + "\">" + frm.doc.email3 + "</a>";
+    }
+    html +=  "</p>"
+    if (frm.fields_dict['business_card_html']) {
+	$(frm.fields_dict['business_card_html'].wrapper).html(html);
+    }
 }

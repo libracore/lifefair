@@ -36,6 +36,7 @@ DocType: Person,Registration,Anmeldung
 DocType: Person,Notes,Notizen
 DocType: Person,This person was not active in any listed meetings.,Dieser Kontakt war nicht aktiv in einem Anlass.
 DocType: Person,Active participation,Aktive Teilnahme
+DocType: Person,Business Card,Visitenkarte
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen
