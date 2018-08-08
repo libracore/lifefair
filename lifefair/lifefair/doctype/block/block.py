@@ -22,6 +22,9 @@ def get_block_info(block=None):
              `content`,
              `use`,
              `location`,
+             `location_detail_1`,
+             `location_detail_2`,
+             `location_detail_3`,
              `tile_text`
              FROM `tabBlock`
              WHERE `name` = '{0}';""".format(block)
