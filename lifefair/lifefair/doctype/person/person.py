@@ -98,34 +98,25 @@ class Person(Document):
 #   /api/method/lifefair.lifefair.doctype.person.person.website_actors?block=<block id>
 @frappe.whitelist(allow_guest=True)
 def website_actors(block=None):
-    if block:
-	sql_query = """SELECT 
-			 `t2`.`long_name` AS `full_name`, 
-			 `t3`.`organisation` AS `organisation`,
-			 `t3`.`function` AS `function`,
-			 `t2`.`website_description` AS `website_description`, 
-			 `t2`.`image` AS `image`,
-			 `t2`.`first_characters` AS `first_characters`
-		FROM `tabBlock Actor` AS `t1`
-		LEFT JOIN `tabPerson` AS `t2` ON `t1`.`person` = `t2`.`name`
-		LEFT JOIN 
-		  (SELECT * FROM `tabPerson Organisation` WHERE `is_primary` = 1) AS `t3`
-		  ON `t2`.`name` = `t3`.`parent`
-		WHERE `t1`.`parent` = "{0}" AND `t2`.`show_on_website` = 1
-		ORDER BY `t2`.`first_characters` ASC;""".format(block)
-    else:
-	sql_query = """SELECT 
-	     `t1`.`long_name` AS `full_name`, 
-	     `t2`.`organisation` AS `organisation`,
-	     `t2`.`function` AS `function`,
-	     `t1`.`website_description` AS `website_description`, 
-	     `t1`.`image` AS `image`,
-	     `t1`.`first_characters` AS `first_characters`
-	   FROM (SELECT * FROM `tabPerson` WHERE `show_on_website` = 1) AS `t1` 
-	   LEFT JOIN 
-	      (SELECT * FROM `tabPerson Organisation` WHERE `is_primary` = 1) AS `t2`
-	      ON `t1`.`name` = `t2`.`parent`
-	   ORDER BY `t1`.`first_characters` ASC"""
+    if not block:
+	block = "%"
+    sql_query = """SELECT 
+		     `t2`.`long_name` AS `full_name`, 
+		     `t3`.`organisation` AS `organisation`,
+		     `t3`.`function` AS `function`,
+		     `t2`.`website_description` AS `website_description`, 
+		     `t2`.`image` AS `image`,
+		     `t2`.`first_characters` AS `first_characters`,
+		     `t4`.`short_name` AS `short_name`,
+		     `t4`.`official_title` AS `official_title`
+	    FROM `tabBlock Actor` AS `t1`
+	    LEFT JOIN `tabPerson` AS `t2` ON `t1`.`person` = `t2`.`name`
+	    LEFT JOIN 
+	      (SELECT * FROM `tabPerson Organisation` WHERE `is_primary` = 1) AS `t3`
+	      ON `t2`.`name` = `t3`.`parent`
+	    LEFT JOIN `tabBlock` AS `t4` ON `t1`.`parent` = `t4`.`name`
+	    WHERE `t1`.`parent` LIKE "{0}" AND `t2`.`show_on_website` = 1
+	    ORDER BY `t2`.`first_characters` ASC;""".format(block)
     people = frappe.db.sql(sql_query, as_dict=True)
 
     return people
