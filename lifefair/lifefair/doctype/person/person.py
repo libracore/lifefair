@@ -116,6 +116,7 @@ def website_actors(block=None):
 	      ON `t2`.`name` = `t3`.`parent`
 	    LEFT JOIN `tabBlock` AS `t4` ON `t1`.`parent` = `t4`.`name`
 	    WHERE `t1`.`parent` LIKE "{0}" AND `t2`.`show_on_website` = 1
+	    GROUP `t2`.`long_name`
 	    ORDER BY `t2`.`first_characters` ASC;""".format(block)
     people = frappe.db.sql(sql_query, as_dict=True)
 

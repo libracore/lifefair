@@ -237,11 +237,12 @@ function display_business_card(frm) {
     }
     if (frm.doc.company_phone) {
 	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.company_phone;
-    } else if (frm.doc.mobile_phone) {
-	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.mobile_phone;
     } else if (frm.doc.private_phone) {
 	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.private_phone;
     }
+    if (frm.doc.mobile_phone) {
+	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.mobile_phone;
+    } 
     html += '&nbsp;<span class="octicon octicon-mail"></span>&nbsp;';
     if (frm.doc.email) {
 	html += "<a href=\"mailto:" + frm.doc.email + "\">" + frm.doc.email + "</a>";
