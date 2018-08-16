@@ -38,7 +38,9 @@ def import_xing(content, meeting):
     TYPE            = 3
     PAYMENT         = 44                    # AS
     INVOICENO       = 43                    # AR
-       
+    CODE            = 47                    # AV, "Gutscheincode", e.g. "S18STAFF"
+    PARTICIPATION   = 51                    # AZ, "Ich nehme teil" 
+      
     isfirst = True
     # read csv
     elements = unicode_csv_reader(content.splitlines())
@@ -58,6 +60,8 @@ def import_xing(content, meeting):
             reg.payment = element[PAYMENT]
             reg.invoice_number = element[INVOICENO]
             reg.phone = element[PHONE]
+            reg.code = element[CODE]
+            reg.participation = element[PARTICIPATION]
             # find block
             block = find_block(element[BLOCK], meeting)
             reg.block = block
@@ -129,7 +133,9 @@ def import_xing(content, meeting):
                     'payment': element[PAYMENT],
                     'invoice_number': element[INVOICENO],
                     'phone': element[PHONE],
-                    'status': status
+                    'status': status,
+                    'code': element[CODE],
+                    'participation': element[PARTICIPATION]
                 })
                 registration = registration.insert()
                 reg_name = registration.name
