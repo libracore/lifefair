@@ -8,6 +8,7 @@ from frappe.model.document import Document
 from frappe import _
 import csv
 import re
+import datetime
 
 class Registration(Document):
     pass
@@ -44,11 +45,13 @@ def import_xing(content, meeting):
     isfirst = True
     # read csv
     elements = unicode_csv_reader(content.splitlines())
+    counter = 0
     # process elements
     for element in elements:
         if isfirst:
             isfirst = False;
             continue
+        counter += 1
         # check if the ticket is already in the database
         db_regs = frappe.get_all("Registration", filters={'ticket_number': element[TICKETNO]}, fields=['name'])
         if db_regs:
@@ -116,7 +119,15 @@ def import_xing(content, meeting):
             block = find_block(element[BLOCK], meeting)
             # parse date stamp (13.07.2018, 16:56)
             date_fields = element[DATE].split(',')[0].split('.')
-            date = "{0}-{1}-{2}".format(date_fields[2], date_fields[1], date_fields[0])
+            if len(date_fields) >= 3:
+                # proper date stamp
+                date = "{0}-{1}-{2}".format(date_fields[2], date_fields[1], date_fields[0])
+            else:
+                # found float timestamp
+                zerodate = datetime.datetime(1899, 12, 30)
+                delta = datetime.timedelta(days=float(element[DATE]))
+                converted_date = zerodate + delta
+                date = "{year:04d}-{month:02d}-{day:02d}".format(year=converted_date.year, month=converted_date.month, day=converted_date.day)
             # parse status ['Bezahlt', 'Storniert', 'Versendet'] > [Tentative, Confirmed, Cancelled, Paid, Sent]
             status = parse_status(element[STATUS])
             try:
