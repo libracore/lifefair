@@ -68,7 +68,7 @@ function import_xing(file, meeting) {
                         frappe.msgprint(__("New registrations: ") + "&nbsp;" + reg_code + "<br>" +
                             __("New people: ") + "&nbsp;" + pers_code);
                         // update partnership status
-                        update_partner_tickets(frm, meeting);
+                        update_partner_tickets(meeting);
                     }
                 }
             });
@@ -85,7 +85,8 @@ function import_xing(file, meeting) {
     }
 }
 
-function update_partner_tickets(frm, meeting) {
+function update_partner_tickets(meeting) {
+    console.log("updating partner tickets");
     frappe.call({
         "method": "lifefair.lifefair.doctype.partnershipticket.partnershipticket.bulk_update_status",
         "args": {

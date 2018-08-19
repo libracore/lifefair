@@ -99,9 +99,9 @@ def get_guests(ticket=None, title=None):
 @frappe.whitelist()
 def bulk_update_status(meeting):
     # find all tickets for the specified meeting
-    partner_tickets = frappe.get_all("Partnershipticket", filter={'meeting': meeting}, fields=['name'])
+    partner_tickets = frappe.get_all("Partnershipticket", filters={'meeting': meeting}, fields=['name'])
     if partner_tickets:
-        for parter_ticket in partner_tickets:
+        for partner_ticket in partner_tickets:
             ticket = frappe.get_doc("Partnershipticket", partner_ticket['name'])
             ticket.identify_people()
     return
