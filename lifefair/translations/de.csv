@@ -73,6 +73,8 @@ DocType: Partnershipticket,Identify people,Teilnehmer identifizeren
 DocType: Partnershipticket,The selected responsible person is not yet a user. Please add the email as new user.,Der verantwortliche Benutzer ist im System nicht verfügbar. Bitte fügen Sie den Benutzer hinzu.
 DocType: Partnershipticket,Partnershipticket,Partner-Ticket
 DocType: Partnershipticket,Ticket Overview,Übersicht
+DocType: Partnershipticket,Missing registrations,Fehlende Anmeldungen
+DocType: Partnershipticket,People identification completed,Personenidentifikation abgeschlossen
 DocType: Registration,Ticket number,Ticketnummer
 DocType: Registration,Invoice number,Rechnungsnummer
 DocType: Registration,Import Xing Registrations,Xing-Anmeldungen importieren

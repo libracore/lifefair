@@ -66,7 +66,9 @@ function import_xing(file, meeting) {
                             pers_code = __("None");
                         }
                         frappe.msgprint(__("New registrations: ") + "&nbsp;" + reg_code + "<br>" +
-                            __("New people: ") + "&nbsp;" + pers_code)
+                            __("New people: ") + "&nbsp;" + pers_code);
+                        // update partnership status
+                        update_partner_tickets(frm, meeting);
                     }
                 }
             });
@@ -83,3 +85,14 @@ function import_xing(file, meeting) {
     }
 }
 
+function update_partner_tickets(frm, meeting) {
+    frappe.call({
+        "method": "lifefair.lifefair.doctype.partnershipticket.partnershipticket.bulk_update_status",
+        "args": {
+            "meeting": meeting
+        },
+        "callback": function(response) {
+            frappe.show_alert( __("People identification completed"));
+        }
+    });
+}

@@ -19,14 +19,19 @@ class Partnershipticket(Document):
         return
     
     def identify_people(self):
+        person_count = 0
+        registration_count = 0
         for ticket in self.tickets:
             if ticket.email:
                 person_matches = frappe.get_all('Person', filters={'email': ticket.email}, fields=['name'])
                 if person_matches:
                     ticket.person = person_matches[0]['name']
+                    person_count += 1
                     registration_matches = frappe.get_all('Registration', filters={'person': person_matches[0]['name'], 'meeting': self.meeting}, fields=['name'])
                     if registration_matches:
                         ticket.registration = registration_matches[0]['name']
+                        registration_count += 1
+        self.missing_registrations = person_count - registration_count
         self.save()
 
     pass
@@ -89,3 +94,14 @@ def get_guests(ticket=None, title=None):
             return _('Invalid credentials')
     else:
         return _('Invalid API call')
+
+# this is the function to bulk-update the ticket status
+@frappe.whitelist()
+def bulk_update_status(meeting):
+    # find all tickets for the specified meeting
+    partner_tickets = frappe.get_all("Partnershipticket", filter={'meeting': meeting}, fields=['name'])
+    if partner_tickets:
+        for parter_ticket in partner_tickets:
+            ticket = frappe.get_doc("Partnershipticket", partner_ticket['name'])
+            ticket.identify_people()
+    return

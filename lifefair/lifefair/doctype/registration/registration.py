@@ -154,10 +154,9 @@ def import_xing(content, meeting):
                 new_regs.append(reg_name)
             except Exception as e:
                 frappe.log_error("Import Xing Error", "Insert Registration failed. {0}".format(e))
-
         
     return { 'registrations': new_regs, 'people': new_pers }
-
+    
 def find_block(block_field, meeting):
     # regex block finder
     p = re.compile('IF.\d\d')
