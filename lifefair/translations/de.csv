@@ -32,7 +32,7 @@ DocType: Person,is,ist
 DocType: Person,of,von
 DocType: Person,Download vCard,vCard herunterladen
 DocType: Person,Participation,Teilnahme
-DocType: Person,Registration,Anmeldung
+DocType: Person,Registration,Registrierung
 DocType: Person,Notes,Notizen
 DocType: Person,This person was not active in any listed meetings.,Dieser Kontakt war nicht aktiv in einem Anlass.
 DocType: Person,Active participation,Aktive Teilnahme
@@ -75,6 +75,9 @@ DocType: Partnershipticket,Partnershipticket,Partner-Ticket
 DocType: Partnershipticket,Ticket Overview,Übersicht
 DocType: Partnershipticket,Missing registrations,Fehlende Anmeldungen
 DocType: Partnershipticket,People identification completed,Personenidentifikation abgeschlossen
+DocType: Partnershipticket,Person count,Anzahl Personen
+DocType: Partnershipticket,Ticket count,Anzahl Tickets
+DocType: Partnershipticket,Registration count,Anzahl Registrierungen
 DocType: Registration,Ticket number,Ticketnummer
 DocType: Registration,Invoice number,Rechnungsnummer
 DocType: Registration,Import Xing Registrations,Xing-Anmeldungen importieren

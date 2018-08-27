@@ -21,16 +21,20 @@ class Partnershipticket(Document):
     def identify_people(self):
         person_count = 0
         registration_count = 0
+        registration_count = 0
         for ticket in self.tickets:
-            if ticket.email:
+            if ticket.email != "@":
+                person_count += 1
                 person_matches = frappe.get_all('Person', filters={'email': ticket.email}, fields=['name'])
                 if person_matches:
-                    ticket.person = person_matches[0]['name']
-                    person_count += 1
+                    ticket.person = person_matches[0]['name']                    
                     registration_matches = frappe.get_all('Registration', filters={'person': person_matches[0]['name'], 'meeting': self.meeting}, fields=['name'])
                     if registration_matches:
                         ticket.registration = registration_matches[0]['name']
                         registration_count += 1
+        self.ticket_count = len(self.tickets)
+        self.person_count = person_count
+        self.registration_count = registration_count
         self.missing_registrations = person_count - registration_count
         self.save()
 
