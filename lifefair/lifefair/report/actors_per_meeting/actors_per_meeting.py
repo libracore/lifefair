@@ -15,7 +15,8 @@ def execute(filters=None):
                "Person:Link/Person:100",
                "Show on website",
                "Meeting::100",
-               "Image"]
+               "Image",
+               "Registered"]
     if filters:
         data = get_actors(meeting=filters.meeting, as_list=True)
     else:
@@ -33,11 +34,14 @@ def get_actors(meeting=None, as_list=True):
                 `t3`.`person` AS `Person`,
                 `t4`.`show_on_website` AS `Show on website`,
                 `t1`.`name` AS `Name`,
-                `t4`.`image` AS `Image`
+                `t4`.`image` AS `Image`,
+                /*`t5`.`name` AS `Registered`*/
+                (SELECT IF(`t5`.`name` IS NOT NULL, "ja", "nein")) AS `Registered`
             FROM `tabMeeting` AS `t1`
             INNER JOIN `tabBlock` AS `t2` ON `t1`.`title` = `t2`.`meeting` 
             INNER JOIN `tabBlock Actor` AS `t3` ON `t2`.`title` = `t3`.`parent`
-            LEFT JOIN `tabPerson` AS `t4` ON `t3`.`person` = `t4`.`name`"""
+            LEFT JOIN `tabPerson` AS `t4` ON `t3`.`person` = `t4`.`name`
+            LEFT JOIN `tabRegistration` AS `t5` ON (`t1`.`name` = `t5`.`meeting` AND `t4`.`name` = `t5`.`person`)"""
     if meeting:
         sql_query += """ WHERE `t1`.`title` = '{0}'""".format(meeting)
     sql_query += """ ORDER BY `t1`.`title` ASC, `t2`.`title` ASC, `t3`.`idx` ASC"""
