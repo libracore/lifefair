@@ -79,6 +79,11 @@ def import_xing(content, meeting):
             db_person = frappe.get_all("Person", filters={'email': element[EMAIL]}, fields=['name'])
             if db_person:
                 person_name = db_person[0]['name']
+                # get person, check website_description and update if empty
+                person = frappe.get_doc("Person", db_person[0]['name'])
+                if not person.website_description:
+                    person.website_description = "{0}, {1}".format(element[FUNCTION], element[COMPANY])
+                    person.save()
             else:
                 # person not found, create new person
                 full_name = "{0} {1}".format(element[FIRST_NAME], element[LAST_NAME])
@@ -103,6 +108,7 @@ def import_xing(content, meeting):
                     'email': element[EMAIL],
                     'company_phone': element[PHONE],
                     'title': element[TITLE],
+                    'website_description': "{0}, {1}".format(element[FUNCTION], element[COMPANY]),
                     'remarks': "From Xing, {1} @ {0}, {2}, {3} {4}".format(element[COMPANY], element[FUNCTION], 
                         element[STREET], element[PINCODE], element[CITY])
                 })
