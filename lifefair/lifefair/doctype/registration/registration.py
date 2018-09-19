@@ -50,6 +50,54 @@ def import_xing(content, meeting):
     for element in elements:
         if isfirst:
             isfirst = False;
+            # find colums codes
+            i = 0
+            for column in element:
+                if column == "Ticketnummer":
+                    TICKETNO = i
+                elif column == "Barcode":
+                    BARCODE = i
+                elif column == "Kategorie":    
+                    REMARKS = i
+                elif column == "Status":    
+                    STATUS = i
+                elif column == "Bestelldatum":
+                    DATE = i
+                elif column == "Anrede":
+                    SALUTATION = i
+                elif column == "Titel":
+                    TITLE = i
+                elif column == "Vorname":
+                    FIRST_NAME = i
+                elif column == "Nachname":
+                    LAST_NAME = i
+                elif column == "Ticket-Email":
+                    EMAIL = i
+                elif column == "Firma":
+                    COMPANY = i
+                elif column == "Telefon":
+                    PHONE = i
+                elif column == "Strasse":
+                    STREET = i
+                elif column == "Postleitzahl":                  
+                    PINCODE = i
+                elif column == "Ort":
+                    CITY = i
+                elif column == "Funktion":
+                    FUNCTION = i
+                elif "Innovationsforen" in column:
+                    BLOCK = i
+                elif column == "Ticketart":
+                    TYPE = i
+                elif column == "Bezahlart":
+                    PAYMENT = i
+                elif column == "Rechnungsnummer":
+                    INVOICENO = i
+                elif column == "Gutscheincode":
+                    CODE = i
+                elif "Ich nehme teil" in column:
+                    PARTICIPATION = i
+                i += 1
             continue
         counter += 1
         # check if the ticket is already in the database
