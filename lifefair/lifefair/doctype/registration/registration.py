@@ -134,6 +134,17 @@ def import_xing(content, meeting):
                     person.save()
             else:
                 # person not found, create new person
+                # check if company exists
+                company_matches = frappe.get_all("Organisation", filters={'official_name': element[COMPANY]}, fields=['name'])
+                if not company_matches:
+                    company = frappe.get_doc({
+                        'doctype': "Organisation",
+                        'official_name': element[COMPANY]
+                    })
+                    try:
+                        company.insert()
+                    except Exception as e:
+                        frappe.log_error("Insert company {0} failed {1}".format(element[COMPANY], e))
                 full_name = "{0} {1}".format(element[FIRST_NAME], element[LAST_NAME])
                 if element[TITLE]:
                     long_name = "{0} {1} {2}".format(element[TITLE], element[FIRST_NAME], element[LAST_NAME])
@@ -146,6 +157,14 @@ def import_xing(content, meeting):
                         first_characters = element[LAST_NAME].upper()
                     except:
                         first_characters = "NN"
+                gender = element[SALUTATION]
+                if gender == "Herr":
+                    letter_salutation = "Sehr geehrter Herr"
+                elif gender == "Frau":
+                    letter_salutation = "Sehr geehrte Frau"
+                else:
+                    gender = ""
+                    letter_salutation = ""
                 person = frappe.get_doc({
                     'doctype': "Person",
                     'first_name': element[FIRST_NAME],
@@ -156,9 +175,19 @@ def import_xing(content, meeting):
                     'email': element[EMAIL],
                     'company_phone': element[PHONE],
                     'title': element[TITLE],
+                    'gender': gender,
+                    'letter_salutation': letter_salutation,
                     'website_description': "{0}, {1}".format(element[FUNCTION], element[COMPANY]),
                     'remarks': "From Xing, {1} @ {0}, {2}, {3} {4}".format(element[COMPANY], element[FUNCTION], 
-                        element[STREET], element[PINCODE], element[CITY])
+                        element[STREET], element[PINCODE], element[CITY]),
+                    'organisations': [{
+                        'organisation': element[COMPANY],
+                        'function': element[FUNCTION],
+                        'is_primary': 1,
+                        'notes': "from xing"
+                    }],
+                    'primary_organisation': element[COMPANY],
+                    'primary_function': element[FUNCTION]
                 })
                 try:
                     person = person.insert()
@@ -166,7 +195,7 @@ def import_xing(content, meeting):
                     frappe.db.commit()
                     new_pers.append(person_name)
                 except Exception as e:
-                    frappe.log_error("Import Xing Error", "Insert Person failed. {0}".format(e))      
+                    frappe.log_error("Import Xing Error", "Insert Person {1} {2} failed. {0}".format(e, element[FIRST_NAME], element[LAST_NAME]))      
                                   
             # create the new registration
             # find block
