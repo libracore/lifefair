@@ -24,10 +24,9 @@ frappe.ui.form.on('Person', {
         // set full name
         cur_frm.set_value('full_name', frm.doc.first_name + " " + frm.doc.last_name);
         // set long  name
+        var long_name = frm.doc.first_name + " " + frm.doc.last_name;
         if (frm.doc.salutation) {
-            var long_name = frm.doc.salutation + " " + frm.doc.first_name + " " + frm.doc.last_name;
-        } else {
-            var long_name = frm.doc.first_name + " " + frm.doc.last_name;
+            long_name = frm.doc.salutation + " " + frm.doc.first_name + " " + frm.doc.last_name;
         }
         cur_frm.set_value('long_name', long_name);
         // set primary company
@@ -55,13 +54,20 @@ frappe.ui.form.on('Person', {
 
 // find the primary organisation
 function find_primary_company(frm) {
+    var found_primary = false;
     for (i = 0; i < frm.doc.organisations.length; i++) {
-	if (frm.doc.organisations[i].is_primary) {
-	    cur_frm.set_value('primary_organisation', frm.doc.organisations[i].organisation);
-	    cur_frm.set_value('primary_function', frm.doc.organisations[i].function);
-	    break;
-	} 
-    } 
+        if (frm.doc.organisations[i].is_primary) {
+            cur_frm.set_value('primary_organisation', frm.doc.organisations[i].organisation);
+            cur_frm.set_value('primary_function', frm.doc.organisations[i].function);
+            found_primary = true;
+            break;
+        } 
+    }
+    if (!found_primary) {
+        // no primary organisation found
+        cur_frm.set_value('primary_organisation', "");
+        cur_frm.set_value('primary_function', "");        
+    }
 }
 
 // open email with local email client

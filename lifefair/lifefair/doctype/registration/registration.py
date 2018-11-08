@@ -183,7 +183,7 @@ def import_xing(content, meeting):
                     'organisations': [{
                         'organisation': element[COMPANY],
                         'function': element[FUNCTION],
-                        'is_primary': 1,
+                        'is_primary': 0,
                         'notes': "from xing"
                     }],
                     'primary_organisation': element[COMPANY],
