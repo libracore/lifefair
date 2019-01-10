@@ -11,10 +11,10 @@ class Person(Document):
     def get_addresses(self):
         sql_query = ("""SELECT *  
 			FROM `tabOrganisation Address` 
-			WHERE `parent` = '{1}'
+			WHERE `person` = '{1}'
 			UNION SELECT *  
 			FROM `tabOrganisation Address`
-			WHERE `organisation` = '{0}' AND `for_shipping` = '1'
+			WHERE `organisation` = '{0}' AND `for_shipping` = '1' AND `organisation` = ""
             ORDER BY `is_private` DESC, `city` ASC""".format(self.primary_organisation, self.name))
         addresses = frappe.db.sql(sql_query, as_dict=True)
         return { 'addresses': addresses }
