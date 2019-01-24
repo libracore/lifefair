@@ -46,11 +46,11 @@ function select_dialog(lists) {
                'default': default_list
            },
            {
-               'fieldname': 'method',
+               'fieldname': 'type',
                'fieldtype': 'Select', 
                'options': "Alle\n2. Welle", 
                'reqd': 1, 
-               'label': __("Method"),
+               'label': __("Type"),
                'default': "Alle"
            },
            {
@@ -58,13 +58,13 @@ function select_dialog(lists) {
                'fieldtype': 'Link', 
                'options': "Meeting", 
                'label': __("Meeting"),
-               'depends_on': 'eval:doc.method == \'2. Welle\''
+               'depends_on': 'eval:doc.type == \'2. Welle\''
            }
        ],
        'primary_action': function() {
            dlg.hide();
            var values = dlg.get_values();
-           if ((values.method == "2. Welle") && (!values.meeting)) {
+           if ((values.type == "2. Welle") && (!values.meeting)) {
                frappe.msgprint( __("Please select a meeting for a second wave." ),  __("Warning") );
            } else {
            var target_list = "";
@@ -74,7 +74,7 @@ function select_dialog(lists) {
                     }
                }
                frappe.show_alert( __("Starting sync...") );
-               run_sync(target_list, values.method, values.meeting);
+               run_sync(target_list, values.type, values.meeting);
            }
        },
        'primary_action_label': __('Sync'),
@@ -83,16 +83,17 @@ function select_dialog(lists) {
     dlg.show();
 }
 
-function run_sync(list, method, meeting) {
+function run_sync(list, type, meeting) {
     frappe.call({
         "method": "lifefair.lifefair.mailchimp.enqueue_sync_contacts",
         "args": {
-            'list': list,
-            'method': method,
-            'meeting': meeting
+            'list_id': list,
+            'type': type,
+            'meeting': meeting,
+            'owner': frappe.user
         },
         "callback": function(response) {
-            frappe.show_alert( __("MailChimp synchronisation completed.") );
+            // frappe.show_alert( __("MailChimp synchronisation completed.") );
         }
     });
 }

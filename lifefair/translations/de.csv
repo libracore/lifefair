@@ -98,3 +98,20 @@ DocType: Block,Short name,Kurzer Titel
 DocType: Follow Up,Follow Up,Nachfassen
 DocType: Follow Up,Action date,Aktionsdatum
 DocType: Follow Up,Action status,Bearbeitungsstatus
+DocType: Person,Sync MailChimp,MailChimp synchronisieren
+DocType: Person,Please select a meeting for a second wave.,Bitte einen Anlass wählen für eine 2. Welle.
+DocType: Person,Starting sync...,Synchronisation starten...
+DocType: Person,Sync,Synchronisieren
+DocType: Person,Sync Person with MailChimp,Kontakte mit MailChimp synchronisieren
+DocType: Person,Synchronisation to MailChimp complete,Synchronisation mit MailChimp abgeschlossen
+DocType: Person,No configuration found. Please make sure that there is a MailChimp configuration,Keine MailChimp Einstellungen gefunden.
+DocType: Person,Queued for syncing. It may take a few minutes to an hour.,Synchronisation läuft. Dies kann einige Minuten dauern.
+DocType: MailChimp Settings,MailChimp Settings,MailChimp Einstellungen
+DocType: MailChimp Settings,Host,Host
+DocType: MailChimp Settings,Something like 12345dcdb...42-us05,Etwas wie 12345dcdb...42-us05
+DocType: MailChimp Settings,Last Actions,Letzte Aktionen
+DocType: MailChimp Settings,Nothing.,Nichts.
+DocType: MailChimp Settings,Only deactivate for testing.,Nur in Testumgebung deaktivieren.
+DocType: MailChimp Settings,Something like https://[dc].api.mailchimp.com/3.0 where [dc] is the last part of the API key.,Etwas wie https://[dc].api.mailchimp.com/3.0 wobei [dc] der letzte Teil des API-Schlüssels ist.
+DocType: MailChimp Settings,API key,API-Schlüssel
+DocType: MailChimp Settings,Verify SSL,SSL prüfen

@@ -59,7 +59,7 @@ def get_members(list_id, count=10000):
     config = frappe.get_single("MailChimp Settings")
     
     if not config.host or not config.api_key:
-        frappe.throw( _("No configuration found. Please make sure that there is a MailChimpConnector configuration") )
+        frappe.throw( _("No configuration found. Please make sure that there is a MailChimp configuration") )
     
     if config.verify_ssl != 1:
         verify_ssl = False
@@ -72,14 +72,16 @@ def get_members(list_id, count=10000):
     return { 'members': results['members'] }
 
 @frappe.whitelist()
-def enqueue_sync_contacts(list_id, method="Alle"):
+def enqueue_sync_contacts(list_id, type="Alle", meeting=None, owner=None):
     add_log(title= _("Starting sync"), 
        message = ( _("Starting to sync contacts to {0}")).format(list_id),
        topic = "MailChimp")
        
     kwargs={
           'list_id': list_id,
-          'method': method
+          'type': type,
+          'meeting': meeting,
+          'owner': owner
         }
     enqueue("lifefair.lifefair.mailchimp.sync_contacts",
         queue='long',
@@ -88,19 +90,19 @@ def enqueue_sync_contacts(list_id, method="Alle"):
     frappe.msgprint( _("Queued for syncing. It may take a few minutes to an hour."))
     return
     
-def sync_contacts(list_id, method, meeting=None):
+def sync_contacts(list_id, type, meeting=None, owner=None):
     # get settings
     config = frappe.get_single("MailChimp Settings")
     
     if not config.host or not config.api_key:
-        frappe.throw( _("No configuration found. Please make sure that there is a MailChimpConnector configuration") )    
+        frappe.throw( _("No configuration found. Please make sure that there is a MailChimp configuration") )    
     if config.verify_ssl != 1:
         verify_ssl = False
     else:
         verify_ssl = True
     
     # get the ERP contact list
-    if method.lower() == "alle":
+    if type.lower() == "alle":
         sql_query = """SELECT 
                 `tabPerson`.`name` AS `name`,
                 `tabPerson`.`letter_salutation` AS `letter_salutation`,
@@ -113,8 +115,7 @@ def sync_contacts(list_id, method, meeting=None):
             FROM
                 `tabPerson`
             WHERE
-                `tabPerson`.`do_not_contact` = 0
-                AND `tabPerson`.`email` LIKE '%@%.%' 
+                `tabPerson`.`email` LIKE '%@%.%' 
             UNION SELECT 
                 `tabPublic Mail`.`name` AS `name`,
                 `tabPublic Mail`.`letter_salutation` AS `letter_salutation`,
@@ -127,8 +128,7 @@ def sync_contacts(list_id, method, meeting=None):
             FROM
                 `tabPublic Mail`
             WHERE
-                `tabPublic Mail`.`do_not_contact` = 0
-                AND `tabPublic Mail`.`email` LIKE '%@%.%'"""
+                `tabPublic Mail`.`email` LIKE '%@%.%'"""
     else:
             sql_query = """SELECT 
                 `tabPerson`.`name` AS `name`,
@@ -142,13 +142,12 @@ def sync_contacts(list_id, method, meeting=None):
             FROM
                 `tabPerson`
             WHERE
-                `tabPerson`.`do_not_contact` = 0
-                AND `tabPerson`.`email` LIKE '%@%.%' 
-                AND `tabPerson`.`is_vip` = 0,
+                `tabPerson`.`email` LIKE '%@%.%' 
+                AND `tabPerson`.`is_vip` = 0
                 AND !( `tabPerson`.`name` IN (SELECT
                     `tabRegistration`.`person` 
                     FROM `tabRegistration`
-                    WHERE `tabRegistration`.`meeting` = '{event}'))
+                    WHERE `tabRegistration`.`meeting` = '{meeting}'))
             UNION SELECT 
                 `tabPublic Mail`.`name` AS `name`,
                 `tabPublic Mail`.`letter_salutation` AS `letter_salutation`,
@@ -161,8 +160,7 @@ def sync_contacts(list_id, method, meeting=None):
             FROM
                 `tabPublic Mail`
             WHERE
-                `tabPublic Mail`.`do_not_contact` = 0
-                AND `tabPublic Mail`.`email` LIKE '%@%.%'""".format(meeting)
+                `tabPublic Mail`.`email` LIKE '%@%.%'""".format(meeting=meeting)
     erp_members = frappe.db.sql(sql_query, as_dict=True)
     
     # get all members from the MailChimp list
@@ -207,6 +205,14 @@ def sync_contacts(list_id, method, meeting=None):
     add_log(title= _("Sync complete"), 
        message= ( _("Sync of contacts to {0} completed.<br>{1}")).format(list_id, ",".join(contact_written)),
        topic="MailChimp")
+       
+    if owner:
+        frappe.publish_realtime(
+            event='msgprint',
+            message= _("Synchronisation to MailChimp complete"),
+            user=owner
+        )
+            
     return { 'members': results['members'] }
 
 def check_mc_member_in_erp(mc_member, erp_members):

@@ -13,6 +13,7 @@ def add_log(title, topic="General", message=""):
         'doctype': 'Lifefair Log',
         'title': title,
         'message': message,
+        'topic': topic,
         'date': datetime.now()
     })
     new_log.insert()
