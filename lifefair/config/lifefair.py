@@ -104,6 +104,12 @@ def get_data():
                        "name": "Organisation Type",
                        "label": _("Organisation Type"),
                        "description": _("Organisation Type")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "MailChimp Settings",
+                       "label": _("MailChimp Settings"),
+                       "description": _("MailChimp Settings")
                    }
             ]
         }
