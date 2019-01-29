@@ -115,3 +115,4 @@ DocType: MailChimp Settings,Only deactivate for testing.,Nur in Testumgebung dea
 DocType: MailChimp Settings,Something like https://[dc].api.mailchimp.com/3.0 where [dc] is the last part of the API key.,Etwas wie https://[dc].api.mailchimp.com/3.0 wobei [dc] der letzte Teil des API-Schlüssels ist.
 DocType: MailChimp Settings,API key,API-Schlüssel
 DocType: MailChimp Settings,Verify SSL,SSL prüfen
+DocType: MailChimp Settings,Connection verification failed ({0}).,Überprüfung der Verbindung fehlgeschlagen ({0}).

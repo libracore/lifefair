@@ -106,6 +106,7 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
         sql_query = """SELECT 
                 `tabPerson`.`name` AS `name`,
                 `tabPerson`.`letter_salutation` AS `letter_salutation`,
+                `tabPerson`.`salutation` AS `salutation`,
                 `tabPerson`.`email` AS `email`,
                 `tabPerson`.`do_not_contact` AS `do_not_contact`,
                 `tabPerson`.`first_name` AS `first_name`,
@@ -119,6 +120,7 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             UNION SELECT 
                 `tabPublic Mail`.`name` AS `name`,
                 `tabPublic Mail`.`letter_salutation` AS `letter_salutation`,
+                '' AS `salutation`,
                 `tabPublic Mail`.`email` AS `email`,
                 `tabPublic Mail`.`do_not_contact` AS `do_not_contact`,
                 '' AS `first_name`,
@@ -133,6 +135,7 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             sql_query = """SELECT 
                 `tabPerson`.`name` AS `name`,
                 `tabPerson`.`letter_salutation` AS `letter_salutation`,
+                `tabPerson`.`salutation` AS `salutation`,
                 `tabPerson`.`email` AS `email`,
                 `tabPerson`.`do_not_contact` AS `do_not_contact`,
                 `tabPerson`.`first_name` AS `first_name`,
@@ -151,6 +154,7 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             UNION SELECT 
                 `tabPublic Mail`.`name` AS `name`,
                 `tabPublic Mail`.`letter_salutation` AS `letter_salutation`,
+                '' AS `salutation`,
                 `tabPublic Mail`.`email` AS `email`,
                 `tabPublic Mail`.`do_not_contact` AS `do_not_contact`,
                 '' AS `first_name`,
@@ -189,7 +193,9 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             "status": contact_status,
             "merge_fields": {
                 "FNAME": erp_member['first_name'], 
-                "LNAME": erp_member['last_name']
+                "LNAME": erp_member['last_name'],
+                "TITEL": erp_member['salutation'],
+                "ANREDE": erp_member['letter_salutation']
             }
         }
         
