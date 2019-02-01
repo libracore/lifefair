@@ -24,26 +24,26 @@ def execute(host, api_token, payload, verify_ssl=True, method="GET"):
             json=payload,
             auth=HTTPBasicAuth("MailChimpConnector", api_token),
             verify=verify_ssl)
-        
+
         status=response.status_code
         text=response.text
         if status not in [200, 404]:
             frappe.log_error("Unexcpected MailChimp response: http {method} {host} response {status} with message {text} on payload {payload}".format(
-                status=status,text=text, payload=payload, method=method, host=host))
+                status=status,text=text, payload=payload, method=method, host=host), "MailChimp Error")
         if status == 404:
             return None
-        
+
         return text
     except Exception as e:
         frappe.throw("Execution of http request failed. Please check host and API token. ({0})".format(e))
-        
+
 @frappe.whitelist()
 def get_lists():
     config = frappe.get_single("MailChimp Settings")
-    
+
     if not config.host or not config.api_key:
         frappe.throw( _("No configuration found. Please make sure that there is a MailChimp configuration") )
-    
+
     if config.verify_ssl != 1:
         verify_ssl = False
     else:
@@ -51,22 +51,22 @@ def get_lists():
     raw = execute(config.host + "/lists?fields=lists.name,lists.id", config.api_key, 
         None, verify_ssl)
     results = json.loads(raw)
-        
+
     return { 'lists': results['lists'] }
 
 @frappe.whitelist()
-def get_members(list_id, count=10000):
+def get_members(list_id, count=10000, offset=0):
     config = frappe.get_single("MailChimp Settings")
-    
+
     if not config.host or not config.api_key:
         frappe.throw( _("No configuration found. Please make sure that there is a MailChimp configuration") )
-    
+
     if config.verify_ssl != 1:
         verify_ssl = False
     else:
         verify_ssl = True
-    url = "{0}/lists/{1}/members?members.email_address,members.status&count={2}".format(
-        config.host, list_id, count)  
+    url = "{host}/lists/{list_id}/members?members.email_address,members.status&count={count}&offset={offset}".format(
+        host=config.host, list_id=list_id, count=count, offset=offset)
     raw = execute(host=url, api_token=config.api_key, payload=None, verify_ssl=verify_ssl)
     results = json.loads(raw)
     return { 'members': results['members'] }
@@ -76,7 +76,7 @@ def enqueue_sync_contacts(list_id, type="Alle", meeting=None, owner=None):
     add_log(title= _("Starting sync"), 
        message = ( _("Starting to sync contacts to {0}")).format(list_id),
        topic = "MailChimp")
-       
+
     kwargs={
           'list_id': list_id,
           'type': type,
@@ -89,21 +89,21 @@ def enqueue_sync_contacts(list_id, type="Alle", meeting=None, owner=None):
         **kwargs)
     frappe.msgprint( _("Queued for syncing. It may take a few minutes to an hour."))
     return
-    
+
 def sync_contacts(list_id, type, meeting=None, owner=None):
     # get settings
     config = frappe.get_single("MailChimp Settings")
-    
+
     if not config.host or not config.api_key:
-        frappe.throw( _("No configuration found. Please make sure that there is a MailChimp configuration") )    
+        frappe.throw( _("No configuration found. Please make sure that there is a MailChimp configuration") )
     if config.verify_ssl != 1:
         verify_ssl = False
     else:
         verify_ssl = True
-    
+
     # get the ERP contact list
     if type.lower() == "alle":
-        sql_query = """SELECT 
+        sql_query = """SELECT
                 `tabPerson`.`name` AS `name`,
                 `tabPerson`.`letter_salutation` AS `letter_salutation`,
                 `tabPerson`.`salutation` AS `salutation`,
@@ -116,8 +116,8 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             FROM
                 `tabPerson`
             WHERE
-                `tabPerson`.`email` LIKE '%@%.%' 
-            UNION SELECT 
+                `tabPerson`.`email` LIKE '%@%.%'
+            UNION SELECT
                 `tabPublic Mail`.`name` AS `name`,
                 `tabPublic Mail`.`letter_salutation` AS `letter_salutation`,
                 '' AS `salutation`,
@@ -132,7 +132,7 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             WHERE
                 `tabPublic Mail`.`email` LIKE '%@%.%'"""
     else:
-            sql_query = """SELECT 
+            sql_query = """SELECT
                 `tabPerson`.`name` AS `name`,
                 `tabPerson`.`letter_salutation` AS `letter_salutation`,
                 `tabPerson`.`salutation` AS `salutation`,
@@ -145,13 +145,13 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             FROM
                 `tabPerson`
             WHERE
-                `tabPerson`.`email` LIKE '%@%.%' 
+                `tabPerson`.`email` LIKE '%@%.%'
                 AND `tabPerson`.`is_vip` = 0
                 AND !( `tabPerson`.`name` IN (SELECT
-                    `tabRegistration`.`person` 
+                    `tabRegistration`.`person`
                     FROM `tabRegistration`
                     WHERE `tabRegistration`.`meeting` = '{meeting}'))
-            UNION SELECT 
+            UNION SELECT
                 `tabPublic Mail`.`name` AS `name`,
                 `tabPublic Mail`.`letter_salutation` AS `letter_salutation`,
                 '' AS `salutation`,
@@ -166,17 +166,28 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             WHERE
                 `tabPublic Mail`.`email` LIKE '%@%.%'""".format(meeting=meeting)
     erp_members = frappe.db.sql(sql_query, as_dict=True)
-    
+
     # get all members from the MailChimp list
-    for mc_member in get_members(list_id, count=100000)['members']:
-        # print(mc_member['email_address'])
-        check_mc_member_in_erp(mc_member, erp_members)
-    
+    repeat = True
+    offset = 0
+    while repeat:
+        mc_members = get_members(list_id, count=1000, offset=offset)['members']
+        if len(mc_members) > 0:
+            for mc_member in mc_members:
+                # print(mc_member['email_address'])
+                check_mc_member_in_erp(mc_member, erp_members)
+            offset += 1000
+        else:
+            repeat = False
+
     # now get all erp members to MailChmp
     contact_written = []
     for erp_member in erp_members:
         # compute mailchimp id (md5 hash of lower-case email)
-        mc_id = hashlib.md5(erp_member['email'].lower()).hexdigest()
+        try:
+            mc_id = hashlib.md5(erp_member['email'].lower()).hexdigest()
+        except:
+            frappe.log_error("Invalid email address (unable to compute hash): {0}".format(erp_member['email']), "Invalid email address")
         # load subscription status from mailchimp if it is set as master
         # default is unsubscribed
         contact_status="unsubscribed"
@@ -192,16 +203,16 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             "email_address": erp_member['email'],
             "status": contact_status,
             "merge_fields": {
-                "FNAME": erp_member['first_name'], 
-                "LNAME": erp_member['last_name'],
-                "TITEL": erp_member['salutation'],
-                "ANREDE": erp_member['letter_salutation']
+                "FNAME": erp_member['first_name'] or "", 
+                "LNAME": erp_member['last_name'] or "",
+                "TITEL": erp_member['salutation'] or "",
+                "ANREDE": erp_member['letter_salutation'] or ""
             }
         }
         
         raw = execute(host=url, api_token=config.api_key, 
             payload=contact_object, verify_ssl=verify_ssl, method=method)
-        print("Updated to MailChimp {0}".format(erp_member['email']))
+        print("Updated to MailChimp {0}: {1}".format(erp_member['email'], raw))
         contact_written.append(erp_member['email'])
     
     url = "{0}/lists/{1}/members?fields=members.id,members.email_address,members.status".format(
@@ -218,7 +229,9 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
             message= _("Synchronisation to MailChimp complete"),
             user=owner
         )
-            
+    add_log(title= _("Sync complete"),
+       message = ( _("Sync to {0} completed, written {1} contacts.")).format(list_id, len(contact_written)),
+       topic = "MailChimp")
     return { 'members': results['members'] }
 
 def check_mc_member_in_erp(mc_member, erp_members):
@@ -236,7 +249,7 @@ def check_mc_member_in_erp(mc_member, erp_members):
             # create person
             create_erp_member(mc_member)
     return
-    
+
 def update_erp_person(name, mc_member):
     # update person
     print("Updating person {0}".format(name))
@@ -244,8 +257,11 @@ def update_erp_person(name, mc_member):
     if mc_member['status'] == "unsubscribed":
         person = frappe.get_doc("Person", name)
         person.do_not_contact = 1
-        person.save()
-        frappe.db.commit()
+        try:
+            person.save()
+            frappe.db.commit()
+        except Exception as err:
+            frappe.log_error( "Unable to save person {person} ({err})".format(person=name, err=err), "MailChimp update_erp_person")
     return
 
 def update_erp_mailer(name, mc_member):
