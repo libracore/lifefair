@@ -219,9 +219,6 @@ def sync_contacts(list_id, type, meeting=None, owner=None):
         config.host, list_id)  
     raw = execute(url, config.api_key, None, verify_ssl)
     results = json.loads(raw)
-    add_log(title= _("Sync complete"), 
-       message= ( _("Sync of contacts to {0} completed.<br>{1}")).format(list_id, ",".join(contact_written)),
-       topic="MailChimp")
        
     if owner:
         frappe.publish_realtime(
