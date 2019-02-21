@@ -95,6 +95,36 @@ def get_data():
             "items": [
                    {
                        "type": "doctype",
+                       "name": "Hierarchiestufe",
+                       "label": _("Hierarchiestufe"),
+                       "description": _("Hierarchiestufe")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Stakeholder",
+                       "label": _("Stakeholder"),
+                       "description": _("Stakeholder")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Branche",
+                       "label": _("Branche"),
+                       "description": _("Branche")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Interesse",
+                       "label": _("Interesse"),
+                       "description": _("Interesse")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Engagement",
+                       "label": _("Engagement"),
+                       "description": _("Engagement")
+                   },
+                   {
+                       "type": "doctype",
                        "name": "Person Group",
                        "label": _("Person Group"),
                        "description": _("Person Group")
