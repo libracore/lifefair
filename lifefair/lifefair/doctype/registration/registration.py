@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018, libracore and contributors
+# Copyright (c) 2018-2019, libracore and contributors
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
@@ -125,6 +125,11 @@ def import_xing(content, meeting):
             # ticket is not in the database, create
             # check email address to find person
             db_person = frappe.get_all("Person", filters={'email': element[EMAIL]}, fields=['name'])
+            # iterate over email2 and email3 in case of no hit
+            if not db_person:
+                db_person = frappe.get_all("Person", filters={'email2': element[EMAIL]}, fields=['name'])
+                if not db_person:
+                    db_person = frappe.get_all("Person", filters={'email3': element[EMAIL]}, fields=['name'])
             if db_person:
                 person_name = db_person[0]['name']
                 # get person, check website_description and update if empty
