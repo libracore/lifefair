@@ -82,6 +82,14 @@ def get_data():
                        "label": _("Kontakte nach Interessen"),
                        "description": _("Kontakte nach Interessen"),
                         "is_query_report": True
+                   },
+                   {
+                       "type": "report",
+                       "doctype": "Registration",
+                       "name": "Anmeldeliste Anlass",
+                       "label": _("Anmeldeliste Anlass"),
+                       "description": _("Anmeldeliste Anlass"),
+                        "is_query_report": True
                    }
             ]
         },

@@ -1,0 +1,30 @@
+{
+ "add_total_row": 0, 
+ "apply_user_permissions": 1, 
+ "creation": "2019-02-21 15:46:51.128444", 
+ "disabled": 0, 
+ "docstatus": 0, 
+ "doctype": "Report", 
+ "idx": 0, 
+ "is_standard": "Yes", 
+ "letter_head": "LSF Letter Head", 
+ "modified": "2019-02-21 15:47:32.301701", 
+ "modified_by": "Administrator", 
+ "module": "Lifefair", 
+ "name": "Anmeldeliste Anlass", 
+ "owner": "Administrator", 
+ "ref_doctype": "Registration", 
+ "report_name": "Anmeldeliste Anlass", 
+ "report_type": "Script Report", 
+ "roles": [
+  {
+   "role": "System Manager"
+  }, 
+  {
+   "role": "Lifefair Manager"
+  }, 
+  {
+   "role": "Lifefair User"
+  }
+ ]
+}

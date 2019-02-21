@@ -131,8 +131,8 @@ def website_actors(block=None):
 def add_interest(interest, meeting):
     # get all participants from a meeting
     participants = frappe.get_all("Registration", filters=[
-        ['meeting', '=', meeting],
-        ['status', 'IN', ['Tentative', 'Confirmed', 'Paid']]],
+        ['meeting', '=', meeting]],
+        # no exclusion filter ['status', 'IN', ['Tentative', 'Confirmed', 'Paid']]],
         fields=['person'])
     return add_interest_to_participants(participants, interest)
     
@@ -141,8 +141,8 @@ def add_interest(interest, meeting):
 def add_interest_to_block(interest, block):
     # get all participants from a block
     participants = frappe.get_all("Registration", filters=[
-        ['block', '=', block],
-        ['status', 'IN', ['Tentative', 'Confirmed', 'Paid']]],
+        ['block', '=', block]],
+        # no exclusion filter ['status', 'IN', ['Tentative', 'Confirmed', 'Paid']]],
         fields=['person'])
     return add_interest_to_participants(participants, interest)
         
