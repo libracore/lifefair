@@ -125,3 +125,48 @@ def website_actors(block=None):
     people = frappe.db.sql(sql_query, as_dict=True)
 
     return people
+
+# populate person interest in bulk from meeting
+@frappe.whitelist()
+def add_interest(interest, meeting):
+    # get all participants from a meeting
+    participants = frappe.get_all("Registration", filters=[
+        ['meeting', '=', meeting],
+        ['status', 'IN', ['Tentative', 'Confirmed', 'Paid']]],
+        fields=['person'])
+    return add_interest_to_participants(participants, interest)
+    
+# populate person interest in bulk from block
+@frappe.whitelist()
+def add_interest_to_block(interest, block):
+    # get all participants from a block
+    participants = frappe.get_all("Registration", filters=[
+        ['block', '=', block],
+        ['status', 'IN', ['Tentative', 'Confirmed', 'Paid']]],
+        fields=['person'])
+    return add_interest_to_participants(participants, interest)
+        
+def add_interest_to_participants(participants, interest):
+    if participants:
+        participant_count = len(participants)
+        added_count = 0
+        # loop through all participants
+        for participant in participants:
+            has_interest = frappe.get_all("Person Interest", filters=[
+                ['parent', '=', participant['person']],
+                ['interesse', '=', interest]],
+                fields=['name'])
+            # participant does not have this interest, add
+            if not has_interest:
+                new_interest = frappe.get_doc({
+                    'doctype': 'Person Interest',
+                    'parenttype': 'Person',
+                    'parentfield': 'interessen',
+                    'parent': participant['person'],
+                    'interesse': interest
+                })
+                new_interest.insert()
+                added_count += 1
+        return {'participants': participant_count, 'added_interests': added_count}
+    else:
+        return {'participants': 0, 'added_interests': 0}
