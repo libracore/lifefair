@@ -74,6 +74,14 @@ def get_data():
                        "label": _("Actors per Meeting"),
                        "description": _("Actors per Meeting"),
                         "is_query_report": True
+                   },
+                   {
+                       "type": "report",
+                       "doctype": "Person",
+                       "name": "Kontakte nach Interessen",
+                       "label": _("Kontakte nach Interessen"),
+                       "description": _("Kontakte nach Interessen"),
+                        "is_query_report": True
                    }
             ]
         },
