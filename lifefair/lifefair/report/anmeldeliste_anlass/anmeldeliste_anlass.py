@@ -53,7 +53,10 @@ def get_data(meeting="%", as_list=True):
          (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`
         FROM `tabRegistration`
         LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
-        WHERE `meeting` LIKE '{0}' LIMIT 10000;""".format(meeting)
+        WHERE 
+          `meeting` LIKE '{0}' 
+          AND `status` NOT IN ("Cancelled", "Abgemeldet")
+        LIMIT 10000;""".format(meeting)
     if as_list:
         data = frappe.db.sql(sql_query, as_list = True)
     else:
