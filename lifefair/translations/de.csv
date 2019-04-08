@@ -95,6 +95,7 @@ DocType: Block,Location Detail 1,Ort / Detail 1
 DocType: Block,Location Detail 2,Ort / Detail 2
 DocType: Block,Location Detail 3,Ort / Detail 3
 DocType: Block,Short name,Kurzer Titel
+DocType: Block,With description,Mit Beschreibung
 DocType: Follow Up,Follow Up,Nachfassen
 DocType: Follow Up,Action date,Aktionsdatum
 DocType: Follow Up,Action status,Bearbeitungsstatus

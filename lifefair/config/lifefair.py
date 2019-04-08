@@ -156,6 +156,12 @@ def get_data():
                        "name": "MailChimp Settings",
                        "label": _("MailChimp Settings"),
                        "description": _("MailChimp Settings")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Web Format",
+                       "label": _("Web Format"),
+                       "description": _("Web Format")
                    }
             ]
         }
