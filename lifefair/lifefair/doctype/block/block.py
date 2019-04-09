@@ -32,3 +32,29 @@ def get_block_info(block=None):
         return block_info
     else:
         return ('Please provide a block')
+
+# this is a public API for the block details for the website
+#
+# call the API from
+#   /api/method/lifefair.lifefair.doctype.block.block.get_block_details?block=<block id>
+@frappe.whitelist(allow_guest=True)
+def get_block_details(block=None):
+    if block:
+        sql_query = """SELECT 
+             `subject`,
+             `person_1_long_name`,
+             `person_1_with_description`,
+             `person_1_website_description`,
+             `person_2_long_name`,
+             `person_2_with_description`,
+             `person_1_website_description`,
+             `tabWeb Format`.`start_code`,
+             `tabWeb Format`.`end_code`
+             FROM `tabBlock Planning`
+             LEFT JOIN `tabWeb Format` ON `tabBlock Planning`.`format` = `tabWeb Format`.`name`
+             WHERE `parent` = '{0}'
+               AND `show_on_website` = 1;""".format(block)
+        block_details = frappe.db.sql(sql_query, as_dict=True)
+        return block_info
+    else:
+        return ('Please provide a block')
