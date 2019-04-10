@@ -7,6 +7,13 @@ import frappe
 from frappe.model.document import Document
 
 class Block(Document):
+    def get_partners(self):
+        sql_query = ("""SELECT *  
+            FROM `tabOrganisation Partnership` 
+            WHERE `block` = '{block}'
+            ORDER BY `parent` ASC;""".format(block=self.name))
+        partners = frappe.db.sql(sql_query, as_dict=True)
+        return { 'partners': partners }
 	pass
 
 # this is a public API for the block information for the website

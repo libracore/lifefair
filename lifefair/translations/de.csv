@@ -44,6 +44,8 @@ DocType: Organisation,French name,Französischer Name
 DocType: Organisation,English name,Englischer Name
 DocType: Organisation,Italian name,Italienischer Name
 DocType: Organisation,Common contact,Gemeinsamer Kontakt
+DocType: Organisation,Image URL (Web),"Bildquelle (URL, Web)"
+DocType: Organisation,Image URL (Print),"Bildquelle (Print, Web)"
 DocType: Organisation Address,Street,Strasse
 DocType: Organisation Address,Additional address,Zusätzliche Adresse
 DocType: Organisation Address,Post box,Postfach
@@ -96,6 +98,7 @@ DocType: Block,Location Detail 2,Ort / Detail 2
 DocType: Block,Location Detail 3,Ort / Detail 3
 DocType: Block,Short name,Kurzer Titel
 DocType: Block,With description,Mit Beschreibung
+DocType: Block,Partnerships,Partnerschaften
 DocType: Follow Up,Follow Up,Nachfassen
 DocType: Follow Up,Action date,Aktionsdatum
 DocType: Follow Up,Action status,Bearbeitungsstatus
