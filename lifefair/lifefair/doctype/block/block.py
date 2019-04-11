@@ -48,21 +48,19 @@ def get_block_info(block=None):
 def get_block_details(block=None):
     if block:
         sql_query = """SELECT 
-             `subject`,
-             `person_1_long_name`,
-             `person_1_with_description`,
-             `person_1_website_description`,
-             `person_2_long_name`,
-             `person_2_with_description`,
-             `person_1_website_description`,
+             `tabBlock Planning`.`title`,
+             `tabBlock Planning`.`person_long_name`,
+             (IF (`tabBlock Planning`.`person_website_description` = 1, 
+               `tabBlock Planning`.`person_website_description`, "")) AS `person_description`,
+             (IF (`tabBlock Planning`.`person_website_description` = 1, " - ", "")) AS `person_connector`,
              `tabWeb Format`.`start_code`,
              `tabWeb Format`.`end_code`
              FROM `tabBlock Planning`
              LEFT JOIN `tabWeb Format` ON `tabBlock Planning`.`format` = `tabWeb Format`.`name`
-             WHERE `parent` = '{0}'
-               AND `show_on_website` = 1;""".format(block)
+             WHERE `tabBlock Planning`.`parent` = '{0}'
+               AND `tabBlock Planning`.`show_on_website` = 1;""".format(block)
         block_details = frappe.db.sql(sql_query, as_dict=True)
-        return block_info
+        return block_details
     else:
         return ('Please provide a block')
 
