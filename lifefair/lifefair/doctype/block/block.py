@@ -65,3 +65,26 @@ def get_block_details(block=None):
         return block_info
     else:
         return ('Please provide a block')
+
+# this is a public API for the block partner logos for the website
+#
+# call the API from
+#   /api/method/lifefair.lifefair.doctype.block.block.get_block_partners?block=<block id>
+@frappe.whitelist(allow_guest=True)
+def get_block_partners(block=None):
+    if block:
+        sql_query = """SELECT 
+             `tabOrganisation`.`name` AS `organisation`,
+             `tabOrganisation`.`homepage`,
+             `tabOrganisation Partnership`.`type`,
+             `tabOrganisation Partnership`.`image_url_web`,
+             `tabOrganisation Partnership`.`image_height_web`
+             FROM `tabOrganisation Partnership`
+             LEFT JOIN `tabOrganisation` ON `tabOrganisation Partnership`.`parent` = `tabOrganisation`.`name`
+             WHERE `tabOrganisation Partnership`.`block` = '{0}'
+               AND `tabOrganisation Partnership`.`show_on_website` = 1
+             ORDER BY `tabOrganisation Partnership`.`priority` DESC;""".format(block)
+        partners = frappe.db.sql(sql_query, as_dict=True)
+        return partners
+    else:
+        return ('Please provide a block')
