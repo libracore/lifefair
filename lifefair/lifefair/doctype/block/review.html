@@ -1,6 +1,57 @@
 <html>
 <head><title>Review {{ doc.name }}</title></head>
 <body>
-<h1>Test</h1>
+<h3>{{ doc.name }}</h3>
+
+<h1>{{ doc.official_title }}</h1>
+
+<h3>{{ doc.location }}</h3>
+<h4>{{ doc.location_detail_1 }}</h4>
+<h4>{{ doc.location_detail_2 }}</h4>
+<h4>{{ doc.location_detail_3 }}</h4>
+
+<!-- main content -->
+<table>
+<tr><td>Herausforderungen</td><td>{{ doc.topic }}</td></tr>
+<tr><td>Zentrale Fragen</td><td>{{ doc.content }}</td></tr>
+<tr><td>Ihr Nutzen</td><td>{{ doc.use }}</td></tr>
+</table>
+
+<!-- program details -->
+<table>
+  <tr>
+    <th>Titel</th>
+    <th>Status</th>
+    <th>Person</th>
+    <th>Kommentar</th>
+  </tr>
+{% for detail in doc.planning %}
+  <tr>
+    <td>{{ detail.title }}</td>
+    <td>{{ detail.status }}</td>
+    <td>{{ detail.person_long_name }}</td>
+    <td>{{ detail.comments }}</td>
+  </tr>
+{% endif %}
+</table>
+
+<!-- people -->
+<table>
+  <tr>
+    <th>Rolle</th>
+    <th>Kontakt</th>
+    <th>Name</th>
+    <th>Beschreibung</th>
+  </tr>
+{% for detail in doc.planning %}
+  <tr>
+    <td>{{ detail.person_role }}</td>
+    <td>{{ detail.person }}</td>
+    <td>{{ detail.person_long_name }}</td>
+    <td>{{ detail.person_website_description }}</td>
+  </tr>
+{% endif %}
+</table>
+
 </body>
 </html>
