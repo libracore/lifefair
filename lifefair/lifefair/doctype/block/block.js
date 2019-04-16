@@ -41,6 +41,24 @@ function display_partners(frm) {
     });	
 }
 
+// create a downloadable file that directly opens in the browser
+function download(filename, type, content) {
+  var element = document.createElement('a');
+  element.setAttribute('href', type + encodeURIComponent(content));
+  element.setAttribute('download', filename);
+
+  element.style.display = 'none';
+  document.body.appendChild(element);
+
+  element.click();
+
+  document.body.removeChild(element);
+}
+
 function generate_html(frm) {
-    console.log(frappe.render_template("review", frm));
+    // pull data into the review form
+    var review_html = frappe.render_template("review", frm);
+    console.log(review_html);
+    // prepare for download
+    download("Review " + frm.doc.name + ".html", 'data:text/html;charset=utf-8,', review_html);
 }
