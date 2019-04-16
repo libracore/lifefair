@@ -5,6 +5,10 @@ frappe.ui.form.on('Block', {
 	refresh: function(frm) {
         if (!frm.doc.__islocal) {
             display_partners(frm);
+            
+            frm.add_custom_button(__("Download HTML"), function() {
+                generate_html(frm);
+            });
         }
 	}
 });
@@ -35,4 +39,8 @@ function display_partners(frm) {
 	    }
 	}
     });	
+}
+
+function generate_html(frm) {
+    console.log(frappe.render_template("review", frm));
 }
