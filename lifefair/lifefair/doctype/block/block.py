@@ -58,7 +58,8 @@ def get_block_details(block=None):
              FROM `tabBlock Planning`
              LEFT JOIN `tabWeb Format` ON `tabBlock Planning`.`format` = `tabWeb Format`.`name`
              WHERE `tabBlock Planning`.`parent` = '{0}'
-               AND `tabBlock Planning`.`show_on_website` = 1;""".format(block)
+               AND `tabBlock Planning`.`show_on_website` = 1
+             ORDER BY `tabBlock Planning`.`idx`;""".format(block)
         block_details = frappe.db.sql(sql_query, as_dict=True)
         return block_details
     else:
