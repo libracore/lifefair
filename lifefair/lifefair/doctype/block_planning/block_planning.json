@@ -212,7 +212,7 @@
    "label": "Role", 
    "length": 0, 
    "no_copy": 0, 
-   "options": "GW Grusswort\nEIN Einf\u00fchrung\nKN Keynote\nPAT Panel-Teilnehmer\nPOS Poster\nEX Experte\nMOD Moderator", 
+   "options": "\nGW Grusswort\nEIN Einf\u00fchrung\nKN Keynote\nPAT Panel-Teilnehmer\nPOS Poster\nEX Experte\nMOD Moderator", 
    "permlevel": 0, 
    "precision": "", 
    "print_hide": 0, 
