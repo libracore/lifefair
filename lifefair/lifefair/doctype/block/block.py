@@ -54,7 +54,8 @@ def get_block_details(block=None):
                `tabBlock Planning`.`person_website_description`, "")) AS `person_description`,
              (IF (`tabBlock Planning`.`person` IS NOT NULL AND`tabBlock Planning`.`person_with_description` = 1, " - ", "")) AS `person_connector`,
              `tabWeb Format`.`start_code`,
-             `tabWeb Format`.`end_code`
+             `tabWeb Format`.`end_code`,
+             (IF (`tabBlock Planning`.`title` IS NOT NULL AND`tabBlock Planning`.`title` != "", "<br>", "")) AS `title_break`
              FROM `tabBlock Planning`
              LEFT JOIN `tabWeb Format` ON `tabBlock Planning`.`format` = `tabWeb Format`.`name`
              WHERE `tabBlock Planning`.`parent` = '{0}'
