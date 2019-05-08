@@ -50,9 +50,9 @@ def get_block_details(block=None):
         sql_query = """SELECT 
              `tabBlock Planning`.`title`,
              `tabBlock Planning`.`person_long_name`,
-             (IF (`tabBlock Planning`.`person_website_description` = 1, 
+             (IF (`tabBlock Planning`.`person_with_description` = 1, 
                `tabBlock Planning`.`person_website_description`, "")) AS `person_description`,
-             (IF (`tabBlock Planning`.`person_website_description` = 1, " - ", "")) AS `person_connector`,
+             (IF (`tabBlock Planning`.`person_with_description` = 1, " - ", "")) AS `person_connector`,
              `tabWeb Format`.`start_code`,
              `tabWeb Format`.`end_code`
              FROM `tabBlock Planning`
