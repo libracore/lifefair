@@ -19,7 +19,7 @@ DocType: Person,Usage,Verwendung
 DocType: Person,Show on website,Auf Webseite anzeigen
 DocType: Person,Website description,Bezeichnung für externe Kommunikation
 DocType: Person,Send Mail,Mail senden
-DocType: Person,CV Date,Datum Lebenslaufe
+DocType: Person,CV Date,Datum Lebenslauf
 DocType: Person,Do not contact,Nicht kontaktieren
 DocType: Person,Academic Title,Akademischer Titel
 DocType: Person,Preferred language,Bevorzugte Sprache
