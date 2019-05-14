@@ -5,10 +5,12 @@
   <title>Review {{ doc.name }}</title>
 </head>
 <body>
+  <!-- timestamp -->
 <h3>{{ doc.name }}</h3>
 
 <h1>{{ doc.official_title }}</h1>
 
+<h3>{{ doc.time }}</h3>
 <h3>{{ doc.location }}</h3>
 <h4>{{ doc.location_detail_1 }}</h4>
 <h4>{{ doc.location_detail_2 }}</h4>
@@ -16,9 +18,9 @@
 
 <!-- main content -->
 <table>
-<tr><td>Herausforderungen</td><td>{{ doc.topic }}</td></tr>
-<tr><td>Zentrale Fragen</td><td>{{ doc.content }}</td></tr>
-<tr><td>Ihr Nutzen</td><td>{{ doc.use }}</td></tr>
+<tr><td>Herausforderungen</td><td>{{ doc.topic }}<br><i>(350 Zeichen inklusive Leerzeichen)</i></td></tr>
+<tr><td>Zentrale Fragen</td><td>{{ doc.content }}<br><i>(350 Zeichen inklusive Leerzeichen)</i></td></tr>
+<tr><td>Ihr Nutzen</td><td>{{ doc.use }}<br><i>(200 Zeichen inklusive Leerzeichen)</i></td></tr>
 </table>
 
 <!-- program details -->
