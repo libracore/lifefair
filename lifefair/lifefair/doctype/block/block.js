@@ -16,9 +16,9 @@ frappe.ui.form.on('Block', {
 function display_partners(frm) {
     // render partners
     frappe.call({
-	method: 'get_partners',
-	doc: frm.doc,
-	callback: function(r) {
+	  method: 'get_partners',
+	  doc: frm.doc,
+	  callback: function(r) {
 	    if (r.message) {
 		var html = "";
 		if (r.message.partners.length == 0) {
@@ -35,9 +35,9 @@ function display_partners(frm) {
 		}					
 		if (frm.fields_dict['partnerships_html']) {
 			$(frm.fields_dict['partnerships_html'].wrapper).html(html);
-		}
+		  }
 	    }
-	}
+	  }
     });	
 }
 
@@ -56,9 +56,29 @@ function download(filename, type, content) {
 }
 
 function generate_html(frm) {
-    // pull data into the review form
-    var review_html = frappe.render_template("review", frm);
-    console.log(review_html);
-    // prepare for download
-    download("Review " + frm.doc.name + ".html", 'data:text/html;charset=utf-8,', review_html);
+    var container = frm;
+    //console.log(args.toSource());
+    frappe.call({
+	  method: 'get_partners',
+	  doc: frm.doc,
+	  callback: function(r) {
+	    if ((r.message) && (r.message.partners.length)) {
+		    container.partners = r.message.partners;
+        }
+        // set timestamp
+        var d = new Date();
+        container.now = "Zeitstempel: " + d.getHours() 
+            + ":" + d.getMinutes()
+            + ":" + d.getSeconds()
+            + " " + d.getFullYear()
+            + "-" + (d.getMonth() + 1)
+            + "-" + d.getDay();
+        // pull data into the review form
+        var review_html = frappe.render_template("review", container);
+        console.log(review_html);
+        // prepare for download
+        download("Review " + frm.doc.name + ".html", 'data:text/html;charset=utf-8,', review_html);
+        
+	  }
+    });	
 }

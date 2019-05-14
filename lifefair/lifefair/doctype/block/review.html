@@ -3,15 +3,61 @@
 <head>
   <meta http-equiv="content-type" content="text/html; charset=utf-8"/>
   <title>Review {{ doc.name }}</title>
+  <style>
+  body, h1, h2, h3, h4, h5, table, p {
+      color:silver;
+      font-family: Roboto, Arial, "Liberation Sans", sans-serif;
+  }
+  h1 {
+    font-size: 40px;
+    color: #003764;
+    font-weight: 300;
+    text-transform: uppercase;
+  }
+  h2 {
+  }
+  h3 {
+    letter-spacing: 0px;
+    text-transform: uppercase;
+    font-size: 30px;
+    line-height: 98%;
+    color: #003764;
+    text-align: left;
+    font-style: normal;
+    font-weight: 300;
+  }
+  h4 {
+    font-size: 16px;
+    color: #003764;
+    font-weight: 400;
+    line-height: 1.4em;
+  }
+  table, tr, td {
+    color: #00A0E6;
+    font-weight: 400;
+    line-height: 1.4em;
+    vertical-align: top;
+  }
+  p {
+    color: silver;
+  }
+  .right {
+    text-align: right;
+  }
+  .lastline {
+    border-bottom: 1px solid silver;
+  }
+  </style>
 </head>
 <body>
   <!-- timestamp -->
+<p class="right">{{ now }}</p>
 <h3>{{ doc.name }}</h3>
 
 <h1>{{ doc.official_title }}</h1>
 
-<h3>{{ doc.time }}</h3>
-<h3>{{ doc.location }}</h3>
+<h4>{{ doc.time }}</h4>
+<h4>{{ doc.location }}</h4>
 <h4>{{ doc.location_detail_1 }}</h4>
 <h4>{{ doc.location_detail_2 }}</h4>
 <h4>{{ doc.location_detail_3 }}</h4>
@@ -24,18 +70,24 @@
 </table>
 
 <!-- partner -->
+<h3>Partner</h3>
+{% for partner in partners %}
+  <h4>{{ partner.type }}: {{ partner.parent }}</h4>
+{% endfor %}
 
 <!-- program details -->
-<h1>Programm</h1>
+<h3>Programm</h3>
 <table>
 {% for detail in doc.planning %}
   <tr>
     <td>Beschreibung</td><td>{{ detail.title }}</td>
   </tr>
-  {% if "REF" in detail.format|upper %}
+  {% if detail.format %}
+    <!-- note: templating engine does not support "REF" in detail.format|upper: cannot use 'in' operator to search for "REF" in detail.format -->
+    {% if detail.format == "REFF" %}
     <tr>
       <td>Person</td>  
-      <td>{{ detail.person_long_name }}</td>
+      <td>{{ detail.person_long_name }} ({{ detail.person }})</td>
     </tr>
     <tr>
       <td>Funktion</td>  
@@ -67,34 +119,17 @@
     </tr>
     <tr>
       <td>GzD Titel</td>  
-      <td>{{ detail.gzd_title }}</td>
+      <td>{% if detail.gzd_title %}ja{% else %}nein{% endif %}</td>
     </tr>
     <tr>
       <td>GzD Name</td>  
-      <td>{{ detail.gzd_person }}</td>
-    </tr>
+      <td>{% if detail.gzd_person %}ja{% else %}nein{% endif %}</td>
+    </tr>    
+    {% endif %}
   {% endif %}
   <tr>
-    <td>Kommentar</td>  
-    <td></td>
-  </tr>
-{% endfor %}
-</table>
-
-<!-- people -->
-<table>
-  <tr>
-    <th>Rolle</th>
-    <th>Kontakt</th>
-    <th>Name</th>
-    <th>Beschreibung</th>
-  </tr>
-{% for detail in doc.planning %}
-  <tr>
-    <td>{{ detail.person_role }}</td>
-    <td>{{ detail.person }}</td>
-    <td>{{ detail.person_long_name }}</td>
-    <td>{{ detail.person_website_description }}</td>
+    <td class="lastline">Kommentar</td>  
+    <td class="lastline"></td>
   </tr>
 {% endfor %}
 </table>
