@@ -62,8 +62,10 @@ function generate_html(frm) {
 	  method: 'get_partners',
 	  doc: frm.doc,
 	  callback: function(r) {
-	    if ((r.message) && (r.message.partners.length)) {
+	    if ((r.message) && (r.message.partners.length > 0)) {
 		    container.partners = r.message.partners;
+        } else {
+            container.partners = [];
         }
         // set timestamp
         var d = new Date();
