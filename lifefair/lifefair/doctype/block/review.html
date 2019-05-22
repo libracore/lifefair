@@ -33,7 +33,7 @@
     line-height: 1.4em;
   }
   table, tr, td {
-    color: #00A0E6;
+    color: black; // #00A0E6;
     font-weight: 400;
     line-height: 1.4em;
     vertical-align: top;
@@ -46,6 +46,27 @@
   }
   .lastline {
     border-bottom: 1px solid silver;
+  }
+  .modulf {
+    text-transform: uppercase;
+    color: #003764;
+    font-weight: 300;
+    font-size: 30px;
+  }
+  .oberf {
+    text-transform: uppercase;
+    color: #00a0e6;
+    font-weight: 300;
+    font-size: 30px;
+  }
+  .unterf {
+    color: #00A0E6;
+    font-size: 18px;
+  }
+  .reff {
+    color: #00A0E6;
+    font-weight: 400;
+    line-height: 1.4em;      
   }
   </style>
 </head>
@@ -64,9 +85,9 @@
 
 <!-- main content -->
 <table>
-<tr><td>Herausforderungen</td><td>{{ doc.topic }}<br><i>(350 Zeichen inklusive Leerzeichen)</i></td></tr>
-<tr><td>Zentrale Fragen</td><td>{{ doc.content }}<br><i>(350 Zeichen inklusive Leerzeichen)</i></td></tr>
-<tr><td>Ihr Nutzen</td><td>{{ doc.use }}<br><i>(200 Zeichen inklusive Leerzeichen)</i></td></tr>
+<tr><td>Herausforderungen</td><td><i>(350 Zeichen inklusive Leerzeichen)</i><br>{{ doc.topic }}</td></tr>
+<tr><td>Zentrale Fragen</td><td><i>(350 Zeichen inklusive Leerzeichen)</i><br>{{ doc.content }}</td></tr>
+<tr><td>Ihr Nutzen</td><td><i>(200 Zeichen inklusive Leerzeichen)</i><br>{{ doc.use }}<br></td></tr>
 </table>
 
 <!-- partner -->
@@ -80,14 +101,19 @@
 <table>
 {% for detail in doc.planning %}
   <tr>
-    <td>Beschreibung</td><td>{{ detail.title }}</td>
+    <td>Beschreibung</td><td
+      {% if detail.format == "ModulF" %}class="modulf"{% endif %}
+      {% if detail.format == "OberF" %}class="oberf"{% endif %}
+      {% if detail.format == "UnterF" %}class="unterf"{% endif %}
+      {% if detail.format == "REFF" %}class="reff"{% endif %}
+      >{{ detail.title }}</td>
   </tr>
   {% if detail.format %}
     <!-- note: templating engine does not support "REF" in detail.format|upper: cannot use 'in' operator to search for "REF" in detail.format -->
     {% if detail.format == "REFF" %}
     <tr>
       <td>Person</td>  
-      <td>{{ detail.person_long_name }} ({{ detail.person }})</td>
+      <td class="reff">{{ detail.person_long_name }} ({{ detail.person }})</td>
     </tr>
     <tr>
       <td>Funktion</td>  
