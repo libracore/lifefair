@@ -88,6 +88,6 @@ def get_block_partners(block=None):
 	if partners:
             return partners
         else:
-            return []
+            return {'message': []}
     else:
         return ('Please provide a block')
