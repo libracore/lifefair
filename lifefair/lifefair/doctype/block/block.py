@@ -88,6 +88,7 @@ def get_block_partners(block=None):
 	if partners:
             return partners
         else:
-            return {'message': []}
+            # provide an empty result because JsonContentImporter fails with a null answer {}
+            return {['image_height_web': 100, 'type': "", 'organisation': "", 'homepage': "", 'image_url_web': ""]}
     else:
         return ('Please provide a block')
