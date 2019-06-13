@@ -32,7 +32,8 @@ def get_block_info(block=None):
              `location_detail_1`,
              `location_detail_2`,
              `location_detail_3`,
-             `tile_text`
+             `tile_text`,
+	     `time`
              FROM `tabBlock`
              WHERE `name` = '{0}';""".format(block)
         block_info = frappe.db.sql(sql_query, as_dict=True)
