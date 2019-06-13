@@ -85,6 +85,9 @@ def get_block_partners(block=None):
                AND `tabOrganisation Partnership`.`show_on_website` = 1
              ORDER BY `tabOrganisation Partnership`.`priority` DESC;""".format(block)
         partners = frappe.db.sql(sql_query, as_dict=True)
-        return partners
+	if partners:
+            return partners
+        else:
+            return []
     else:
         return ('Please provide a block')
