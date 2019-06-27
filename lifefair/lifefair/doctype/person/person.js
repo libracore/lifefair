@@ -1,4 +1,4 @@
-// Copyright (c) 2018, libracore and contributors
+// Copyright (c) 2018-2019, libracore and contributors
 // For license information, please see license.txt
 
 frappe.ui.form.on('Person', {
@@ -35,10 +35,19 @@ frappe.ui.form.on('Person', {
         if (!frm.doc.website_description) {
             update_website_description(frm);
         }
-	},
-	/* update first characters when changing the name */
-	last_name: function(frm) {
-		cur_frm.set_value('first_characters', frm.doc.last_name.substring(0, 4).toUpperCase());
+    },
+    /* update first characters when changing the name */
+    last_name: function(frm) {
+	if (frm.doc.last_name.length >= 4) {
+	    cur_frm.set_value('first_characters', frm.doc.last_name.substring(0, 4).toUpperCase());
+	} else {
+	    try {
+	        var base_name = frm.doc.last_name + frm.doc.first_name;
+	        cur_frm.set_value('first_characters', base_name.substring(0, 4).toUpperCase());
+	    } catch {
+		cur_frm.set_value('first_characters', "AAAA");
+	    }
+	}
     },
     gender: function(frm) {
         if (frm.doc.gender) {
