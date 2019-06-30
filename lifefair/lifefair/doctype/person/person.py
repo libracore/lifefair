@@ -129,6 +129,54 @@ def website_actors(block=None):
 
     return people
 
+# this is a public API for the actors list for an event
+#
+# call the API from
+#   /api/method/lifefair.lifefair.doctype.person.person.website_actors_by_event?event=<event id>
+@frappe.whitelist(allow_guest=True)
+def website_actors_by_event(event=None):
+    if event:
+        sql_query = """SELECT
+                 `tabPerson`.`long_name` AS `full_name`, 
+                 `tOrg`.`organisation` AS `organisation`,
+                 `tOrg`.`function` AS `function`,
+                 `tabPerson`.`website_description` AS `website_description`, 
+                 `tabPerson`.`image` AS `image`,
+                 `tabPerson`.`first_characters` AS `first_characters`,
+                 IFNULL(`tTestimonial`.`text`, "") AS `testimonial`,
+                 `person`.`short_name` AS `short_name`,
+                 `person`.`official_title` AS `official_title`
+            FROM (
+              /* subquery: find all people for event */
+              SELECT 
+                `tabBlock Planning`.`person` AS `name`,
+                `tabBlock`.`short_name` AS `short_name`,
+                `tabBlock`.`official_title` AS `official_title`    
+              FROM `tabBlock Planning`
+              LEFT JOIN `tabBlock` ON `tabBlock`.`name` = `tabBlock Planning`.`parent`
+              WHERE `tabBlock`.`meeting` = "{event}"
+               AND `tabBlock Planning`.`person` IS NOT NULL
+               AND `tabBlock Planning`.`show_on_website` = 1 
+               AND `tabBlock Planning`.`parent` NOT LIKE "%Beirat%"
+               AND `tabBlock Planning`.`parent` NOT LIKE "%Abend%"
+              GROUP BY `tabBlock Planning`.`person`
+              ) AS `person`
+            LEFT JOIN `tabPerson` ON `tabPerson`.`name` = `person`.`name`
+            LEFT JOIN 
+              (SELECT * FROM `tabPerson Organisation` WHERE `is_primary` = 1) AS `tOrg`
+              ON `tabPerson`.`name` = `tOrg`.`parent`
+            LEFT JOIN 
+              (SELECT `parent`, `text` FROM `tabPerson Quote` ORDER BY `date` DESC LIMIT 1) AS `tTestimonial`
+              ON `tTestimonial`.`parent` = `tabPerson`.`name`
+            WHERE `tabPerson`.`show_on_website` = 1
+            GROUP BY `tabPerson`.`long_name`
+            ORDER BY `tabPerson`.`first_characters` ASC;""".format(event=event)
+        people = frappe.db.sql(sql_query, as_dict=True)
+
+        return people
+    else:
+        return ('Please provide an event')
+    
 # populate person interest in bulk from meeting
 @frappe.whitelist()
 def add_interest(interest, meeting):
