@@ -141,9 +141,9 @@ def website_actors_by_event(event=None):
                  `tOrg`.`organisation` AS `organisation`,
                  `tOrg`.`function` AS `function`,
                  `tabPerson`.`website_description` AS `website_description`, 
-                 `tabPerson`.`image` AS `image`,
+                 IF(ISNULL(`tabPerson`.`image`), "https://sges.ch/wp-content/uploads/referenten-2019/avatar.png", `tabPerson`.`image`) AS `image`,
                  `tabPerson`.`first_characters` AS `first_characters`,
-                 IFNULL(`tTestimonial`.`text`, "") AS `testimonial`,
+                 IF(ISNULL(`tTestimonial`.`text`), "", CONCAT("«",`tTestimonial`.`text`,"»")) AS `testimonial`,
                  `person`.`short_name` AS `short_name`,
                  `person`.`official_title` AS `official_title`
             FROM (
@@ -172,8 +172,10 @@ def website_actors_by_event(event=None):
             GROUP BY `tabPerson`.`long_name`
             ORDER BY `tabPerson`.`first_characters` ASC;""".format(event=event)
         people = frappe.db.sql(sql_query, as_dict=True)
-
-        return people
+        if people:
+            return people
+        else:
+            return ('Nothing found for {0}'.format(event))
     else:
         return ('Please provide an event')
     
