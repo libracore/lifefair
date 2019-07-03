@@ -127,7 +127,10 @@ def website_actors(block=None):
         ORDER BY `t2`.`first_characters` ASC;""".format(block)
     people = frappe.db.sql(sql_query, as_dict=True)
 
-    return people
+    if people:
+        return people
+    else:
+        return ('Nothing found for {0}'.format(event))
 
 # this is a public API for the actors list for an event
 #
