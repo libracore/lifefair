@@ -141,7 +141,7 @@ def import_xing(content, meeting):
                 # person not found, create new person
                 # check if company exists
                 company_matches = frappe.get_all("Organisation", filters={'official_name': element[COMPANY]}, fields=['name'])
-                if not company_matches:
+                if not company_matches and element[COMPANY] and element[COMPANY] != "":
                     company = frappe.get_doc({
                         'doctype': "Organisation",
                         'official_name': element[COMPANY]
@@ -184,16 +184,19 @@ def import_xing(content, meeting):
                     'letter_salutation': letter_salutation,
                     'website_description': "{0}, {1}".format(element[FUNCTION], element[COMPANY]),
                     'remarks': "From Xing, {1} @ {0}, {2}, {3} {4}".format(element[COMPANY], element[FUNCTION], 
-                        element[STREET], element[PINCODE], element[CITY]),
-                    'organisations': [{
-                        'organisation': element[COMPANY],
-                        'function': element[FUNCTION],
-                        'is_primary': 0,
-                        'notes': "from xing"
-                    }],
-                    'primary_organisation': element[COMPANY],
-                    'primary_function': element[FUNCTION]
+                        element[STREET], element[PINCODE], element[CITY])
                 })
+                # only insert company if provided
+                if element[COMPANY] and element[COMPANY] != "":
+                    if element[FUNCTION] and element[FUNCTION] != "":
+                        person['organisations'] = [{
+                            'organisation': element[COMPANY],
+                            'function': element[FUNCTION],
+                            'is_primary': 0,
+                            'notes': "from xing"
+                        }]
+                        person['primary_organisation'] = element[COMPANY]
+                        person['primary_function' = element[FUNCTION]
                 try:
                     person = person.insert()
                     person_name = person.name
