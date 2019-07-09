@@ -1,3 +1,6 @@
+// Copyright (c) 2018-2019, libracore and contributors
+// For license information, please see license.txt
+
 frappe.listview_settings['Registration'] = {
     onload: function(listview) {
         listview.page.add_menu_item( __("Import Xing Registrations"), function() {
@@ -32,6 +35,7 @@ function import_xing(file, meeting) {
         var reader = new FileReader();
         reader.onload = function(e) {
             console.log("Reading...");
+            frappe.show_alert("Xing einlesen...");
             // read the file 
             var data = e.target.result;
             // load the workbook

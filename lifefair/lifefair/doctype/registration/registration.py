@@ -9,6 +9,7 @@ from frappe import _
 import csv
 import re
 import datetime
+from lifefair.lifefair.utils import add_log
 
 class Registration(Document):
     pass
@@ -186,19 +187,19 @@ def import_xing(content, meeting):
                     'remarks': "From Xing, {1} @ {0}, {2}, {3} {4}".format(element[COMPANY], element[FUNCTION], 
                         element[STREET], element[PINCODE], element[CITY])
                 })
-                # only insert company if provided
-                if element[COMPANY] and element[COMPANY] != "":
-                    if element[FUNCTION] and element[FUNCTION] != "":
-                        person['organisations'] = [{
-                            'organisation': element[COMPANY],
-                            'function': element[FUNCTION],
-                            'is_primary': 0,
-                            'notes': "from xing"
-                        }]
-                        person['primary_organisation'] = element[COMPANY]
-                        person['primary_function' = element[FUNCTION]
                 try:
                     person = person.insert()
+                    # only insert company if provided
+                    if element[COMPANY] and element[COMPANY] != "":
+                        if element[FUNCTION] and element[FUNCTION] != "":
+                            organisation = person.append('organisations', {})
+                            organisation.organisation = element[COMPANY]
+                            organisation.function = element[FUNCTION]
+                            organisation.is_primary = 0
+                            organisation.notes = "from xing"
+                            person.primary_organisation = element[COMPANY]
+                            person.primary_function = element[FUNCTION]
+                            person.save()
                     person_name = person.name
                     frappe.db.commit()
                     new_pers.append(person_name)
@@ -245,7 +246,10 @@ def import_xing(content, meeting):
                 new_regs.append(reg_name)
             except Exception as e:
                 frappe.log_error("Import Xing Error", "Insert Registration failed. {0}".format(e))
-        
+    add_log(title= _("Xing Import complete"),
+       message = ( _("Import of {0} registrations ({1}) and {2} contacts ({3}).")).format(
+                len(new_regs), new_regs, len(new_pers), new_pers),
+       topic = "Xing")    
     return { 'registrations': new_regs, 'people': new_pers }
     
 def find_block(block_field, meeting):
