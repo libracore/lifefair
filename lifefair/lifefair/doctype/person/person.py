@@ -148,13 +148,15 @@ def website_actors_by_event(event=None):
                  `tabPerson`.`first_characters` AS `first_characters`,
                  IF(ISNULL(`tTestimonial`.`text`), "", CONCAT("«",`tTestimonial`.`text`,"»")) AS `testimonial`,
                  `person`.`short_name` AS `short_name`,
-                 `person`.`official_title` AS `official_title`
+                 `person`.`official_title` AS `official_title`,
+                 `person`.`website_link` AS `website_link`
             FROM (
               /* subquery: find all people for event */
               SELECT 
                 `tabBlock Planning`.`person` AS `name`,
                 `tabBlock`.`short_name` AS `short_name`,
-                `tabBlock`.`official_title` AS `official_title`    
+                `tabBlock`.`official_title` AS `official_title`,
+                `tabBlock`.`website_link` AS `website_link`
               FROM `tabBlock Planning`
               LEFT JOIN `tabBlock` ON `tabBlock`.`name` = `tabBlock Planning`.`parent`
               WHERE `tabBlock`.`meeting` = "{event}"
