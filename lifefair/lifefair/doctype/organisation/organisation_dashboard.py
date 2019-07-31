@@ -11,6 +11,9 @@ def get_data():
          {
             'label': _('Addresses'),
             'items': ['Organisation Address']
+         },  {
+            'label': _('Activity'),
+            'items': ['Exhibitor']
          }
       ]
    }

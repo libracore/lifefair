@@ -10,7 +10,7 @@ def get_data():
       'transactions': [
          {
             'label': _('Organisation'),
-            'items': ['Block', 'Registration', 'Partnershipticket']
+            'items': ['Block', 'Registration', 'Partnershipticket', 'Exhibitor']
          }
       ]
    }
