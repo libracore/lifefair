@@ -1,8 +1,12 @@
-// Copyright (c) 2018, libracore and contributors
+// Copyright (c) 2018-2019, libracore and contributors
 // For license information, please see license.txt
 
 frappe.ui.form.on('Block', {
 	refresh: function(frm) {
+        // set filters for applicable print formats (only for Block)
+        cur_frm.fields_dict['flyer_print_format'].get_query = function(doc) {
+            return { filters: {'doc_type': 'Block'} }
+        };
         if (!frm.doc.__islocal) {
             display_partners(frm);
             
