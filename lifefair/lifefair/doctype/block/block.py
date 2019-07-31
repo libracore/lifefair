@@ -5,6 +5,7 @@
 from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
+from frappe.utils.file_manager import save_file, remove_all
 
 class Block(Document):
     def get_partners(self):
@@ -14,6 +15,10 @@ class Block(Document):
             ORDER BY `parent` ASC;""".format(block=self.name))
         partners = frappe.db.sql(sql_query, as_dict=True)
         return { 'partners': partners }
+    def validate(self):
+        # create flyer
+        frappe.enqueue(method=create_flyer_pdf, queue='long', timeout=30,
+            **{'name': self.name})
 	pass
 
 # this is a public API for the block information for the website
@@ -93,3 +98,17 @@ def get_block_partners(block=None):
             return [{'image_height_web': 100, 'type': "", 'organisation': "", 'homepage': "", 'image_url_web': ""}]
     else:
         return ('Please provide a block')
+
+# pdf creation for flyer
+def create_flyer_pdf(name):
+    block = frappe.get_doc("Block", name)
+    # create html
+    html = frappe.get_print("Block", name, print_format=block.flyer_print_format)
+    # create pdf
+    pdf = frappe.utils.pdf.get_pdf(html)
+    # clear attached files
+    remove_all("Block", name)
+    # save and attach pdf
+    file_name = "{0}.pdf".format(name.replace(" ", "_").replace("/", "_"))
+    save_file(file_name, pdf, "Block", name, is_private=0)
+    return
