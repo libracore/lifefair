@@ -19,14 +19,14 @@ def get_exhibitors_company_overview(event=None):
                  `tabExhibitor`.`organisation` AS `organisation`,
                  `tabExhibitor`.`topic` AS `topic`,
                  `tabExhibitor`.`name` AS `name`,
-                 "," AS `seperator`
+                 "," AS `separator`
             FROM `tabExhibitor`             
               WHERE `tabExhibitor`.`meeting` = "{event}"
             ORDER BY `tabExhibitor`.`organisation` ASC;""".format(event=event)
 
         exhibition = frappe.db.sql(sql_query, as_dict=True)        
         if exhibition:
-            exhibition[-1]['seperator'] = '.'
+            exhibition[-1]['separator'] = '.'
             return exhibition
         else:
             return ('Nothing found for {0}'.format(event))
@@ -44,14 +44,14 @@ def get_exhibitors_topic_overview(event=None):
                  `tabExhibitor`.`organisation` AS `organisation`,
                  `tabExhibitor`.`topic` AS `topic`,
                  `tabExhibitor`.`name` AS `name`,
-                 "," AS `seperator`
+                 "," AS `separator`
             FROM `tabExhibitor`             
               WHERE `tabExhibitor`.`meeting` = "{event}"
             ORDER BY `tabExhibitor`.`topic` ASC;""".format(event=event)
 
         exhibition = frappe.db.sql(sql_query, as_dict=True)        
         if exhibition:
-            exhibition[-1]['seperator'] = '.'
+            exhibition[-1]['separator'] = '.'
             return exhibition
         else:
             return ('Nothing found for {0}'.format(event))
@@ -111,7 +111,7 @@ def get_exhibitors(event=None):
 
         exhibition = frappe.db.sql(sql_query, as_dict=True)        
         if exhibition:
-            exhibition[-1]['seperator'] = '.'
+            exhibition[-1]['separator'] = '.'
             return exhibition
         else:
             return ('Nothing found for {0}'.format(event))
