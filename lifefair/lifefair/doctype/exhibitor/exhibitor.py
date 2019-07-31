@@ -111,7 +111,6 @@ def get_exhibitors(event=None):
 
         exhibition = frappe.db.sql(sql_query, as_dict=True)        
         if exhibition:
-            exhibition[-1]['separator'] = '.'
             return exhibition
         else:
             return ('Nothing found for {0}'.format(event))
