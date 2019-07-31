@@ -11,6 +11,7 @@ This application allows to manage complex relations between people and organisat
 It includes
 * directly sending a mail with the local email client (e.g. Thunderbird or Outlook) from a contact
 * downloading contacts as vCards
+* several connections to a WordPress frontend (using the JSONContentImporter plugin)
 
 ### Installation
 Lifefair is an application for ERPNext (https://erpnext.org). Make sure to have a running ERPNext server.
