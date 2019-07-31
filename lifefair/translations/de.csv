@@ -124,3 +124,5 @@ DocType: MailChimp Settings,Something like https://[dc].api.mailchimp.com/3.0 wh
 DocType: MailChimp Settings,API key,API-Schlüssel
 DocType: MailChimp Settings,Verify SSL,SSL prüfen
 DocType: MailChimp Settings,Connection verification failed ({0}).,Überprüfung der Verbindung fehlgeschlagen ({0}).
+DocType: Exhibitor,Exhibitor,Ausstellung
+DocType: SDG Goal,SDG Goal,SDG Ziel
