@@ -107,7 +107,7 @@ def get_exhibitors(event=None):
              LEFT JOIN 
                (SELECT `parent`, `text` FROM `tabPerson Quote` ORDER BY `date` DESC LIMIT 1) AS `tTestimonial3`
                ON `tTestimonial3`.`parent` = `tP3`.`name`
-             WHERE `meeting` = "SGES";""".format(event=event)
+             WHERE `meeting` = "{event}";""".format(event=event)
 
         exhibition = frappe.db.sql(sql_query, as_dict=True)        
         if exhibition:
