@@ -72,6 +72,7 @@ def get_exhibitors(event=None):
                  `tabExhibitor`.`linktext_website` AS `linktext_website`,
                  `tabExhibitor`.`product_image_link` AS `product_image_link`,
                  `tabExhibitor`.`company_description` AS `company_description`,
+                 `tabExhibitor`.`sdg_logo` AS `sdg_logo`,
                  `tP1`.`full_name` AS `person_1`,
                  `tP1`.`website_description` AS `website_description_1`,
                  `tP1`.`email` AS `email_1`,
