@@ -59,7 +59,15 @@ def get_data():
                        "label": _("Partnershipticket"),
                        "color": "#f88c00",
                        "icon": "octicon octicon-clippy",
-                       "description": _("Partnershipticket")
+                       "description": _("Partnershipticket")                      
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Exhibitor",
+                       "label": _("Exhibitor"),
+                       "color": "#f88c00",
+                       "icon": "octicon octicon-clippy",
+                       "description": _("Exhibitor")
                    }
             ]
         },
@@ -162,6 +170,12 @@ def get_data():
                        "name": "Web Format",
                        "label": _("Web Format"),
                        "description": _("Web Format")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "SDG Goal",
+                       "label": _("SDG Goal"),
+                       "description": _("SDG Goal")
                    }
             ]
         }
