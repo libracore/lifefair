@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2018, libracore and contributors
+# Copyright (c) 2018-2019, libracore and contributors
 # For license information, please see license.txt
 
 from __future__ import unicode_literals
@@ -171,7 +171,12 @@ def website_actors_by_event(event=None):
               (SELECT * FROM `tabPerson Organisation` WHERE `is_primary` = 1) AS `tOrg`
               ON `tabPerson`.`name` = `tOrg`.`parent`
             LEFT JOIN 
-              (SELECT `parent`, `text` FROM `tabPerson Quote` ORDER BY `date` DESC LIMIT 1) AS `tTestimonial`
+              (SELECT `parent`, `text`, `date` 
+               FROM `tabPerson Quote` AS `t1`
+               WHERE `t1`.`name` = (SELECT `name` 
+                     FROM `tabPerson Quote` AS `t2`
+                     WHERE `t2`.`parent` = `t1`.`parent`
+                     ORDER BY `date` DESC LIMIT 1)) AS `tTestimonial`
               ON `tTestimonial`.`parent` = `tabPerson`.`name`
             WHERE `tabPerson`.`show_on_website` = 1
             GROUP BY `tabPerson`.`long_name`
