@@ -96,7 +96,12 @@ def get_exhibitors(event=None):
              LEFT JOIN `tabExhibition Contact` AS `tPL1` ON `tabExhibitor`.`name` = `tPL1`.`parent` AND `tPL1`.`idx` = 1
              LEFT JOIN `tabPerson` AS `tP1` ON `tP1`.`name` = `tPL1`.`person`
              LEFT JOIN 
-  (SELECT `parent`, `text` FROM `tabPerson Quote` ORDER BY `date` DESC LIMIT 1) AS `tTestimonial1`
+		  (SELECT `parent`, `text`, `date` 
+		   FROM `tabPerson Quote` AS `t1`
+		   WHERE `t1`.`name` = (SELECT `name` 
+			       FROM `tabPerson Quote` AS `t2`
+				   WHERE `t2`.`parent` = `t1`.`parent`
+			       ORDER BY `date` DESC LIMIT 1)) AS `tTestimonial1`
   ON `tTestimonial1`.`parent` = `tP1`.`name`
              LEFT JOIN `tabExhibition Contact` AS `tPL2` ON `tabExhibitor`.`name` = `tPL2`.`parent` AND `tPL2`.`idx` = 2
              LEFT JOIN `tabPerson` AS `tP2` ON `tP2`.`name` = `tPL2`.`person`
