@@ -107,6 +107,12 @@ def get_data():
             "items": [
                    {
                        "type": "doctype",
+                       "name": "Marketing and Activity",
+                       "label": _("Marketing and Activity"),
+                       "description": _("Marketing and Activity")
+                   },
+                   {
+                       "type": "doctype",
                        "name": "Follow Up",
                        "label": _("Follow Up"),
                        "description": _("Follow Up")

@@ -18,7 +18,7 @@ def get_data():
          },
          {
             'label': _('Marketing'),
-            'items': ['Follow Up']
+            'items': ['Marketing and Activity', 'Follow Up']
          }
       ]
    }

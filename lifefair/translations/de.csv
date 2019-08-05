@@ -125,4 +125,17 @@ DocType: MailChimp Settings,API key,API-Schlüssel
 DocType: MailChimp Settings,Verify SSL,SSL prüfen
 DocType: MailChimp Settings,Connection verification failed ({0}).,Überprüfung der Verbindung fehlgeschlagen ({0}).
 DocType: Exhibitor,Exhibitor,Ausstellung
+DocType: Exhibitor,Exhibition website,Aussteller-Webseite
+DocType: Exhibitor,Linktext website,Webseiten-Linktext
+DocType: Exhibitor,Product Image link,Link Produktbild
+DocType: Exhibitor,Company description,Firmenbeschreibung
+DocType: Exhibitor,Description too long. Please shorten below 1100 characters.,Beschreibung zu lang. Bitte unter 1100 Zeichen kürzen.
 DocType: SDG Goal,SDG Goal,SDG Ziel
+DocType: Marketing and Activity,Marketing and Activity,Veranstaltungen und Marketing
+DocType: Marketing and Activity,Card,Karte
+DocType: Marketing and Activity,Network activation,Netzwerkaktivierung
+DocType: Marketing and Activity,Collaboration partner,Mitwirkungspartner
+DocType: Marketing and Activity,ISA quoted,ISA angeboten
+DocType: Marketing and Activity,ISA interest,ISA Interesse
+DocType: Marketing and Activity,ISA declined,ISA Absage
+DocType: Marketing and Activity,Testimonial generation,Testimonialgenerierung
