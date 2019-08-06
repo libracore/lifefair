@@ -77,19 +77,19 @@ def get_exhibitors(event=None):
                  `tP1`.`website_description` AS `website_description_1`,
                  `tP1`.`email` AS `email_1`,
                  `tP1`.`company_phone` AS `phone_1`,
-                 `tP1`.`image` AS `image_1`,
+                 IF(ISNULL(`tP1`.`image`), "https://sges.ch/wp-content/uploads/referenten-2019/avatar.png", `tP1`.`image`) AS `image_1`,
              IF(ISNULL(`tTestimonial1`.`text`), "", CONCAT("«",`tTestimonial1`.`text`,"»")) AS `testimonial_1`,
                  `tP2`.`full_name` AS `person_2`,
                  `tP2`.`website_description` AS `website_description_2`,                
                  `tP2`.`email` AS `email_2`,
                  `tP2`.`company_phone` AS `phone_2`,
-                 `tP2`.`image` AS `image_2`,
+                 IF(ISNULL(`tP2`.`image`), "https://sges.ch/wp-content/uploads/referenten-2019/avatar.png", `tP2`.`image`) AS `image_2`,
              IF(ISNULL(`tTestimonial2`.`text`), "", CONCAT("«",`tTestimonial2`.`text`,"»")) AS `testimonial_2`,  
                  `tP3`.`full_name` AS `person_3`,
                  `tP3`.`website_description` AS `website_description_3`,
                  `tP3`.`email` AS `email_3`,
                  `tP3`.`company_phone` AS `phone_3`,                
-                 `tP3`.`image` AS `image_3`,
+                 IF(ISNULL(`tP3`.`image`), "https://sges.ch/wp-content/uploads/referenten-2019/avatar.png", `tP3`.`image`) AS `image_3`,
              IF(ISNULL(`tTestimonial3`.`text`), "", CONCAT("«",`tTestimonial3`.`text`,"»")) AS `testimonial_3`
                  
              FROM `tabExhibitor`
