@@ -25,10 +25,23 @@ class Partnershipticket(Document):
         for ticket in self.tickets:
             if ticket.email != "@":
                 person_count += 1
+                # try to find person by email address
                 person_matches = frappe.get_all('Person', filters={'email': ticket.email}, fields=['name'])
                 if person_matches:
-                    ticket.person = person_matches[0]['name']                    
-                    registration_matches = frappe.get_all('Registration', filters={'person': person_matches[0]['name'], 'meeting': self.meeting}, fields=['name'])
+                    ticket.person = person_matches[0]['name']
+                else:
+                    # fallback to email 2
+                    person_matches = frappe.get_all('Person', filters={'email2': ticket.email}, fields=['name'])
+                    if person_matches:
+                        ticket.person = person_matches[0]['name']
+                    else:
+                        # fallback to email 3
+                        person_matches = frappe.get_all('Person', filters={'email3': ticket.email}, fields=['name'])
+                        if person_matches:
+                            ticket.person = person_matches[0]['name']
+                # if person found, try to match registration
+                if ticket.person:
+                    registration_matches = frappe.get_all('Registration', filters={'person': ticket.person, 'meeting': self.meeting}, fields=['name'])
                     if registration_matches:
                         ticket.registration = registration_matches[0]['name']
                         registration_count += 1
