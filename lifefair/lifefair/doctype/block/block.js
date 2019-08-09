@@ -102,17 +102,18 @@ function generate_csv(frm) {
     csv += "Idx\tBeschreibung\tDauer\tZeit\tPerson (Code)\tName der Person\tStatus\tRolle\tFormat\n\r";
     var time = new Date();
     time.setHours(14);
+    time.setMinutes(0);
     var timeStr = "";
     // aggregate planing items
     try {
         frm.doc.planning.forEach(function (entry) {
             if (time.getMinutes() > 9) {
-                timeStr += time.getHours() + ":" +  time.getMinutes();
+                timeStr = time.getHours() + ":" +  time.getMinutes();
             } else {
-                timeStr += time.getHours() + ":0" +  time.getMinutes();
+                timeStr = time.getHours() + ":0" +  time.getMinutes();
             } 
             csv += entry.idx + "\t"
-                 + (entry.title || "") + "\t"
+                 + "\"" + (entry.title || "") + "\"\t"
                  + (entry.duration || 0) + "\t"
                  + timeStr + "\t"
                  + (entry.person || "") + "\t"
