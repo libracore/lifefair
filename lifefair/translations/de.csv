@@ -103,6 +103,7 @@ DocType: Block,With description,Mit Beschreibung
 DocType: Block,Partnerships,Partnerschaften
 DocType: Block,Download HTML,HTML herunterladen
 DocType: Block,Status Details,Erweiterter Status
+DocType: Block,Download Excel,Planungs-Excel
 DocType: Follow Up,Follow Up,Nachfassen
 DocType: Follow Up,Action date,Aktionsdatum
 DocType: Follow Up,Action status,Bearbeitungsstatus

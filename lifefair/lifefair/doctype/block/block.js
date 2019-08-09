@@ -13,6 +13,10 @@ frappe.ui.form.on('Block', {
             frm.add_custom_button(__("Download HTML"), function() {
                 generate_html(frm);
             });
+            
+            frm.add_custom_button(__("Download Excel"), function() {
+                generate_csv(frm);
+            });
         }
 	}
 });
@@ -87,4 +91,68 @@ function generate_html(frm) {
         
 	  }
     });	
+}
+
+
+function generate_csv(frm) {
+    var csv = "";
+    // block information
+    csv += "Block\t" + frm.doc.name + "\n\r";
+    csv += "\n\r";
+    csv += "Idx\tBeschreibung\tDauer\tZeit\tPerson (Code)\tName der Person\tStatus\tRolle\tFormat\n\r";
+    var time = new Date();
+    time.setHours(14);
+    // aggregate planing items
+    try {
+        frm.doc.planning.forEach(function (entry) {
+            csv += entry.idx + "\t"
+                 + (entry.title || "") + "\t"
+                 + (entry.duration || 0) + "\t"
+                 + time.getHours() + ":" + time.getMinutes() + "\t"
+                 + (entry.person || "") + "\t"
+                 + (entry.person_long_name || "") + "\t"
+                 + (entry.status || "") + "\t"
+                 + (entry.person_role || "") + "\t"
+                 + (entry.format || "") + "\n\r";
+            // increase starting time
+            time = addMinutes(time, (entry.duration || 0));
+        });
+    } catch {
+        csv += "Keine Planungsdaten gefunden";
+    }
+    // prepare file name
+    var now = new Date();
+    var filename = "Blockplanung_" + frm.doc.name;
+    filename += "_" + now.getFullYear();
+    if (now.getMonth() > 8) {
+        filename += "-" + (now.getMonth() + 1);
+    } else {
+        filename += "-0" + (now.getMonth() + 1);
+    }
+    if (now.getDate() > 9) {
+        filename += "-" + now.getDate();
+    } else {
+        filename += "-0" + now.getDate();
+    }
+    filename += "T"
+    if (now.getHours() > 9) {
+        filename += now.getHours();
+    } else {
+        filename += now.getHours();
+    }
+    if (now.getMinutes() > 9) {
+        filename += "-" + now.getMinutes();
+    } else {
+        filename += "-0" + now.getMinutes();
+    } 
+    filename += ".csv";
+    filename = filename.split(":").join("_");
+    filename = filename.split("/").join("_");
+    filename = filename.split("\\").join("_");
+    // prepare for download
+    download(filename, 'data:text/csv;charset=utf-8,', csv);
+}
+
+function addMinutes(date, minutes) {
+    return new Date(date.getTime() + minutes * 60000);
 }
