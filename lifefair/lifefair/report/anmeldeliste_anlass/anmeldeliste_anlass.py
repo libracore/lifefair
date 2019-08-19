@@ -10,7 +10,7 @@ def execute(filters=None):
     
     columns = ["Person:Link/Person:100", 
                "Name::200", 
-                "Briefanrede::100",
+               "Briefanrede::100",
                "Nachname::100",
                "Meeting:Link/Meeting:300",
                "Funktion::150",
@@ -19,9 +19,10 @@ def execute(filters=None):
                "Gutscheincode::200",
                "Email::150",
                "Nur einmal kontakieren::50",
-               "Firma 1::100",
-               "Firma 2::100",
+               "Zeile 1::100",
+               "Zeile 2::100",
                "Geprüft von::50",
+               "Block:Link/Block:100"
             ]
     if filters:
         data = get_data(meeting=filters.meeting, as_list=True)
@@ -50,7 +51,8 @@ def get_data(meeting="%", as_list=True):
          IF (SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1) !=  
              SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1), 
              SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1), "") AS `Firma 2`,
-         (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`
+         (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,
+         `tabRegistration`.`block` AS `Block`
         FROM `tabRegistration`
         LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
         WHERE 

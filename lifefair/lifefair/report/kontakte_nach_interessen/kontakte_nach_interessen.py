@@ -9,13 +9,17 @@ def execute(filters=None):
     columns, data = [], []
     
     columns = ["Person:Link/Person:100",
-               "Name::200",  
+               "Name::200",
+               "Last name::200",
+               "Letter salutation::150",
                "Website description::200",
                "Primary Organisation::200",
                "Email::200",
+               "Company phone::100",
                "Hierarchie::100",
                "Engagement::100",
-               "Interesse"
+               "Interesse",
+               "Nur einmal kontaktieren::50"
             ]
     if filters:
         if filters.interest1:
@@ -52,12 +56,16 @@ def get_people(interest1="%", interest2="%",
     sql_query = """SELECT 
                     `t2`.`name` AS `Person`,
                     `t2`.`long_name` AS `Name`,
+                    `t2`.`last_name` AS `Last name`,
+                    `t2`.`letter_salutation` AS `Letter salutation`,
                     `t2`.`website_description` AS `Website description`,
                     `t2`.`primary_organisation` AS `Primary Organisation`,
                     `t2`.`email` AS `Email`,
+                    `t2`.`company_phone` AS `Company phone`,
                     `t2`.`hierarchiestufe` AS `Hierarchie`,
                     `t2`.`engagement` AS `Engagement`,
-                    `t1`.`interest`
+                    `t1`.`interest` AS `Interest`,
+                    `t2`.`nur_einmal_kontaktieren` AS `Nur einmal kontaktieren`
                    FROM (SELECT 
                            `parent` AS `person`, 
                            GROUP_CONCAT(`interesse`) AS `interest`
