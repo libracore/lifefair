@@ -99,7 +99,7 @@ function generate_csv(frm) {
     // block information
     csv += "Block\t" + frm.doc.name + "\n\r";
     csv += "\n\r";
-    csv += "Idx\tBeschreibung\tDauer\tZeit\tPerson (Code)\tName der Person\tStatus\tRolle\tFormat\n\r";
+    csv += "Idx\tBeschreibung\tZeit\tDauer\tPerson (Code)\tName der Person\tStatus\tRolle\tFormat\n\r";
     var time = new Date();
     time.setHours(14);
     time.setMinutes(0);
@@ -114,8 +114,8 @@ function generate_csv(frm) {
             } 
             csv += entry.idx + "\t"
                  + "\"" + (entry.title || "") + "\"\t"
-                 + (entry.duration || 0) + "\t"
                  + timeStr + "\t"
+                 + (entry.duration || 0) + "\t"
                  + (entry.person || "") + "\t"
                  + (entry.person_long_name || "") + "\t"
                  + (entry.status || "") + "\t"
