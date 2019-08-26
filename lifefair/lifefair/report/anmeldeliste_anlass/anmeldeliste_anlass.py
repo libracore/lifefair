@@ -9,20 +9,21 @@ def execute(filters=None):
     columns, data = [], []
     
     columns = ["Person:Link/Person:100", 
+               "Personenkürzel::50",
                "Name::200", 
-               "Briefanrede::100",
-               "Nachname::100",
-               "Meeting:Link/Meeting:300",
-               "Funktion::150",
-               "Organisation:Link/Organisation:200",
-               "Erste Zeichen::50",
-               "Gutscheincode::200",
-               "Email::150",
-               "Nur einmal kontakieren::50",
                "Zeile 1::100",
                "Zeile 2::100",
                "Geprüft von::50",
-               "Block:Link/Block:100"
+               "Registrierung:Link/Registration:100",
+               "Meeting:Link/Meeting:200",
+               "Funktion::150",
+               "Organisation:Link/Organisation:200",
+               "Gutscheincode::200",
+               "Email::150",
+               "Nur einmal kontakieren::50",
+               "Block:Link/Block:100",
+               "Briefanrede::100",
+               "Nachname::100"             
             ]
     if filters:
         data = get_data(meeting=filters.meeting, as_list=True)
@@ -35,24 +36,25 @@ def execute(filters=None):
 def get_data(meeting="%", as_list=True):
     sql_query = """SELECT 
          `tabRegistration`.`person` AS `Person`, 
+         `tabPerson`.`first_characters` AS `Personenkürzel`,
          `tabPerson`.`long_name` AS `Name`, 
-         IF (`tabPerson`.`salutation` LIKE "%", 
-             CONCAT(`tabPerson`.`letter_salutation`, " ", `tabPerson`.`salutation`),
-             `tabPerson`.`letter_salutation`) AS `Briefanrede`,
-         `tabPerson`.`last_name` AS `Last Name`,
+         SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1) AS `Zeile 1`,
+         IF (SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1) !=  
+             SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1), 
+             SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1), "") AS `Zeile 2`,
+         (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,
+         `tabRegistration`.`name` AS `Registrierung`,
          `tabRegistration`.`meeting` AS `Meeting`,
          `tabPerson`.`primary_function` AS `Funktion`,
          `tabPerson`.`primary_organisation` AS `Organisation`,
-         `tabPerson`.`first_characters` AS `Erste Zeichen`,
          `tabRegistration`.`code` AS `Gutscheincode`,
          `tabPerson`.`email` AS `Email`,
          `tabPerson`.`nur_einmal_kontaktieren` AS `Nur einmal kontakieren`,
-         SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1) AS `Firma 1`,
-         IF (SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1) !=  
-             SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1), 
-             SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1), "") AS `Firma 2`,
-         (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,
-         `tabRegistration`.`block` AS `Block`
+         `tabRegistration`.`block` AS `Block`,
+         IF (`tabPerson`.`salutation` LIKE "%", 
+             CONCAT(`tabPerson`.`letter_salutation`, " ", `tabPerson`.`salutation`),
+             `tabPerson`.`letter_salutation`) AS `Briefanrede`,
+         `tabPerson`.`last_name` AS `Last Name`
         FROM `tabRegistration`
         LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
         WHERE 
