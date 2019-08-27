@@ -14,4 +14,4 @@ class Meeting(Document):
             ORDER BY `parent` ASC;""".format(meeting=self.name))
         partners = frappe.db.sql(sql_query, as_dict=True)
         return { 'partners': partners }
-	pass
+    pass

@@ -17,4 +17,4 @@ class MailChimpSettings(Document):
             frappe.msgprint( _("Connection verification failed ({0}).").format(err), _("Validation"))
         return
         
-	pass
+    pass

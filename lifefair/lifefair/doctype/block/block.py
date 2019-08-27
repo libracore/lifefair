@@ -19,7 +19,7 @@ class Block(Document):
         # create flyer
         frappe.enqueue(method=create_flyer_pdf, queue='long', timeout=30,
             **{'name': self.name})
-	pass
+    pass
 
 # this is a public API for the block information for the website
 #
@@ -38,7 +38,7 @@ def get_block_info(block=None):
              `location_detail_2`,
              `location_detail_3`,
              `tile_text`,
-	     `time`
+             `time`
              FROM `tabBlock`
              WHERE `name` = '{0}';""".format(block)
         block_info = frappe.db.sql(sql_query, as_dict=True)
@@ -91,7 +91,7 @@ def get_block_partners(block=None):
                AND `tabOrganisation Partnership`.`show_on_website` = 1
              ORDER BY `tabOrganisation Partnership`.`priority` DESC;""".format(block)
         partners = frappe.db.sql(sql_query, as_dict=True)
-	if partners:
+        if partners:
             return partners
         else:
             # provide an empty result because JsonContentImporter fails with a null answer {}
