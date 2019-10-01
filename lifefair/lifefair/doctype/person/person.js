@@ -64,7 +64,7 @@ frappe.ui.form.on('Person', {
 // find the primary organisation
 function find_primary_company(frm) {
     var found_primary = false;
-    for (i = 0; i < frm.doc.organisations.length; i++) {
+    for (var i = 0; i < frm.doc.organisations.length; i++) {
         if (frm.doc.organisations[i].is_primary) {
             cur_frm.set_value('primary_organisation', frm.doc.organisations[i].organisation);
             cur_frm.set_value('primary_function', frm.doc.organisations[i].function);
