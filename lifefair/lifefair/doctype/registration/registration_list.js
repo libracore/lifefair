@@ -3,6 +3,9 @@
 
 frappe.listview_settings['Registration'] = {
     onload: function(listview) {
+        // load Excel module
+        load_script("/assets/lifefair/js/xlsx.full.min.js", function() { console.log("XLSX loaded"); })
+        
         listview.page.add_menu_item( __("Import Xing Registrations"), function() {
             // clean file browser cache
             if (document.getElementById("input_file")) {
@@ -100,4 +103,15 @@ function update_partner_tickets(meeting) {
             frappe.show_alert( __("People identification completed"));
         }
     });
+}
+
+function load_script(url, callback) {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src = url;
+    script.onload = function() { 
+        callback();
+        /* console.log("External script " + url + " loaded"); */
+    }
+    document.getElementsByTagName("head")[0].appendChild(script);
 }
