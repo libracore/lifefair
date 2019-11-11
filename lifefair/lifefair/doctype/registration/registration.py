@@ -142,7 +142,8 @@ def import_xing(content, meeting):
                 # person not found, create new person
                 # check if company exists
                 company_matches = frappe.get_all("Organisation", filters={'official_name': element[COMPANY]}, fields=['name'])
-                if not company_matches and element[COMPANY] and element[COMPANY] != "":
+                # do not insert companies, too many typo issues
+                """if not company_matches and element[COMPANY] and element[COMPANY] != "":
                     company = frappe.get_doc({
                         'doctype': "Organisation",
                         'official_name': element[COMPANY]
@@ -150,7 +151,7 @@ def import_xing(content, meeting):
                     try:
                         company.insert()
                     except Exception as e:
-                        frappe.log_error("Insert company {0} failed {1}".format(element[COMPANY], e))
+                        frappe.log_error("Insert company {0} failed {1}".format(element[COMPANY], e)) """
                 full_name = "{0} {1}".format(element[FIRST_NAME], element[LAST_NAME])
                 if element[TITLE]:
                     long_name = "{0} {1} {2}".format(element[TITLE], element[FIRST_NAME], element[LAST_NAME])
@@ -189,8 +190,8 @@ def import_xing(content, meeting):
                 })
                 try:
                     person = person.insert()
-                    # only insert company if provided
-                    if element[COMPANY] and element[COMPANY] != "":
+                    # only insert company if provided (and matched)
+                    if company_matches and element[COMPANY] and element[COMPANY] != "":
                         if element[FUNCTION] and element[FUNCTION] != "":
                             organisation = person.append('organisations', {})
                             organisation.organisation = element[COMPANY]
