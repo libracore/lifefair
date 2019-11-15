@@ -260,15 +260,35 @@ def get_testimonials(event=None, block=None, exhibitor=None, interest=None):
         field = "impact"
         target = 1
     # prepare query
-    sql_query = """SELECT 
+    sql_query = """SELECT * FROM 
+        (SELECT 
             IF(ISNULL(`tabPerson Quote`.`text`), "", CONCAT("«",`tabPerson Quote`.`text`,"»")) AS `testimonial`,        
             `tabPerson`.`long_name` AS `person`,
             `tabPerson`.`website_description` AS `website_description`
         FROM `tabPerson Quote`
         LEFT JOIN `tabPerson` ON `tabPerson`.`name` = `tabPerson Quote`.`parent`
-        WHERE `tabPerson Quote`.`{field}` = '{target}'
+        WHERE `tabPerson Quote`.`{field}` = '{target}' AND `tabPerson Quote`.`priority` = 'High'
         ORDER BY RAND()
-        LIMIT 6;""".format(field=field, target=target)
+        LIMIT 3) AS `tHigh`
+        UNION SELECT * FROM 
+        (SELECT
+            IF(ISNULL(`tabPerson Quote`.`text`), "", CONCAT("«",`tabPerson Quote`.`text`,"»")) AS `testimonial`,        
+            `tabPerson`.`long_name` AS `person`,
+            `tabPerson`.`website_description` AS `website_description`
+        FROM `tabPerson Quote`
+        LEFT JOIN `tabPerson` ON `tabPerson`.`name` = `tabPerson Quote`.`parent`
+        WHERE `tabPerson Quote`.`{field}` = '{target}' AND `tabPerson Quote`.`priority` = 'Medium'
+        ORDER BY RAND()
+        LIMIT 2) AS `tMedium`
+        UNION SELECT * FROM
+        (SELECT IF(ISNULL(`tabPerson Quote`.`text`), "", CONCAT("«",`tabPerson Quote`.`text`,"»")) AS `testimonial`,        
+            `tabPerson`.`long_name` AS `person`,
+            `tabPerson`.`website_description` AS `website_description`
+        FROM `tabPerson Quote`
+        LEFT JOIN `tabPerson` ON `tabPerson`.`name` = `tabPerson Quote`.`parent`
+        WHERE `tabPerson Quote`.`{field}` = '{target}' AND `tabPerson Quote`.`priority` = 'Low'
+        ORDER BY RAND()
+        LIMIT 1) AS `tLow`;""".format(field=field, target=target)
 
     testimonials = frappe.db.sql(sql_query, as_dict=True)        
     if testimonials:
