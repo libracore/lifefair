@@ -233,3 +233,45 @@ def add_interest_to_participants(participants, interest):
         return {'participants': participant_count, 'added_interests': added_count}
     else:
         return {'participants': 0, 'added_interests': 0}
+
+# Public API to get 6 testimonials for an event, block, exhibitor or interest (or impact no arguments)
+# call the API from
+#   /api/method/lifefair.lifefair.doctype.person.person.get_testimonials
+#   /api/method/lifefair.lifefair.doctype.person.person.get_testimonials?event=<event id>
+#   /api/method/lifefair.lifefair.doctype.person.person.get_testimonials?block=<block id>
+#   /api/method/lifefair.lifefair.doctype.person.person.get_testimonials?exhibitor=<exhibitor id>
+#   /api/method/lifefair.lifefair.doctype.person.person.get_testimonials?interst=<interest id>
+@frappe.whitelist(allow_guest=True)
+def get_testimonials(event=None, block=None, exhibitor=None, interest=None):
+    # prepare option
+    if event:
+        field = "event"
+        target = event
+    elif block:
+        field = "block"
+        target = block
+    elif exhibitor:
+        field = "exhibitor"
+        target = exhibitor
+    elif interest:
+        field = "interest"
+        target = interest
+    else:
+        field = "impact"
+        target = 1
+    # prepare query
+    sql_query = """SELECT 
+            IF(ISNULL(`tabPerson Quote`.`text`), "", CONCAT("«",`tabPerson Quote`.`text`,"»")) AS `testimonial`,        
+            `tabPerson`.`long_name` AS `person`,
+            `tabPerson`.`website_description` AS `website_description`
+        FROM `tabPerson Quote`
+        LEFT JOIN `tabPerson` ON `tabPerson`.`name` = `tabPerson Quote`.`parent`
+        WHERE `tabPerson Quote`.`{field}` = '{target}'
+        ORDER BY RAND()
+        LIMIT 6;""".format(field=field, target=target)
+
+    testimonials = frappe.db.sql(sql_query, as_dict=True)        
+    if testimonials:
+        return testimonials
+    else:
+        return ('Nothing found for {0} = {1}'.format(field, target))

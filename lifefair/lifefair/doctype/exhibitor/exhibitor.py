@@ -58,7 +58,7 @@ def get_exhibitors_topic_overview(event=None):
     else:
         return ('Please provide an exhibition')
         
-        #
+#
 # call the API from
 #   /api/method/lifefair.lifefair.doctype.exhibitor.exhibitor.get_exhibitors?event=<event id>
 @frappe.whitelist(allow_guest=True)
