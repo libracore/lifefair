@@ -116,7 +116,15 @@ def get_data():
                        "name": "Follow Up",
                        "label": _("Follow Up"),
                        "description": _("Follow Up")
-                   }
+                   },
+                   {
+                       "type": "report",
+                       "doctype": "Person",
+                       "name": "Testimonials",
+                       "label": _("Testimonials"),
+                       "description": _("Testimonials"),
+                        "is_query_report": True
+                   },
             ]
         },
         {
