@@ -278,7 +278,8 @@ def get_testimonials(event=None, block=None, exhibitor=None, interest=None):
         (SELECT
             IF(ISNULL(`tabPerson Quote`.`text`), "", CONCAT("«",`tabPerson Quote`.`text`,"»")) AS `testimonial`,        
             `tabPerson`.`long_name` AS `person`,
-            `tabPerson`.`website_description` AS `website_description`
+            `tabPerson`.`website_description` AS `website_description`,
+            IF(ISNULL(`tabPerson`.`image`), "https://sges.ch/wp-content/uploads/referenten-2019/avatar.png", `tabPerson`.`image`) AS `image`
         FROM `tabPerson Quote`
         LEFT JOIN `tabPerson` ON `tabPerson`.`name` = `tabPerson Quote`.`parent`
         WHERE `tabPerson Quote`.`{field}` = '{target}' AND `tabPerson Quote`.`priority` = 'Medium'
@@ -287,7 +288,8 @@ def get_testimonials(event=None, block=None, exhibitor=None, interest=None):
         UNION SELECT * FROM
         (SELECT IF(ISNULL(`tabPerson Quote`.`text`), "", CONCAT("«",`tabPerson Quote`.`text`,"»")) AS `testimonial`,        
             `tabPerson`.`long_name` AS `person`,
-            `tabPerson`.`website_description` AS `website_description`
+            `tabPerson`.`website_description` AS `website_description`,
+            IF(ISNULL(`tabPerson`.`image`), "https://sges.ch/wp-content/uploads/referenten-2019/avatar.png", `tabPerson`.`image`) AS `image`
         FROM `tabPerson Quote`
         LEFT JOIN `tabPerson` ON `tabPerson`.`name` = `tabPerson Quote`.`parent`
         WHERE `tabPerson Quote`.`{field}` = '{target}' AND `tabPerson Quote`.`priority` = 'Low'
