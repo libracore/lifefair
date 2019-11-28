@@ -140,73 +140,12 @@ def import_xing(content, meeting):
                     person.save()
             else:
                 # person not found, create new person
-                # check if company exists
-                company_matches = frappe.get_all("Organisation", filters={'official_name': element[COMPANY]}, fields=['name'])
-                # do not insert companies, too many typo issues
-                """if not company_matches and element[COMPANY] and element[COMPANY] != "":
-                    company = frappe.get_doc({
-                        'doctype': "Organisation",
-                        'official_name': element[COMPANY]
-                    })
-                    try:
-                        company.insert()
-                    except Exception as e:
-                        frappe.log_error("Insert company {0} failed {1}".format(element[COMPANY], e)) """
-                full_name = "{0} {1}".format(element[FIRST_NAME], element[LAST_NAME])
-                if element[TITLE]:
-                    long_name = "{0} {1} {2}".format(element[TITLE], element[FIRST_NAME], element[LAST_NAME])
-                else:
-                    long_name = full_name
-                try:
-                    first_characters = element[LAST_NAME][0:4].upper()
-                except:
-                    try:
-                        first_characters = element[LAST_NAME].upper()
-                    except:
-                        first_characters = "NN"
-                gender = element[SALUTATION]
-                if gender == "Herr":
-                    letter_salutation = "Sehr geehrter Herr"
-                elif gender == "Frau":
-                    letter_salutation = "Sehr geehrte Frau"
-                else:
-                    gender = ""
-                    letter_salutation = ""
-                person = frappe.get_doc({
-                    'doctype': "Person",
-                    'first_name': element[FIRST_NAME],
-                    'last_name': element[LAST_NAME],
-                    'full_name': full_name,
-                    'long_name': long_name,
-                    'first_characters': first_characters,
-                    'email': element[EMAIL],
-                    'company_phone': element[PHONE],
-                    'title': element[TITLE],
-                    'gender': gender,
-                    'letter_salutation': letter_salutation,
-                    'website_description': "{0}, {1}".format(element[FUNCTION], element[COMPANY]),
-                    'remarks': "From Xing, {1} @ {0}, {2}, {3} {4}".format(element[COMPANY], element[FUNCTION], 
-                        element[STREET], element[PINCODE], element[CITY])
-                })
-                try:
-                    person = person.insert()
-                    # only insert company if provided (and matched)
-                    if company_matches and element[COMPANY] and element[COMPANY] != "":
-                        if element[FUNCTION] and element[FUNCTION] != "":
-                            organisation = person.append('organisations', {})
-                            organisation.organisation = element[COMPANY]
-                            organisation.function = element[FUNCTION]
-                            organisation.is_primary = 0
-                            organisation.notes = "from xing"
-                            person.primary_organisation = element[COMPANY]
-                            person.primary_function = element[FUNCTION]
-                            person.save()
-                    person_name = person.name
-                    frappe.db.commit()
-                    new_pers.append(person_name)
-                except Exception as e:
-                    frappe.log_error("Import Xing Error", "Insert Person {1} {2} failed. {0}".format(e, element[FIRST_NAME], element[LAST_NAME]))      
-                                  
+                create_person(company=element[COMPANY],first_name=element[FIRST_NAME], 
+                    last_name=element[LAST_NAME], title=element[TITLE],
+                    salutation=element[SALUTATION], email=element[EMAIL], phone=element[PHONE], 
+                    function=element[FUNCTION], street=element[STREET], pincode=element[PINCODE], 
+                    city=element[CITY], source="from xing")
+                                                  
             # create the new registration
             # find block
             block = find_block(element[BLOCK], meeting)
@@ -252,7 +191,86 @@ def import_xing(content, meeting):
                 len(new_regs), new_regs, len(new_pers), new_pers),
        topic = "Xing")    
     return { 'registrations': new_regs, 'people': new_pers }
-    
+
+def create_person(first_name, last_name, email, title=None, salutation=None, company=None, function=None, phone=None,
+    street=None, pincode=None, city=None, source="from xing"):
+    # check if the person is already in the database (by email)
+    sql_query = """SELECT `name` 
+                   FROM `tabPerson`
+                   WHERE `email` = '{email}'
+                      OR `email2` = '{email}'
+                      OR `email3` = '{email}';""".format(email=email)
+    db_person = frappe.db.sql(sql_query, as_dict=True)
+    if not db_person:
+        # check if company exists
+        if company:
+            company_matches = frappe.get_all("Organisation", filters={'official_name': company}, fields=['name'])
+        # do not insert companies, too many typo issues
+        """if not company_matches and company and company != "":
+            company = frappe.get_doc({
+                'doctype': "Organisation",
+                'official_name': company
+            })
+            try:
+                company.insert()
+            except Exception as e:
+                frappe.log_error("Insert company {0} failed {1}".format(company, e)) """
+        full_name = "{0} {1}".format(first_name, last_name)
+        if title:
+            long_name = "{0} {1} {2}".format(title, first_name, last_name)
+        else:
+            long_name = full_name
+        try:
+            first_characters = last_name[0:4].upper()
+        except:
+            try:
+                first_characters = last_name.upper()
+            except:
+                first_characters = "NN"
+        gender = salutation
+        if gender == "Herr":
+            letter_salutation = "Sehr geehrter Herr"
+        elif gender == "Frau":
+            letter_salutation = "Sehr geehrte Frau"
+        else:
+            gender = ""
+            letter_salutation = ""
+        person = frappe.get_doc({
+            'doctype': "Person",
+            'first_name': first_name,
+            'last_name': last_name,
+            'full_name': full_name,
+            'long_name': long_name,
+            'first_characters': first_characters,
+            'email': email,
+            'company_phone': phone,
+            'title': title,
+            'gender': gender,
+            'letter_salutation': letter_salutation,
+            'website_description': "{0}, {1}".format(function, company),
+            'remarks': "{5}, {1} @ {0}, {2}, {3} {4}".format(company, function, 
+                street, pincode, city, source)
+        })
+        try:
+            person = person.insert()
+            # only insert company reference if provided (and matched)
+            if company_matches and company and company != "":
+                if function and function != "":
+                    organisation = person.append('organisations', {})
+                    organisation.organisation = company
+                    organisation.function = function
+                    organisation.is_primary = 0
+                    organisation.notes = source
+                    person.primary_organisation = company
+                    person.primary_function = function
+                    person.save()
+            person_name = person.name
+            frappe.db.commit()
+            new_pers.append(person_name)
+        except Exception as e:
+            frappe.log_error("Import Xing Error", "Insert Person {1} {2} failed. {3}: {0}".format(e, first_name, last_name, source))      
+    return
+
 def find_block(block_field, meeting):
     # regex block finder
     p = re.compile('IF.\d\d')

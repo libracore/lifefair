@@ -16,5 +16,6 @@ def add_log(title, topic="General", message=""):
         'topic': topic,
         'date': datetime.now()
     })
-    new_log.insert()
+    new_log.insert(ignore_permissions=True)
+    frappe.db.commit()
     return

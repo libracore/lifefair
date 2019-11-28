@@ -6,6 +6,9 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 from datetime import datetime
+from lifefair.lifefair.doctype.registration.registration import create_person
+from lifefair.lifefair.utils import add_log
+from frappe import _
 
 class Person(Document):
     def get_addresses(self):
@@ -295,3 +298,23 @@ def get_testimonials(event=None, block=None, exhibitor=None, interest=None):
         return testimonials
     else:
         return ('Nothing found for {0} = {1}'.format(field, target))
+
+# Public API to register a new person
+#   /api/method/lifefair.lifefair.doctype.person.person.register_new_person?fname=<...>&lname=<...>&salutation=<..>&email=<...>&organisation=<...>&function=<...>
+@frappe.whitelist(allow_guest=True)
+def register_new_person(fname="", lname="", salutation="", email="", title="", organisation="", function="", check=""):
+    now = datetime.now()
+    status = "rejected"
+    if check == "{0:04d}{1:02d}{2:02d}".format(now.year, now.month, now.day):
+        create_person(company=organisation,first_name=fname, 
+            last_name=lname, title=title,
+            salutation=None, email=email, phone=None, 
+            function=function, street=None, pincode=None, 
+            city=None, source="from web form (newsletter)")
+        status = "completed"
+    frappe.log_error("{0} {1}".format(fname, lname))
+    add_log(title= _("Web contact form received"),
+       message = ( _("Import of person ({0} {1} {3}) from web form {2}.")).format(
+                fname, lname, status, check),
+       topic = "Web form (newsletter)")    
+    return
