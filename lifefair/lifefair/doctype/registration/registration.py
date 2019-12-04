@@ -140,11 +140,13 @@ def import_xing(content, meeting):
                     person.save()
             else:
                 # person not found, create new person
-                create_person(company=element[COMPANY],first_name=element[FIRST_NAME], 
+                new_person = create_person(company=element[COMPANY],first_name=element[FIRST_NAME], 
                     last_name=element[LAST_NAME], title=element[TITLE],
                     salutation=element[SALUTATION], email=element[EMAIL], phone=element[PHONE], 
                     function=element[FUNCTION], street=element[STREET], pincode=element[PINCODE], 
                     city=element[CITY], source="from xing")
+                if new_person:
+                    new_pers.append(new_person)
                                                   
             # create the new registration
             # find block
@@ -201,6 +203,7 @@ def create_person(first_name, last_name, email, title=None, salutation=None, com
                       OR `email2` = '{email}'
                       OR `email3` = '{email}';""".format(email=email)
     db_person = frappe.db.sql(sql_query, as_dict=True)
+    person_name = None
     if not db_person:
         # check if company exists
         if company:
@@ -265,11 +268,11 @@ def create_person(first_name, last_name, email, title=None, salutation=None, com
                     person.primary_function = function
                     person.save()
             person_name = person.name
-            frappe.db.commit()
-            new_pers.append(person_name)
+            frappe.db.commit()            
         except Exception as e:
             frappe.log_error("Import Xing Error", "Insert Person {1} {2} failed. {3}: {0}".format(e, first_name, last_name, source))      
-    return
+    frappe.log_error(person_name)
+    return person_name
 
 def find_block(block_field, meeting):
     # regex block finder

@@ -309,15 +309,17 @@ def register_new_person(fname="", lname="", salutation="", email="", title="", o
     now = datetime.now()
     status = "rejected"
     if check == "{0:04d}{1:02d}{2:02d}".format(now.year, now.month, now.day):
-        create_person(company=organisation,first_name=fname, 
+        new_person = create_person(company=organisation,first_name=fname, 
             last_name=lname, title=title,
-            salutation=None, email=email, phone=None, 
+            salutation=salutation, email=email, phone=None, 
             function=function, street=None, pincode=None, 
             city=None, source="from web form (newsletter)")
-        status = "completed"
-    frappe.log_error("{0} {1}".format(fname, lname))
+        if new_person:
+            status = "completed - new person {0}".format(new_person)
+        else:
+            status = "completed - already in database"
     add_log(title= _("Web contact form received"),
-       message = ( _("Import of person ({0} {1} {3}) from web form {2}.")).format(
+       message = ( _("Import of person ({0} {1} chk{3}) from web form {2}.")).format(
                 fname, lname, status, check),
        topic = "Web form (newsletter)")    
     return
