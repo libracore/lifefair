@@ -147,6 +147,7 @@ def import_xing(content, meeting):
                     city=element[CITY], source="from xing")
                 if new_person:
                     new_pers.append(new_person)
+                    person_name = new_person
                                                   
             # create the new registration
             # find block
@@ -271,7 +272,7 @@ def create_person(first_name, last_name, email, title=None, salutation=None, com
             frappe.db.commit()            
         except Exception as e:
             frappe.log_error("Import Xing Error", "Insert Person {1} {2} failed. {3}: {0}".format(e, first_name, last_name, source))      
-    frappe.log_error(person_name)
+    #frappe.log_error(person_name)
     return person_name
 
 def find_block(block_field, meeting):
