@@ -4,3 +4,4 @@
 *.swp
 tags
 lifefair/docs/current
+__pycache__
