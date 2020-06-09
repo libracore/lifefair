@@ -19,7 +19,7 @@
  "is_standard": 1, 
  "login_required": 1, 
  "max_attachment_size": 0, 
- "modified": "2018-07-15 15:40:11.546261", 
+ "modified": "2020-06-09 07:45:11.546261", 
  "modified_by": "Administrator", 
  "module": "Lifefair", 
  "name": "partnership-ticket", 
@@ -29,7 +29,9 @@
  "route": "partnership_tickets", 
  "show_sidebar": 1, 
  "sidebar_items": [], 
- "success_url": "/partnership-ticket", 
+ "success_url": "/partnership_tickets", 
+ "button_label": "Speichern",
+ "success_message": "Vielen Dank. Ihre Änderungen wurden gespeichert.",
  "title": "Partnership Ticket", 
  "web_form_fields": [
   {
