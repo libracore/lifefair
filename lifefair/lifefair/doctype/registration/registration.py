@@ -148,6 +148,8 @@ def import_xing(content, meeting):
                 if new_person:
                     new_pers.append(new_person)
                     person_name = new_person
+                else:
+                    frappe.log_error("Import Xing Error", "Failed to insert person {0} {1} (Ticket: {2})".format(element[FIRST_NAME], element[LAST_NAME], element[TICKETNO]))
                                                   
             # create the new registration
             # find block
@@ -188,7 +190,7 @@ def import_xing(content, meeting):
                 frappe.db.commit()
                 new_regs.append(reg_name)
             except Exception as e:
-                frappe.log_error("Import Xing Error", "Insert Registration failed. {0}".format(e))
+                frappe.log_error("Import Xing Error", "Insert Registration failed. {0} (Ticket: {1})".format(e, element[TICKETNO]))
     add_log(title= _("Xing Import complete"),
        message = ( _("Import of {0} registrations ({1}) and {2} contacts ({3}).")).format(
                 len(new_regs), new_regs, len(new_pers), new_pers),
@@ -207,6 +209,7 @@ def create_person(first_name, last_name, email, title=None, salutation=None, com
     person_name = None
     if not db_person:
         # check if company exists
+        company_matches = None
         if company:
             company_matches = frappe.get_all("Organisation", filters={'official_name': company}, fields=['name'])
         # do not insert companies, too many typo issues
