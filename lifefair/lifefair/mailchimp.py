@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2019, libracore and contributors
+# Copyright (c) 2017-2020, libracore and contributors
 # License: AGPL v3. See LICENCE
 
 # import definitions
@@ -13,7 +13,7 @@ from requests.auth import HTTPBasicAuth
 from datetime import datetime
 import hashlib
 from frappe.utils.background_jobs import enqueue
-from utils import add_log
+from lifefair.lifefair.utils import add_log
 
 # execute API function
 def execute(host, api_token, payload, verify_ssl=True, method="GET"):  
