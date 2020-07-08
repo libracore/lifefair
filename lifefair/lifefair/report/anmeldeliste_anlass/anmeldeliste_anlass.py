@@ -23,8 +23,13 @@ def execute(filters=None):
                "Nur einmal kontakieren::50",
                "Block:Link/Block:100",
                "Briefanrede::100",
-               "Nachname::100"             
+               "Nachname::100",
+               "Geschlecht::100",
+               "Branche.:100",
+               "Hierarchiestufe.:100",
+               "Stakeholder::100"             
             ]
+            
     if filters:
         data = get_data(meeting=filters.meeting, as_list=True)
     else:
@@ -49,6 +54,10 @@ def get_data(meeting="%", as_list=True):
          `tabPerson`.`primary_organisation` AS `Organisation`,
          `tabRegistration`.`code` AS `Gutscheincode`,
          `tabPerson`.`email` AS `Email`,
+         `tabPerson`.`gender` AS `Geschlecht`,
+         `tabPerson`.`branche` AS `Branche`,
+         `tabPerson`.`hierarchiestufe` AS `Hierarchiestufe`,
+         `tabPerson`.`stakeholder` AS `Stakeholder`,
          `tabPerson`.`nur_einmal_kontaktieren` AS `Nur einmal kontakieren`,
          `tabRegistration`.`block` AS `Block`,
          IF (`tabPerson`.`salutation` LIKE "%", 
