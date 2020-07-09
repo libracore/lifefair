@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2020, libracore and contributors
+# Copyright (c) 2017-2019, libracore and contributors
 # License: AGPL v3. See LICENCE
 
 # import definitions
