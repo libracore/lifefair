@@ -11,6 +11,10 @@ def execute(filters=None):
     columns = ["Person:Link/Person:100", 
                "Personenkürzel::50",
                "Name::200", 
+               "Geschlecht::100",  
+               "Branche.:100",
+               "Hierarchiestufe.:100",
+               "Stakeholder::100"           
                "Zeile 1::100",
                "Zeile 2::100",
                "Geprüft von::50",
@@ -23,11 +27,7 @@ def execute(filters=None):
                "Nur einmal kontakieren::50",
                "Block:Link/Block:100",
                "Briefanrede::100",
-               "Nachname::100",
-               "Geschlecht::100",
-               "Branche.:100",
-               "Hierarchiestufe.:100",
-               "Stakeholder::100"             
+               "Nachname::100",   
             ]
             
     if filters:
@@ -43,6 +43,10 @@ def get_data(meeting="%", as_list=True):
          `tabRegistration`.`person` AS `Person`, 
          `tabPerson`.`first_characters` AS `Personenkürzel`,
          `tabPerson`.`long_name` AS `Name`, 
+         `tabPerson`.`gender` AS `Gender`, 
+         `tabPerson`.`branche` AS `Branche`,
+         `tabPerson`.`hierarchiestufe` AS `Hierarchiestufe`,
+         `tabPerson`.`stakeholder` AS `Stakeholder`,
          SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1) AS `Zeile 1`,
          IF (SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1) !=  
              SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1), 
@@ -54,10 +58,6 @@ def get_data(meeting="%", as_list=True):
          `tabPerson`.`primary_organisation` AS `Organisation`,
          `tabRegistration`.`code` AS `Gutscheincode`,
          `tabPerson`.`email` AS `Email`,
-         `tabPerson`.`gender` AS `Geschlecht`,
-         `tabPerson`.`branche` AS `Branche`,
-         `tabPerson`.`hierarchiestufe` AS `Hierarchiestufe`,
-         `tabPerson`.`stakeholder` AS `Stakeholder`,
          `tabPerson`.`nur_einmal_kontaktieren` AS `Nur einmal kontakieren`,
          `tabRegistration`.`block` AS `Block`,
          IF (`tabPerson`.`salutation` LIKE "%", 
