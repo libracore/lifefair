@@ -302,6 +302,28 @@ def get_testimonials(event=None, block=None, exhibitor=None, interest=None):
     else:
         return ('Nothing found for {0} = {1}'.format(field, target))
 
+# Public API to all impact testimonials
+# call the API from
+#   /api/method/lifefair.lifefair.doctype.person.person.get_impact_testimonials
+@frappe.whitelist(allow_guest=True)
+def get_impact_testimonials():
+    # prepare query
+    sql_query = """SELECT 
+            IF(ISNULL(`tabPerson Quote`.`text`), "", CONCAT("«",`tabPerson Quote`.`text`,"»")) AS `testimonial`,        
+            `tabPerson`.`long_name` AS `person`,
+            `tabPerson`.`website_description` AS `website_description`,
+            IF(ISNULL(`tabPerson`.`image`), "https://sges.ch/wp-content/uploads/referenten-2019/avatar.png", `tabPerson`.`image`) AS `image`
+        FROM `tabPerson Quote`
+        LEFT JOIN `tabPerson` ON `tabPerson`.`name` = `tabPerson Quote`.`parent`
+        WHERE `tabPerson Quote`.`impact` = 1
+        ORDER BY `tabPerson`.`first_characters` ASC;"""
+
+    testimonials = frappe.db.sql(sql_query, as_dict=True)        
+    if testimonials:
+        return testimonials
+    else:
+        return ('Nothing found for {0} = {1}'.format(field, target))
+
 # Public API to register a new person
 #   /api/method/lifefair.lifefair.doctype.person.person.register_new_person?fname=<...>&lname=<...>&salutation=<..>&email=<...>&organisation=<...>&function=<...>
 @frappe.whitelist(allow_guest=True)
