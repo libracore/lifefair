@@ -10,24 +10,24 @@ def execute(filters=None):
     
     columns = ["Person:Link/Person:100", 
                "Personenkürzel::50",
-               "Name::200", 
-               "Geschlecht::100",  
-               "Branche.:100",
-               "Hierarchiestufe.:100",
-               "Stakeholder::100"           
+               "Name::200",   
+               "Geschlecht::100",    
+               "Branche",     
+               "Stakeholder",
+               "Hierarchiestufe",
                "Zeile 1::100",
                "Zeile 2::100",
-               "Geprüft von::50",
+               "Geprüft von::100",
                "Registrierung:Link/Registration:100",
                "Meeting:Link/Meeting:200",
                "Funktion::150",
                "Organisation:Link/Organisation:200",
                "Gutscheincode::200",
                "Email::150",
-               "Nur einmal kontakieren::50",
+               "Nur einmal kontakieren::100",
                "Block:Link/Block:100",
                "Briefanrede::100",
-               "Nachname::100",   
+               "Nachname::100", 
             ]
             
     if filters:
@@ -42,11 +42,11 @@ def get_data(meeting="%", as_list=True):
     sql_query = """SELECT 
          `tabRegistration`.`person` AS `Person`, 
          `tabPerson`.`first_characters` AS `Personenkürzel`,
-         `tabPerson`.`long_name` AS `Name`, 
-         `tabPerson`.`gender` AS `Gender`, 
+         `tabPerson`.`long_name` AS `Name`,
+         `tabPerson`.`gender` AS `Geschlecht`,
          `tabPerson`.`branche` AS `Branche`,
-         `tabPerson`.`hierarchiestufe` AS `Hierarchiestufe`,
          `tabPerson`.`stakeholder` AS `Stakeholder`,
+         `tabPerson`.`hierarchiestufe` AS `Hierarchiestufe`,
          SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1) AS `Zeile 1`,
          IF (SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1) !=  
              SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1), 
