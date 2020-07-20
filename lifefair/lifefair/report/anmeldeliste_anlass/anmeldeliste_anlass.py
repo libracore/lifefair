@@ -9,6 +9,7 @@ def execute(filters=None):
     columns, data = [], []
     
     columns = ["Person:Link/Person:100", 
+               "Teilnahme::200",
                "Personenkürzel::50",
                "Name::200",   
                "Geschlecht::100",    
@@ -41,6 +42,7 @@ def execute(filters=None):
 def get_data(meeting="%", as_list=True):
     sql_query = """SELECT 
          `tabRegistration`.`person` AS `Person`, 
+         `tabRegistration`.`participation` AS `Teilnahme`, 
          `tabPerson`.`first_characters` AS `Personenkürzel`,
          `tabPerson`.`long_name` AS `Name`,
          `tabPerson`.`gender` AS `Geschlecht`,
