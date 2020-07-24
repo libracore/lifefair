@@ -8,38 +8,39 @@ import frappe
 def execute(filters=None):
     columns, data = [], []
     
-    columns = ["Person:Link/Person:100", 
-               "Teilnahme::200",
-               "Personenkürzel::50",
-               "Name::200",   
-               "Geschlecht::100",    
-               "Branche",     
-               "Stakeholder",
-               "Hierarchiestufe",
-               "Zeile 1::100",
-               "Zeile 2::100",
-               "Geprüft von::100",
-               "Registrierung:Link/Registration:100",
-               "Meeting:Link/Meeting:200",
-               "Funktion::150",
-               "Organisation:Link/Organisation:200",
-               "Gutscheincode::200",
-               "Email::150",
-               "Nur einmal kontakieren::100",
-               "Block:Link/Block:100",
-               "Briefanrede::100",
-               "Nachname::100", 
+    columns = [
+                {"label": ("Kontakt KNT"), "fieldname": "Person", "fieldtype": "Link", "options": "Person", "width": 100},
+                {"label": ("Personenkürzel"), "fieldname": "item_group", "fieldtype": "Link", "options": "Item Group",  "width": 50},
+                {"label": ("Name"), "fieldname": "Namw", "fieldtype": "Data", "width": 200},
+                {"label": ("Geschlecht"), "fieldname": "Geschlecht", "fieldtype": "Data", "width": 100},
+                {"label": ("Zeile 1"), "fieldname": "Zeile 1", "fieldtype": "Data", "width": 100},
+                {"label": ("Zeile 2"), "fieldname": "Zeile 2", "fieldtype": "Data", "width": 100},
+                {"label": ("Geprüft von"), "fieldname": "Geprüft von", "fieldtype": "Data", "width": 100},
+                {"label": ("Registrierung"), "fieldname": "Registrierung", "fieldtype": "Link", "options": "Registration", "width": 100}, 
+                {"label": ("Gutscheincode"), "fieldname": "Gutscheincode", "fieldtype": "Data", "width": 200},
+                {"label": ("Anlass"), "fieldname": "Meeting", "fieldtype": "Data", "width": 200},
+                {"label": ("Teilnahme"), "fieldname": "Teilnahme", "fieldtype": "Data", "width": 200},
+                {"label": ("Block"), "fieldname": "Block", "fieldtype": "Link", "options": "Block", "width": 100}, 
+                {"label": ("Funktion %"), "fieldname": "Funktion", "fieldtype": "Data", "width": 150},
+                {"label": ("Organisation"), "fieldname": "Organisation", "fieldtype": "Link", "options": "Organisation", "width": 200}, 
+                {"label": ("Branche"), "fieldname": "Branche", "fieldtype": "Data", "width": 100},
+                {"label": ("Stakeholder"), "fieldname": "Stakeholder", "fieldtype": "Data", "width": 100},
+                {"label": ("Hierarchiestufe"), "fieldname": "Hierarchiestufe", "fieldtype": "Data", "width": 100},
+                {"label": ("Email"), "fieldname": "Email", "fieldtype": "Data", "width": 150},
+                {"label": ("Nur einmal kontaktieren"), "fieldname": "Nur einmal kontaktieren", "fieldtype": "Data", "width": 100},
+                {"label": ("Briefanrede"), "fieldname": "Briefanrede", "fieldtype": "Data", "width": 100},
+                {"label": ("Nachname"), "fieldname": "Last Name", "fieldtype": "Data", "width": 100}
             ]
             
     if filters:
-        data = get_data(meeting=filters.meeting, as_list=True)
+        data = get_data(meeting=filters.meeting, as_dict=True)
     else:
-        data = get_data(as_list=True)
+        data = get_data(as_dict=True)
           
     return columns, data
 
 # use as_list=True in case of later Export to Excel
-def get_data(meeting="%", as_list=True):
+def get_data(meeting="%", as_dict=True):
     sql_query = """SELECT 
          `tabRegistration`.`person` AS `Person`, 
          `tabRegistration`.`participation` AS `Teilnahme`, 
@@ -72,8 +73,8 @@ def get_data(meeting="%", as_list=True):
           `meeting` LIKE '{0}' 
           AND `status` NOT IN ("Cancelled", "Abgemeldet")
         LIMIT 10000;""".format(meeting)
-    if as_list:
-        data = frappe.db.sql(sql_query, as_list = True)
+    if as_dict:
+        data = frappe.db.sql(sql_query, as_dict = True)
     else:
         data = frappe.db.sql(sql_query, as_dict = True)
     return data
