@@ -105,12 +105,12 @@
   {
    "fieldname": "topic",
    "fieldtype": "Small Text",
-   "label": "Topic"
+   "label": "Thema und Inhalt"
   },
   {
    "fieldname": "content",
    "fieldtype": "Small Text",
-   "label": "Thema und Inhalt"
+   "label": "Zentrale Fragen"
   },
   {
    "fieldname": "use",
@@ -194,7 +194,7 @@
    "label": "Neues Datum"
   }
  ],
- "modified": "2020-07-24 14:25:26.604907",
+ "modified": "2020-07-24 14:56:02.407511",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",
