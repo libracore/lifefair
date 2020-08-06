@@ -286,8 +286,14 @@ def find_block(block_field, meeting):
     if match_block:
         block = "{0} {1}".format(meeting, match_block.group(0))
         # check if the block exists in the db
-        db_block = frappe.get_all("Block", filters={'name': block}, fields=['name'])
-        if not db_block:
+        db_block = frappe.get_all("Block", 
+            filters=[['name', 'LIKE', '%{0}%'.format(block)],
+                     ['meeting', '=', meeting]], 
+            fields=['name'].
+            order_by='name ASC')
+        if len(db_block) > 0:
+            block = db_block[0]['name']
+        else:
             block = None
     else:
         block = None  
