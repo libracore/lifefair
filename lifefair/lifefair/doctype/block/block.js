@@ -105,10 +105,11 @@ function generate_csv(frm) {
 	var minutes = 0;
 	try {
 		time_part = frm.doc.time.split(" ")[0];
-		hours = parseInt(time_part.split(":")[0])
-		minutes = parseInt(time_part.split(":")[1])
+		hours = parseInt(time_part.split(":")[0]);
+		minutes = parseInt(time_part.split(":")[1]);
 	} catch {
 		// do nothing, will revert to default 14:00
+		console.log("Planning with default start time...");
 	}
     var time = new Date();
     time.setHours(hours);
@@ -155,7 +156,7 @@ function generate_csv(frm) {
     if (now.getHours() > 9) {
         filename += now.getHours();
     } else {
-        filename += now.getHours();
+        filename += "0" + now.getHours();
     }
     if (now.getMinutes() > 9) {
         filename += "-" + now.getMinutes();
