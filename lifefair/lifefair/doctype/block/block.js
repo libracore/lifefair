@@ -2,7 +2,7 @@
 // For license information, please see license.txt
 
 frappe.ui.form.on('Block', {
-	refresh: function(frm) {
+    refresh: function(frm) {
         // set filters for applicable print formats (only for Block)
         cur_frm.fields_dict['flyer_print_format'].get_query = function(doc) {
             return { filters: {'doc_type': 'Block'} }
@@ -18,35 +18,35 @@ frappe.ui.form.on('Block', {
                 generate_csv(frm);
             });
         }
-	}
+    }
 });
 
 function display_partners(frm) {
     // render partners
     frappe.call({
-	  method: 'get_partners',
-	  doc: frm.doc,
-	  callback: function(r) {
-	    if (r.message) {
-		var html = "";
-		if (r.message.partners.length == 0) {
-		    html = "<p>" + __("No partners found") + "</p>";
-		} else {
-		    r.message.partners.forEach(function (partner) {
+      method: 'get_partners',
+      doc: frm.doc,
+      callback: function(r) {
+        if (r.message) {
+        var html = "";
+        if (r.message.partners.length == 0) {
+            html = "<p>" + __("No partners found") + "</p>";
+        } else {
+            r.message.partners.forEach(function (partner) {
                 // address code generator
                 html += '<p>';
                 html += '<span class="octicon octicon-broadcast"></span>&nbsp;';
                 html += '<a href="/desk#Form/Organisation/' + partner.parent + '">';
                 html += partner.parent + "</a>: " + partner.type;
                 html += "</p>";
-		    });
-		}					
-		if (frm.fields_dict['partnerships_html']) {
-			$(frm.fields_dict['partnerships_html'].wrapper).html(html);
-		  }
-	    }
-	  }
-    });	
+            });
+        }                    
+        if (frm.fields_dict['partnerships_html']) {
+            $(frm.fields_dict['partnerships_html'].wrapper).html(html);
+          }
+        }
+      }
+    });    
 }
 
 // create a downloadable file that directly opens in the browser
@@ -67,11 +67,11 @@ function generate_html(frm) {
     var container = frm;
     //console.log(args.toSource());
     frappe.call({
-	  method: 'get_partners',
-	  doc: frm.doc,
-	  callback: function(r) {
-	    if ((r.message) && (r.message.partners.length > 0)) {
-		    container.partners = r.message.partners;
+      method: 'get_partners',
+      doc: frm.doc,
+      callback: function(r) {
+        if ((r.message) && (r.message.partners.length > 0)) {
+            container.partners = r.message.partners;
         } else {
             container.partners = [];
         }
@@ -89,8 +89,8 @@ function generate_html(frm) {
         // prepare for download
         download("Review " + frm.doc.name + ".html", 'data:text/html;charset=utf-8,', review_html);
         
-	  }
-    });	
+      }
+    });    
 }
 
 
@@ -100,17 +100,17 @@ function generate_csv(frm) {
     csv += "Block\t" + frm.doc.name + "\n\r";
     csv += "\n\r";
     csv += "Idx\tBeschreibung\tZeit\tDauer\tPerson (Code)\tName der Person\tStatus\tRolle\tFormat\n\r";
-	// try to fetch start time
-	var hours = 14;
-	var minutes = 0;
-	try {
-		time_part = frm.doc.time.split(" ")[0];
-		hours = parseInt(time_part.split(":")[0]);
-		minutes = parseInt(time_part.split(":")[1]);
-	} catch {
-		// do nothing, will revert to default 14:00
-		console.log("Planning with default start time...");
-	}
+    // try to fetch start time
+    var hours = 14;
+    var minutes = 0;
+    try {
+        time_part = frm.doc.time.split(" ")[0];
+        hours = parseInt(time_part.split(":")[0]);
+        minutes = parseInt(time_part.split(":")[1]);
+    } catch {
+        // do nothing, will revert to default 14:00
+        console.log("Planning with default start time...");
+    }
     var time = new Date();
     time.setHours(hours);
     time.setMinutes(minutes);
