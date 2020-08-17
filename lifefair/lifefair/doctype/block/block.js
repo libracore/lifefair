@@ -100,9 +100,19 @@ function generate_csv(frm) {
     csv += "Block\t" + frm.doc.name + "\n\r";
     csv += "\n\r";
     csv += "Idx\tBeschreibung\tZeit\tDauer\tPerson (Code)\tName der Person\tStatus\tRolle\tFormat\n\r";
+	// try to fetch start time
+	var hours = 14;
+	var minutes = 0;
+	try {
+		time_part = frm.doc.time.split(" ")[0];
+		hours = parseInt(time_part.split(":")[0])
+		minutes = parseInt(time_part.split(":")[1])
+	} catch {
+		// do nothing, will revert to default 14:00
+	}
     var time = new Date();
-    time.setHours(14);
-    time.setMinutes(0);
+    time.setHours(hours);
+    time.setMinutes(minutes);
     var timeStr = "";
     // aggregate planing items
     try {
