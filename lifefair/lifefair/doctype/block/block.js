@@ -104,7 +104,7 @@ function generate_csv(frm) {
     var hours = 14;
     var minutes = 0;
     try {
-        time_part = frm.doc.time.split(" ")[0];
+        var time_part = frm.doc.time.split(" ")[0];
         hours = parseInt(time_part.split(":")[0]);
         minutes = parseInt(time_part.split(":")[1]);
     } catch {
