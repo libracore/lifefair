@@ -40,6 +40,7 @@ DocType: Person,Business Card,Visitenkarte
 DocType: Person,Related contacts,Verknüpfte Kontakte
 DocType: Person,This person knows...,Diese Person kennt...
 DocType: Person,Personal Postal Code,Private PLZ
+DocType: Person,for COVID tracing,für COVID-Tracing
 DocType: Organisation,Official name,Name
 DocType: Organisation,Alternative names,Alternative Namen
 DocType: Organisation,People,Personen
