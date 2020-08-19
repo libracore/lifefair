@@ -57,6 +57,7 @@
   "private_phone",
   "fax",
   "homepage",
+  "personal_postal_code",
   "section_salutation",
   "salutation",
   "title",
@@ -481,10 +482,16 @@
    "fieldname": "email_invalid_data",
    "fieldtype": "Data",
    "label": "Ung\u00fcltige Email-Adresse"
+  },
+  {
+   "description": "for COVID tracing",
+   "fieldname": "personal_postal_code",
+   "fieldtype": "Data",
+   "label": "Personal Postal Code"
   }
  ],
  "image_field": "image",
- "modified": "2020-07-08 12:35:11.541792",
+ "modified": "2020-08-19 15:00:37.662480",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",

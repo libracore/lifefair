@@ -29,7 +29,8 @@ def execute(filters=None):
                 {"label": ("Email"), "fieldname": "email", "fieldtype": "Data", "width": 150},
                 {"label": ("Nur einmal kontaktieren"), "fieldname": "contact_only_once", "fieldtype": "Data", "width": 100},
                 {"label": ("Briefanrede"), "fieldname": "briefanrede", "fieldtype": "Data", "width": 100},
-                {"label": ("Nachname"), "fieldname": "last_name", "fieldtype": "Data", "width": 100}
+                {"label": ("Nachname"), "fieldname": "last_name", "fieldtype": "Data", "width": 100},
+                {"label": ("PLZ"), "fieldname": "plz", "fieldtype": "Data", "width": 50}
             ]
 
     if filters:
@@ -49,6 +50,7 @@ def get_data(meeting="%", as_dict=True):
          `tabPerson`.`branche` AS `branche`,
          `tabPerson`.`stakeholder` AS `stakeholder`,
          `tabPerson`.`hierarchiestufe` AS `hierarchiestufe`,
+         `tabPerson`.`personal_postal_code` AS `plz`,
          SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1) AS `line1`,
          IF (SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1) !=
              SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1),
