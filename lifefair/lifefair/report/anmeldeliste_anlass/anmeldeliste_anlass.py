@@ -76,7 +76,7 @@ def get_data(meeting="%", as_dict=True):
         LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
         WHERE
           `meeting` LIKE '{0}'
-          AND `status` NOT IN ("Cancelled", "Abgemeldet")
+          AND `status` NOT IN ("Cancelled", "Abgemeldet", "Tentative")
         LIMIT 10000;""".format(meeting)
     if as_dict:
         data = frappe.db.sql(sql_query, as_dict = True)

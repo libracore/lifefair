@@ -106,7 +106,7 @@ def import_xing(content, meeting):
         if db_regs:
             # ticket is already in the database, update
             reg = frappe.get_doc("Registration", db_regs[0]['name'])
-            status = parse_status(element[STATUS])
+            status = parse_status(element[STATUS], element[REMARKS])
             reg.status = status
             reg.type = element[TYPE]
             reg.payment = element[PAYMENT]
@@ -166,7 +166,7 @@ def import_xing(content, meeting):
                 converted_date = zerodate + delta
                 date = "{year:04d}-{month:02d}-{day:02d}".format(year=converted_date.year, month=converted_date.month, day=converted_date.day)
             # parse status ['Bezahlt', 'Storniert', 'Versendet'] > [Tentative, Confirmed, Cancelled, Paid, Sent]
-            status = parse_status(element[STATUS])
+            status = parse_status(element[STATUS], element[REMARKS])
             try:
                 registration = frappe.get_doc({
                     'doctype': "Registration",
@@ -299,12 +299,16 @@ def find_block(block_field, meeting):
         block = None  
     return block
         
-def parse_status(xing_status):
+def parse_status(xing_status, remarks=None):
     status = None
+    # parse from normal status
     if xing_status == "Bezahlt":
         status = "Paid"
     elif xing_status == "Storniert":
         status = "Cancelled"
     elif xing_status == "Versendet":
         status = "Sent"
+    # override status in special cases: Warteliste in remarks is tentative
+    if "warteliste" in remarks.replace(" ", "").lower():
+        status = "Tentative"
     return status
