@@ -308,7 +308,7 @@ def parse_status(xing_status, remarks=None):
         status = "Cancelled"
     elif xing_status == "Versendet":
         status = "Sent"
-    # override status in special cases: Warteliste in remarks is tentative
-    if "warteliste" in remarks.replace(" ", "").lower():
+    # override status in special cases: Warteliste in remarks is tentative (except on cancellations)
+    if not status = "Cancelled" and "warteliste" in remarks.replace(" ", "").lower():
         status = "Tentative"
     return status
