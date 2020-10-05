@@ -10,10 +10,49 @@ import csv
 import re
 import datetime
 from lifefair.lifefair.utils import add_log
+from random import randint
 
 class Registration(Document):
+    def create_ticket(self):
+        self.date = datetime.date.today()
+        # get random 16
+        self.barcode = get_barcode()
+        # get ticket number (####-####-####)
+        self.ticket_number = get_ticket_code()
+        self.type = "LF-Ticket"
+        
+        self.save()
+        return
     pass
 
+def get_barcode():
+    # generate random barcode
+    barcode = ''
+    for i in range(16):
+        barcode += str(randint(0,9))
+    # check if this is already in the database
+    db = frappe.get_all("Registration", filters={'barcode': barcode}, fields=['name'])
+    if len(db) > 0:
+        # it's in the database, retry
+        barcode = get_barcode()
+    return barcode
+
+def get_ticket_code():
+    # generate random ticket code
+    ticket_code = ''
+    for i in range(14):
+        ticket_code += str(randint(0,9))
+    ticket_code = list(ticket_code)
+    ticket_code[4] = "-"
+    ticket_code[9] = "-"
+    ticket_code = "".join(ticket_code)
+    # check if this is already in the database
+    db = frappe.get_all("Registration", filters={'ticket_number': ticket_code}, fields=['name'])
+    if len(db) > 0:
+        # it's in the database, retry
+        ticket_code = get_ticket_code()
+    return ticket_code
+    
 @frappe.whitelist()
 def import_xing(content, meeting):
     new_regs = []

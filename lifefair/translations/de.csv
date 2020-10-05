@@ -94,6 +94,7 @@ DocType: Registration,Error reading file,Fehler beim Lesen der Datei
 DocType: Registration,Error,Fehler
 DocType: Registration,Please select a file.,Bitte eine Datei auswählen.
 DocType: Registration,Registered,Registriert
+DocType: Registration,Create ticket,Ticket erstellen
 DocType: Block,Official title,Offizieller Titel
 DocType: Block,Use,Nutzen
 DocType: Block,Tile text,Kacheltext

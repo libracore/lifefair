@@ -173,11 +173,12 @@
   },
   {
    "fieldname": "sponsor",
-   "fieldtype": "Data",
-   "label": "Sponsor"
+   "fieldtype": "Link",
+   "label": "Sponsor",
+   "options": "Organisation"
   }
  ],
- "modified": "2020-10-05 17:37:54.313035",
+ "modified": "2020-10-05 18:03:27.504978",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Registration",
