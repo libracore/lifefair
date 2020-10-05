@@ -134,26 +134,21 @@ def import_xing(content, meeting):
                 db_person = frappe.get_all("Person", filters={'email2': element[EMAIL]}, fields=['name'])
                 if not db_person:
                     db_person = frappe.get_all("Person", filters={'email3': element[EMAIL]}, fields=['name'])
+            phone = element[PHONE]
+            if PHONE_2 and element[PHONE_2] and element[PHONE_2] != ".":
+                phone = element[PHONE_2]
             if db_person:
                 person_name = db_person[0]['name']
                 # get person, check website_description and update if empty
                 person = frappe.get_doc("Person", db_person[0]['name'])
                 if not person.website_description:
                     person.website_description = "{0}, {1}".format(element[FUNCTION], element[COMPANY])
-                    person.save()
                 # update phone number if missing
                 if not person.company_phone:
-                    if PHONE_2 and element[PHONE_2] and element[PHONE_2] != ".":
-                        person.company_phone = element[PHONE_2]
-                    elif element[PHONE]:
-                        person.company_phone = element[PHONE]
-                    person.save()
+                    person.company_phone = phone
+                person.save()
             else:
                 # person not found, create new person
-                if PHONE_2 and element[PHONE_2] and element[PHONE_2] != ".":
-                    phone = element[PHONE_2]
-                else:
-                    phone = element[PHONE]
                 new_person = create_person(company=element[COMPANY],first_name=element[FIRST_NAME], 
                     last_name=element[LAST_NAME], title=element[TITLE],
                     salutation=element[SALUTATION], email=element[EMAIL], phone=phone, 
@@ -194,7 +189,7 @@ def import_xing(content, meeting):
                     'type': element[TYPE],
                     'payment': element[PAYMENT],
                     'invoice_number': element[INVOICENO],
-                    'phone': element[PHONE],
+                    'phone': phone,
                     'status': status,
                     'code': element[CODE],
                     'participation': element[PARTICIPATION]
