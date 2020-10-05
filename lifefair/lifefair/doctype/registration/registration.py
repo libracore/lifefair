@@ -42,7 +42,8 @@ def import_xing(content, meeting):
     INVOICENO       = 43                    # AR
     CODE            = 47                    # AV, "Gutscheincode", e.g. "S18STAFF"
     PARTICIPATION   = 51                    # AZ, "Ich nehme teil" 
-      
+    PHONE_2         = None
+    
     isfirst = True
     # read csv
     elements = csv.reader(content.splitlines(), dialect=csv.excel)
@@ -78,6 +79,8 @@ def import_xing(content, meeting):
                     COMPANY = i
                 elif column == "Telefon":
                     PHONE = i
+                elif column == "Telefonnummer":
+                    PHONE_2 = i
                 elif column == "Strasse":
                     STREET = i
                 elif column == "Postleitzahl":                  
@@ -138,11 +141,22 @@ def import_xing(content, meeting):
                 if not person.website_description:
                     person.website_description = "{0}, {1}".format(element[FUNCTION], element[COMPANY])
                     person.save()
+                # update phone number if missing
+                if not person.company_phone:
+                    if PHONE_2 and element[PHONE_2] and element[PHONE_2] != ".":
+                        person.company_phone = element[PHONE_2]
+                    elif element[PHONE]:
+                        person.company_phone = element[PHONE]
+                    person.save()
             else:
                 # person not found, create new person
+                if PHONE_2 and element[PHONE_2] and element[PHONE_2] != ".":
+                    phone = element[PHONE_2]
+                else:
+                    phone = element[PHONE]
                 new_person = create_person(company=element[COMPANY],first_name=element[FIRST_NAME], 
                     last_name=element[LAST_NAME], title=element[TITLE],
-                    salutation=element[SALUTATION], email=element[EMAIL], phone=element[PHONE], 
+                    salutation=element[SALUTATION], email=element[EMAIL], phone=phone, 
                     function=element[FUNCTION], street=element[STREET], pincode=element[PINCODE], 
                     city=element[CITY], source="from xing")
                 if new_person:
