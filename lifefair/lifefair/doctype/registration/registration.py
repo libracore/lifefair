@@ -15,8 +15,8 @@ from random import randint
 class Registration(Document):
     def create_ticket(self):
         self.date = datetime.date.today()
-        # get random 16
-        self.barcode = get_barcode()
+        # get random 18 digit barcode
+        self.barcode = get_barcode(18)
         # get ticket number (####-####-####)
         self.ticket_number = get_ticket_code()
         self.type = "LF-Ticket"
@@ -25,16 +25,16 @@ class Registration(Document):
         return
     pass
 
-def get_barcode():
+def get_barcode(l):
     # generate random barcode
     barcode = ''
-    for i in range(16):
+    for i in range(l):
         barcode += str(randint(0,9))
     # check if this is already in the database
     db = frappe.get_all("Registration", filters={'barcode': barcode}, fields=['name'])
     if len(db) > 0:
         # it's in the database, retry
-        barcode = get_barcode()
+        barcode = get_barcode(l)
     return barcode
 
 def get_ticket_code():
