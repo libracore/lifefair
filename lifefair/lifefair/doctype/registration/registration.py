@@ -43,8 +43,8 @@ def get_ticket_code():
     for i in range(14):
         ticket_code += str(randint(0,9))
     ticket_code = list(ticket_code)
-    ticket_code[4] = "-"
-    ticket_code[9] = "-"
+    ticket_code[4] = "/"
+    ticket_code[9] = "/"
     ticket_code = "".join(ticket_code)
     # check if this is already in the database
     db = frappe.get_all("Registration", filters={'ticket_number': ticket_code}, fields=['name'])
