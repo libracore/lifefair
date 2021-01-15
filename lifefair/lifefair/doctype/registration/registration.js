@@ -16,7 +16,7 @@ function create_ticket(frm) {
         method: 'create_ticket',
         doc: frm.doc,
         callback: function(response) {
-            refresh_field(['date', 'barcode', 'ticket_number', 'type', 'invoice_number'])
+            refresh_field(['date', 'barcode', 'ticket_number', 'type', 'invoice_number', 'email_clerk'])
         }
     });
 }

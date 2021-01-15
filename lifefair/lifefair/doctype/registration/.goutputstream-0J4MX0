@@ -32,7 +32,6 @@ class Registration(Document):
 def set_reporting_date(docu):
 	
 	re = frappe.get_doc('Registration', docu)
-	frappe.msgprint(type(re))
 	re.free_text = "hallo"
 	meeting = frappe.get_doc('Meeting', re.meeting)
 	
