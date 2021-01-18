@@ -11,6 +11,7 @@ import re
 import datetime
 from lifefair.lifefair.utils import add_log
 from random import randint
+import datetime
 from datetime import timedelta
 
 class Registration(Document):
@@ -21,7 +22,7 @@ class Registration(Document):
         # get ticket number (####-####-####)
         self.ticket_number = get_ticket_code()
         self.type = "LF-Ticket"
-        self.email_clerk = frappe.session.user_email
+        self.email_clerk = frappe.session.user
         self.save()
         
         
@@ -31,23 +32,21 @@ class Registration(Document):
 @frappe.whitelist()
 def set_reporting_date(docu):
 	
-	re = frappe.get_doc('Registration', docu)
-	frappe.msgprint(type(re))
-	re.free_text = "hallo"
-	meeting = frappe.get_doc('Meeting', re.meeting)
 	
-	registration_date = re.date
-	registration_date + timedelta(days=10)
-	re.meldedate = registration_date
-	#meeting_date = meeting.date
-	#meeting_date + timedelta(days=8)
+	r = frappe.get_doc('Registration', docu)
+	meeting = frappe.get_doc('Meeting', r.meeting)
 	
-	#re.meldedatum = min(registration_date, meeting_date)
-	re.save
+	registration_date = r.date
+	meeting_date = datetime.datetime.strptime(meeting.date, '%d.%m.%Y')
 	
-	frappe.msgprint(re.person)
-	frappe.msgprint("hello")
-	print("hello")
+	reg = registration_date + datetime.timedelta(days=10)
+	met = meeting_date - datetime.timedelta(days=8)
+
+	earliest = min(reg, met.date())
+	r.meldedatum = earliest
+	
+	r.save()
+	
 	return
 
 
