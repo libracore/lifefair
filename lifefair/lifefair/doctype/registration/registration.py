@@ -11,6 +11,7 @@ import re
 import datetime
 from lifefair.lifefair.utils import add_log
 from random import randint
+from datetime import timedelta
 
 class Registration(Document):
     def create_ticket(self):
@@ -20,10 +21,25 @@ class Registration(Document):
         # get ticket number (####-####-####)
         self.ticket_number = get_ticket_code()
         self.type = "LF-Ticket"
+        self.email_clerk = frappe.session.user
+        
+        meeting = frappe.get_doc('Meeting', self.meeting)
+        registration_date = self.date
+        meeting_date = datetime.datetime.strptime(meeting.date, '%d.%m.%Y')
+	
+        reg = registration_date + datetime.timedelta(days=10)
+        met = meeting_date - datetime.timedelta(days=8)
+
+        earliest = min(reg, met.date())
+        self.meldedatum = earliest
+        
         
         self.save()
+        
+        
         return
     pass
+
 
 def get_barcode(l):
     # generate random barcode

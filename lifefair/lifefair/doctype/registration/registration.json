@@ -28,8 +28,10 @@
   "is_checked",
   "section_ticket",
   "free_text",
+  "email_clerk",
   "column_ticket",
-  "sponsor"
+  "sponsor",
+  "meldedatum"
  ],
  "fields": [
   {
@@ -176,9 +178,19 @@
    "fieldtype": "Link",
    "label": "Sponsor",
    "options": "Organisation"
+  },
+  {
+   "fieldname": "email_clerk",
+   "fieldtype": "Data",
+   "label": "Email Clerk"
+  },
+  {
+   "fieldname": "meldedatum",
+   "fieldtype": "Date",
+   "label": "Meldedatum"
   }
  ],
- "modified": "2020-10-05 18:03:27.504978",
+ "modified": "2021-01-14 23:46:43.509324",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Registration",
