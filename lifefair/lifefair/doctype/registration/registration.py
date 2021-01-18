@@ -23,6 +23,18 @@ class Registration(Document):
         self.ticket_number = get_ticket_code()
         self.type = "LF-Ticket"
         self.email_clerk = frappe.session.user
+        
+        meeting = frappe.get_doc('Meeting', self.meeting)
+        registration_date = self.date
+        meeting_date = datetime.datetime.strptime(meeting.date, '%d.%m.%Y')
+	
+        reg = registration_date + datetime.timedelta(days=10)
+        met = meeting_date - datetime.timedelta(days=8)
+
+        earliest = min(reg, met.date())
+        self.meldedatum = earliest
+        
+        
         self.save()
         
         
@@ -32,7 +44,7 @@ class Registration(Document):
 @frappe.whitelist()
 def set_reporting_date(docu):
 	
-	
+	'''
 	r = frappe.get_doc('Registration', docu)
 	meeting = frappe.get_doc('Meeting', r.meeting)
 	
@@ -46,7 +58,7 @@ def set_reporting_date(docu):
 	r.meldedatum = earliest
 	
 	r.save()
-	
+	'''
 	return
 
 
