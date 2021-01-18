@@ -29,7 +29,7 @@ def get_actors(meeting=None, block=None, as_list=True):
     sql_query = """SELECT 
                 `t2`.`title` AS `Block`,
                 `t4`.`long_name` AS `Name`,
-                `t4`.`website_description` AS `Website description`,
+                `t3`.`person_website_description` AS `Website description`,
                 `t3`.`person_role` AS `Role`,
                 `t3`.`person` AS `Person`,
                 `t4`.`show_on_website` AS `Show on website`,
