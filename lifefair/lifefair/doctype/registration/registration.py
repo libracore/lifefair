@@ -10,8 +10,6 @@ import csv
 import re
 import datetime
 from lifefair.lifefair.utils import add_log
-from random import randint
-import datetime
 from datetime import timedelta
 
 class Registration(Document):
@@ -41,25 +39,6 @@ class Registration(Document):
         return
     pass
 
-@frappe.whitelist()
-def set_reporting_date(docu):
-	
-	'''
-	r = frappe.get_doc('Registration', docu)
-	meeting = frappe.get_doc('Meeting', r.meeting)
-	
-	registration_date = r.date
-	meeting_date = datetime.datetime.strptime(meeting.date, '%d.%m.%Y')
-	
-	reg = registration_date + datetime.timedelta(days=10)
-	met = meeting_date - datetime.timedelta(days=8)
-
-	earliest = min(reg, met.date())
-	r.meldedatum = earliest
-	
-	r.save()
-	'''
-	return
 
 
 def get_barcode(l):

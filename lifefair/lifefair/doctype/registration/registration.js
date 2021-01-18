@@ -9,20 +9,7 @@ frappe.ui.form.on('Registration', {
             });
         }
     },
-    /*
-    validate: function(frm){
-		frappe.call({
-			method: 'lifefair.lifefair.doctype.registration.registration.set_reporting_date',
-			args: {
-				"docu": cur_frm.doc.name,
-			},
-		callback: function(response) {
-            refresh_field(['meldedatum'])
-        }
-		});
-    
-    },
-    */
+
 });
 
 function create_ticket(frm) {
