@@ -8,7 +8,7 @@ frappe.ui.form.on('Registration', {
                 create_ticket(frm);
             });
         }
-    },
+    }
 
 });
 
