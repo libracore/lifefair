@@ -10,6 +10,7 @@ import csv
 import re
 import datetime
 from lifefair.lifefair.utils import add_log
+from random import randint
 from datetime import timedelta
 
 class Registration(Document):
@@ -38,7 +39,6 @@ class Registration(Document):
         
         return
     pass
-
 
 
 def get_barcode(l):
