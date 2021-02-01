@@ -246,25 +246,28 @@ function display_business_card(frm) {
     var html = '<p>';
     html += frm.doc.long_name;
     if (frm.doc.website_description) {
-	html += " (" + frm.doc.website_description + ")<br>";
+	html += " (" + frm.doc.website_description + ")<br>" + ", ";
     } else {
 	html += "<br>";
     }
     if (frm.doc.company_phone) {
-	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.company_phone;
+	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.company_phone + ", ";
     } else if (frm.doc.private_phone) {
-	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.private_phone;
+	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.private_phone + ", ";
     }
     if (frm.doc.mobile_phone) {
-	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.mobile_phone;
+	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.mobile_phone + ", ";
     } 
     html += '&nbsp;<span class="octicon octicon-mail"></span>&nbsp;';
     if (frm.doc.email) {
-	html += "<a href=\"mailto:" + frm.doc.email + "\">" + frm.doc.email + "</a>";
+	html += "<a href=\"mailto:" + frm.doc.email + "\">" + frm.doc.email + "</a>" + ", ";
     } else if (frm.doc.email2) {
-	html += "<a href=\"mailto:" + frm.doc.email2 + "\">" + frm.doc.email2 + "</a>";
+	html += "<a href=\"mailto:" + frm.doc.email2 + "\">" + frm.doc.email2 + "</a>" + ", ";
     } else if (frm.doc.email3) {
-	html += "<a href=\"mailto:" + frm.doc.email3 + "\">" + frm.doc.email3 + "</a>";
+	html += "<a href=\"mailto:" + frm.doc.email3 + "\">" + frm.doc.email3 + "</a>" + ", ";
+    }
+    if (frm.doc.linkedin_id) {
+	html += '<span class="fa fa-linkedin-square"></span>&nbsp;' + frm.doc.linkedin_id + ", ";
     }
     html +=  "</p>"
     if (frm.fields_dict['business_card_html']) {

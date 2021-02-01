@@ -17,7 +17,7 @@ def execute(filters=None):
                "Meeting::100",
                "Image",
                "Registered",
-               "Interest:Link/Interest:150"]
+               "Interests"]
     if filters:
         data = get_actors(meeting=filters.meeting, block=filters.block, as_list=True)
     else:
@@ -26,10 +26,9 @@ def execute(filters=None):
     return columns, data
 
 # use as_list=True in case of later Export to Excel
-def get_actors(meeting=None, block=None, interest=None, as_list=True):
+def get_actors(meeting=None, block=None, interests=None, as_list=True):
     sql_query = """SELECT 
-				`t6`.`interest` AS `Interest`,
-                `t2`.`title` AS `Block`,
+`t2`.`title` AS `Block`,
                 `t4`.`long_name` AS `Name`,
                 `t3`.`person_website_description` AS `Website description`,
                 `t3`.`person_role` AS `Role`,
@@ -38,19 +37,17 @@ def get_actors(meeting=None, block=None, interest=None, as_list=True):
                 `t1`.`name` AS `Name`,
                 `t4`.`image` AS `Image`,
                 /*`t5`.`name` AS `Registered`*/
-                (SELECT IF(`t5`.`name` IS NOT NULL, "ja", "nein")) AS `Registered`
+                (SELECT IF(`t5`.`name` IS NOT NULL, "ja", "nein")) AS `Registered`,
+                `t1`.`hauptinteresse` AS `Interests`,
             FROM `tabMeeting` AS `t1`
             INNER JOIN `tabBlock` AS `t2` ON `t1`.`title` = `t2`.`meeting` 
             INNER JOIN `tabBlock Planning` AS `t3` ON (`t2`.`title` = `t3`.`parent` AND `t3`.`person` IS NOT NULL)
-            INNER JOIN `tabInterest` AS `t6` 
             LEFT JOIN `tabPerson` AS `t4` ON `t3`.`person` = `t4`.`name`
             LEFT JOIN `tabRegistration` AS `t5` ON (`t1`.`name` = `t5`.`meeting` AND `t4`.`name` = `t5`.`person`)"""
     if meeting:
         sql_query += """ WHERE `t1`.`title` = '{0}'""".format(meeting)
     elif block:
-        sql_query += """ WHERE `t2`.`title` = '{0}'""".format(block)
-    elif interest:
-        sql_query += """ WHERE `t6`.`title` = '{0}'""".format(interest)    
+        sql_query += """ WHERE `t2`.`title` = '{0}'""".format(block)  
     sql_query += """ GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))"""
     sql_query += """ ORDER BY `t1`.`title` ASC, `t2`.`title` ASC, `t3`.`idx` ASC"""
     if as_list:

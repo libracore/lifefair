@@ -47,7 +47,9 @@
   "email3",
   "skype",
   "preferred_language",
+  "linkedin_id",
   "do_not_contact",
+  "cfp_abbestellen",
   "nur_einmal_kontaktieren",
   "email_invalid",
   "email_invalid_data",
@@ -321,7 +323,8 @@
    "default": "0",
    "fieldname": "do_not_contact",
    "fieldtype": "Check",
-   "label": "Do not contact"
+   "label": "Do not contact",
+   "permlevel": 2
   },
   {
    "default": "0",
@@ -488,10 +491,22 @@
    "fieldname": "personal_postal_code",
    "fieldtype": "Data",
    "label": "Personal Postal Code"
+  },
+  {
+   "default": "0",
+   "fieldname": "cfp_abbestellen",
+   "fieldtype": "Check",
+   "label": "CFP Abbestellen",
+   "permlevel": 1
+  },
+  {
+   "fieldname": "linkedin_id",
+   "fieldtype": "Data",
+   "label": "Linkedin ID"
   }
  ],
  "image_field": "image",
- "modified": "2020-08-19 15:00:37.662480",
+ "modified": "2021-01-31 18:15:34.728807",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",
