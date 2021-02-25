@@ -17,6 +17,8 @@ frappe.ui.form.on('Person', {
 	display_contacts(frm);
 	// load active participation
 	display_active_participation(frm);
+	// load passive participation
+	display_passive_participation(frm);
 	// load business card
 	display_business_card(frm);
     },
@@ -213,13 +215,21 @@ function display_active_participation(frm) {
 	    if (r.message) {
             var html = "";
             if (r.message.participations.length == 0) {
-                html = "<p>" + __("This person was not active in any listed meetings.") + "</p>";
+                html = "<p>" + __("Diese Person war bis jetzt an noch keinem Anlass aktiv.") + "</p>";
             } else {
+				html = "<p>" + __("Diese Person war aktiv in an ") + "<strong>" + r.message.participations.length + "</strong>" +" Anlässen.</p> <br>";
+
                 r.message.participations.forEach(function (participation) {
                     // participation code generator
                     html += '<p>';
                     html += '<a href="/desk#Form/Block/' + participation.block + '">';
-                    html += participation.block + " (" + participation.meeting + ")</a></p>";
+                    html += participation.block + ", " + participation.official_title + ", " + participation.person_role 
+                    if (participation.website_description) {
+						participation.website_description +"</a></p>";
+						} else {
+							+"</a></p>";
+							}
+                   
                 });
             }					
             if (frm.fields_dict['actor_html']) {
@@ -229,6 +239,48 @@ function display_active_participation(frm) {
 	}
     });	
 }
+
+
+
+function display_passive_participation(frm) {
+    // render passive participation
+    frappe.call({
+	method: 'get_passive_participation',
+	doc: frm.doc,
+	callback: function(r) {
+		
+	    if (r.message) {
+            var html = "";
+         
+         if (r.message.registrations.length == 0) {
+                html = "<p>" + __("Diese Person hat bis jetzt noch kein Meeting besucht.") + "</p>";
+            } else {
+				html = "<p>" + __("Diese Person war bereits für ") + "<strong>" + r.message.registrations.length + "</strong>" +" Anlässe registriert.</p> <br>";
+ 
+                r.message.registrations.forEach(function (registrations) {
+                    // participation code generator
+                    html += '<a href="/desk#Form/Block/' + registrations.block + '">';
+                    html += registrations.block + ", " + registrations.official_title + ", " + "</a></p>";
+                });
+				}
+           
+         
+         
+         
+         
+         
+         
+            if (frm.fields_dict['registration']) {
+                $(frm.fields_dict['registration'].wrapper).html(html);
+            }
+	    }
+	}
+    });	
+}
+
+
+
+
 
 function update_website_description(frm) {
     var description = "";
@@ -241,36 +293,59 @@ function update_website_description(frm) {
     cur_frm.set_value('website_description', description);
 }
 
+
 function display_business_card(frm) {
-    // render business card
-    var html = '<p>';
-    html += frm.doc.long_name;
-    if (frm.doc.website_description) {
-	html += " (" + frm.doc.website_description + ")<br>" + ", ";
-    } else {
-	html += "<br>";
-    }
-    if (frm.doc.company_phone) {
-	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.company_phone + ", ";
-    } else if (frm.doc.private_phone) {
-	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.private_phone + ", ";
-    }
-    if (frm.doc.mobile_phone) {
-	html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.mobile_phone + ", ";
-    } 
-    html += '&nbsp;<span class="octicon octicon-mail"></span>&nbsp;';
-    if (frm.doc.email) {
-	html += "<a href=\"mailto:" + frm.doc.email + "\">" + frm.doc.email + "</a>" + ", ";
-    } else if (frm.doc.email2) {
-	html += "<a href=\"mailto:" + frm.doc.email2 + "\">" + frm.doc.email2 + "</a>" + ", ";
-    } else if (frm.doc.email3) {
-	html += "<a href=\"mailto:" + frm.doc.email3 + "\">" + frm.doc.email3 + "</a>" + ", ";
-    }
-    if (frm.doc.linkedin_id) {
-	html += '<span class="fa fa-linkedin-square"></span>&nbsp;' + frm.doc.linkedin_id + ", ";
-    }
-    html +=  "</p>"
-    if (frm.fields_dict['business_card_html']) {
-	$(frm.fields_dict['business_card_html'].wrapper).html(html);
-    }
-}
+	frappe.call({
+    method: 'get_association_info',
+    doc: frm.doc,
+    callback: function(r) {
+		
+		// render business card
+		var html = '<p>';
+		html += frm.doc.long_name;
+		if (frm.doc.website_description) {
+		html += " (" + frm.doc.website_description + ")<br>" + ", ";
+		} else {
+		html += "<br>";
+		}
+		if (frm.doc.company_phone) {
+		html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.company_phone + ", ";
+		} else if (frm.doc.private_phone) {
+		html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.private_phone + ", ";
+		}
+		if (frm.doc.mobile_phone) {
+		html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + frm.doc.mobile_phone + ", ";
+		} 
+		html += '&nbsp;<span class="octicon octicon-mail"></span>&nbsp;';
+		if (frm.doc.email) {
+		html += "<a href=\"mailto:" + frm.doc.email + "\">" + frm.doc.email + "</a>" + ", ";
+		} else if (frm.doc.email2) {
+		html += "<a href=\"mailto:" + frm.doc.email2 + "\">" + frm.doc.email2 + "</a>" + ", ";
+		} else if (frm.doc.email3) {
+		html += "<a href=\"mailto:" + frm.doc.email3 + "\">" + frm.doc.email3 + "</a>" + ", ";
+		}
+		if (frm.doc.linkedin_id) {
+		html += '<span class="fa fa-linkedin-square"></span>&nbsp;' + frm.doc.linkedin_id + ", ";
+		}
+		html +=  "</p>"
+	
+
+		/*
+		if (r.message.association != 0) {
+			html += '<span>' +  association.alternative_names + '<strong>NEIN</strong </span>';
+			} else if (frm.doc.is_member == 0){
+			html += '<span>' +  "Ist Mitglied eines Verbandes: " + '<strong>JA</strong </span>';	
+		}
+			r.message.association.forEach(function (asso) {
+			html += '<span>' +  asso.alternative_names + '</span>';
+			
+			}
+		*/
+		
+			
+		if (frm.fields_dict['business_card_html']) {
+		$(frm.fields_dict['business_card_html'].wrapper).html(html);
+		}
+	}
+    });
+} //display business car

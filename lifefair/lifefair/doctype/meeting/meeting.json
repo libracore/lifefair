@@ -13,8 +13,7 @@
   "section_partnerships",
   "partnerships_html",
   "interessen_section",
-  "interesse",
-  "hauptinteresse"
+  "interesse"
  ],
  "fields": [
   {
@@ -59,15 +58,9 @@
    "fieldtype": "Table",
    "label": "Interesse",
    "options": "Meeting Interest"
-  },
-  {
-   "fieldname": "hauptinteresse",
-   "fieldtype": "Link",
-   "label": "Hauptinteresse",
-   "options": "Interesse"
   }
  ],
- "modified": "2021-02-01 12:09:51.411774",
+ "modified": "2021-02-25 13:40:54.006890",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Meeting",

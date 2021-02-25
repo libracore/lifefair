@@ -19,6 +19,7 @@ class Organisation(Document):
 		sql_query = ("""SELECT 
 		      `t2`.`name`, 
 		      `t2`.`full_name`,
+		      `t2`.`linkedin_id`,
 		      `t1`.`function` AS `role`,
 		      `t1`.`is_primary`       
 			FROM (SELECT * FROM `tabPerson Organisation` WHERE `organisation` = '{0}') AS `t1`			

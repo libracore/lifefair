@@ -23,6 +23,8 @@
   "known_contacts",
   "section_actor",
   "actor_html",
+  "passive_participation_section",
+  "registration",
   "section_classification",
   "person_group",
   "stakeholder",
@@ -36,6 +38,7 @@
   "organisations",
   "primary_organisation",
   "primary_function",
+  "is_member",
   "section_website",
   "show_on_website",
   "column_website",
@@ -503,10 +506,27 @@
    "fieldname": "linkedin_id",
    "fieldtype": "Data",
    "label": "Linkedin ID"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "passive_participation_section",
+   "fieldtype": "Section Break",
+   "label": "Passive Participation"
+  },
+  {
+   "fieldname": "registration",
+   "fieldtype": "HTML",
+   "label": "registration"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_member",
+   "fieldtype": "Check",
+   "label": "Ist Mitglied eines Verbandes"
   }
  ],
  "image_field": "image",
- "modified": "2021-01-31 18:15:34.728807",
+ "modified": "2021-02-25 14:18:16.845956",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",

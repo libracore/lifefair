@@ -41,11 +41,27 @@ class Person(Document):
             ORDER BY `person_name` ASC""".format(self.name))
         contacts = frappe.db.sql(sql_query, as_dict=True)
         return { 'contacts': contacts }
+        
+    def get_association_info(self):
+        sql_query = ("""SELECT 1
+        FROM ( SELECT 
+              `t1`.`ist_ver` AS `ist_ver`
+               FROM `tabOrganisation` AS t1
+               LEFT JOIN `tabPerson Organisation` AS `t2` ON  `t1`.`name` = `t2`.`parent`) AS `org`
+        WHERE `org`.`ist_ver` = '0' """.format(self.name))
+        association = frappe.db.sql(sql_query, as_dict=True)
+        return association 
+        
+              
+        
+        
 
     def get_active_participation(self):
         sql_query = ("""SELECT 
               `t2`.`name` AS `block`, 
-              `t2`.`meeting` AS `meeting`
+              `t2`.`meeting` AS `meeting`,
+              `t2`.`official_title` AS `official_title`,
+              `t1`.`person_role` AS `person_role`
         FROM `tabBlock Planning` AS `t1`
             LEFT JOIN `tabBlock` AS `t2` ON `t2`.`name` = `t1`.`parent`
             WHERE `t1`.`person` = '{0}' 
@@ -53,6 +69,20 @@ class Person(Document):
             ORDER BY `t2`.`name` ASC""".format(self.name))
         participations = frappe.db.sql(sql_query, as_dict=True)
         return { 'participations': participations }
+    
+    
+    def get_passive_participation(self):
+        sql_query = ("""SELECT 
+              `t2`.`name` AS `block`, 
+              `t2`.`official_title` AS `official_title`
+        FROM `tabBlock Planning` AS `t1`
+            LEFT JOIN `tabBlock` AS `t2` ON `t2`.`name` = `t1`.`parent`
+            LEFT JOIN `tabRegistration` AS `t3` ON `t3`.`person` = `t1`.`person`
+            WHERE `t1`.`person` = '{0}' 
+            GROUP BY `t2`.`name`
+            ORDER BY `t2`.`name` ASC""".format(self.name))
+        registrations = frappe.db.sql(sql_query, as_dict=True)
+        return { 'registrations': registrations }
     
     # generates a vCard record (UTF-8, not Outlook configuration)
     def get_vcard(self):
@@ -345,3 +375,5 @@ def register_new_person(fname="", lname="", salutation="", email="", title="", o
                 fname, lname, status, check),
        topic = "Web form (newsletter)")    
     return
+    
+    
