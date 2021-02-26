@@ -79,6 +79,7 @@ function display_people(frm) {
 					html += '<a href="/desk#Form/Person/' + person.name + '">';
 					html += person.full_name;
 					html += ", " + person.role;
+					if (person.linkedin_id) { html += ", " + '<span class="fa fa-linkedin-square"></span>&nbsp;' + person.linkedin_id;}
 					if (person.is_primary) {
 						html += '&nbsp;<span class="octicon octicon-check"></span>';
 					}

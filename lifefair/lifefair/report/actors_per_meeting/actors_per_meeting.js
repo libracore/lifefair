@@ -11,6 +11,12 @@ frappe.query_reports["Actors per Meeting"] = {
             "label": __("Block"),
             "fieldtype": "Link",
             "options": "Block"
+        },
+        {
+            "fieldname":"interests",
+            "label": __("Interests"),
+            "fieldtype": "Link",
+            "options": "Interesse"
         }
     ]
 }

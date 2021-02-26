@@ -36,6 +36,7 @@ def get_actors(meeting=None, block=None, as_list=True):
                 `t4`.`show_on_website` AS `Show on website`,
                 `t1`.`name` AS `Name`,
                 `t4`.`image` AS `Image`,
+                
                 /*`t5`.`name` AS `Registered`*/
                 (SELECT IF(`t5`.`name` IS NOT NULL, "ja", "nein")) AS `Registered`
             FROM `tabMeeting` AS `t1`
