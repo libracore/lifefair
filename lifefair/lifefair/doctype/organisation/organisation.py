@@ -20,6 +20,13 @@ class Organisation(Document):
 		      `t2`.`name`, 
 		      `t2`.`full_name`,
 		      `t2`.`linkedin_id`,
+		      `t2`.`website_description`,
+		      `t2`.`company_phone`,
+		      `t2`.`private_phone`,
+		      `t2`.`mobile_phone`,
+		      `t2`.`email`,
+		      `t2`.`email2`,
+		      `t2`.`email3`,
 		      `t1`.`function` AS `role`,
 		      `t1`.`is_primary`       
 			FROM (SELECT * FROM `tabPerson Organisation` WHERE `organisation` = '{0}') AS `t1`			

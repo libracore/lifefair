@@ -325,7 +325,7 @@ function display_business_card(frm) {
 		html += "<a href=\"mailto:" + frm.doc.email3 + "\">" + frm.doc.email3 + "</a>" + ", ";
 		}
 		if (frm.doc.linkedin_id) {
-		html += '<span class="fa fa-linkedin-square"></span>&nbsp;' + frm.doc.linkedin_id + ", ";
+		html += '<span class="fa fa-linkedin-square"></span>&nbsp;' + frm.doc.linkedin_id;
 		}
 		html +=  "</p>"
 	

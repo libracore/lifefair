@@ -71,14 +71,12 @@ class Person(Document):
     
     def get_passive_participation(self):
         sql_query = ("""SELECT 
-              `t2`.`name` AS `block`, 
-              `t2`.`official_title` AS `official_title`
+              `t1`.`meeting` AS `block`,     
         FROM `tabBlock Planning` AS `t1`
-            LEFT JOIN `tabBlock` AS `t2` ON `t2`.`name` = `t1`.`parent`
             LEFT JOIN `tabRegistration` AS `t3` ON `t3`.`person` = `t1`.`person`
             WHERE `t1`.`person` = '{0}' 
-            GROUP BY `t2`.`name`
-            ORDER BY `t2`.`name` ASC""".format(self.name))
+            GROUP BY `t3`.`name`
+            ORDER BY `t3`.`name` ASC""".format(self.name))
         registrations = frappe.db.sql(sql_query, as_dict=True)
         return { 'registrations': registrations }
     
