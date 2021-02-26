@@ -43,14 +43,12 @@ class Person(Document):
         return { 'contacts': contacts }
         
     def get_association_info(self):
-        sql_query = ("""SELECT 1
-        FROM ( SELECT 
-              `t1`.`ist_ver` AS `ist_ver`
-               FROM `tabOrganisation` AS t1
-               LEFT JOIN `tabPerson Organisation` AS `t2` ON  `t1`.`name` = `t2`.`parent`) AS `org`
-        WHERE `org`.`ist_ver` = '0' """.format(self.name))
-        association = frappe.db.sql(sql_query, as_dict=True)
-        return association 
+        sql_query = ("""SELECT IFNULL(SUM(`tabOrganisation`.`ist_ver`), 0) AS `check` 
+		FROM `tabPerson Organisation` 
+		LEFT JOIN `tabOrganisation` ON `tabOrganisation`.`name` = `tabPerson Organisation`.`organisation`
+		WHERE `tabPerson Organisation`.`parent` = "{person}" """.format(person=self.name)) 
+        data = frappe.db.sql(sql_query, as_dict=True)
+        return data[0]['check']
         
               
         

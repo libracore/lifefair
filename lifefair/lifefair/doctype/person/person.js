@@ -329,18 +329,14 @@ function display_business_card(frm) {
 		}
 		html +=  "</p>"
 	
-
-		/*
-		if (r.message.association != 0) {
-			html += '<span>' +  association.alternative_names + '<strong>NEIN</strong </span>';
-			} else if (frm.doc.is_member == 0){
-			html += '<span>' +  "Ist Mitglied eines Verbandes: " + '<strong>JA</strong </span>';	
-		}
-			r.message.association.forEach(function (asso) {
-			html += '<span>' +  asso.alternative_names + '</span>';
-			
+		if (r.message > 0) {
+		html +=	'<p> Ist Mitgleid eines Verbandes: JA </p>';
+			} else {
+		html +=	'<p> Ist Mitgleid eines Verbandes: NEIN </p>';
 			}
-		*/
+
+			
+		
 		
 			
 		if (frm.fields_dict['business_card_html']) {

@@ -131,11 +131,11 @@
    "default": "0",
    "fieldname": "ist_ver",
    "fieldtype": "Check",
-   "label": "ist_ver"
+   "label": "Ist Verband "
   }
  ],
  "image_field": "image",
- "modified": "2021-02-25 22:20:35.355911",
+ "modified": "2021-02-26 10:53:30.410215",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Organisation",
