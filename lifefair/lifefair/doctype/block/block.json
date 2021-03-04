@@ -23,6 +23,7 @@
   "topic",
   "content",
   "use",
+  "ist_kein_aktiver_block",
   "section_links",
   "website_link",
   "facebook_link",
@@ -192,9 +193,15 @@
    "fieldname": "neues_datum",
    "fieldtype": "Date",
    "label": "Neues Datum"
+  },
+  {
+   "default": "0",
+   "fieldname": "ist_kein_aktiver_block",
+   "fieldtype": "Check",
+   "label": "Ist kein aktiver Block"
   }
  ],
- "modified": "2020-07-24 14:56:02.407511",
+ "modified": "2021-02-28 23:55:21.617354",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",

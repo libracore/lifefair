@@ -223,7 +223,7 @@ function display_active_participation(frm) {
                     // participation code generator
                     html += '<p>';
                     html += '<a href="/desk#Form/Block/' + participation.block + '">';
-                    html += participation.block + ", " + participation.official_title + ", " + participation.person_role 
+                    html += participation.block + ", " + participation.official_title + ", " + participation.person_role + "," + participation.description
                     if (participation.website_description) {
 						participation.website_description +"</a></p>";
 						} else {
@@ -253,14 +253,14 @@ function display_passive_participation(frm) {
             var html = "";
          
          if (r.message.registrations.length == 0) {
-                html = "<p>" + __("Diese Person hat bis jetzt noch kein Meeting besucht.") + "</p>";
+                html = "<p>" + __("Diese Person hat bis jetzt noch keinen Anlass besucht.") + "</p>";
             } else {
 				html = "<p>" + __("Diese Person war bereits für ") + "<strong>" + r.message.registrations.length + "</strong>" +" Anlässe registriert.</p> <br>";
  
                 r.message.registrations.forEach(function (registrations) {
                     // participation code generator
                     html += '<a href="/desk#Form/Block/' + registrations.block + '">';
-                    html += registrations.block + ", " + registrations.official_title + ", " + "</a></p>";
+                    html += registrations.block + ", " + registrations.off_title + ", " + "</a></p>";
                 });
 				}
            

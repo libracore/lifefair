@@ -13,7 +13,11 @@
   "section_partnerships",
   "partnerships_html",
   "interessen_section",
-  "interesse"
+  "interesse_1",
+  "column_break_8",
+  "interesse_2",
+  "column_break_10",
+  "interesse_3"
  ],
  "fields": [
   {
@@ -54,13 +58,33 @@
    "label": "Interessen"
   },
   {
-   "fieldname": "interesse",
-   "fieldtype": "Table",
-   "label": "Interesse",
-   "options": "Meeting Interest"
+   "fieldname": "interesse_1",
+   "fieldtype": "Link",
+   "label": "Interesse 1",
+   "options": "Interesse"
+  },
+  {
+   "fieldname": "column_break_8",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "interesse_2",
+   "fieldtype": "Link",
+   "label": "Interesse 2",
+   "options": "Interesse"
+  },
+  {
+   "fieldname": "column_break_10",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "interesse_3",
+   "fieldtype": "Link",
+   "label": "Interesse 3",
+   "options": "Interesse"
   }
  ],
- "modified": "2021-02-25 13:40:54.006890",
+ "modified": "2021-03-04 15:39:28.312888",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Meeting",

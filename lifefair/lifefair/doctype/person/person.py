@@ -62,7 +62,7 @@ class Person(Document):
               `t1`.`person_role` AS `person_role`
         FROM `tabBlock Planning` AS `t1`
             LEFT JOIN `tabBlock` AS `t2` ON `t2`.`name` = `t1`.`parent`
-            WHERE `t1`.`person` = '{0}' 
+            WHERE `t1`.`person` = '{0}' AND `t2`.`ist_kein_aktiver_block` = 0
             GROUP BY `t2`.`name`
             ORDER BY `t2`.`name` ASC""".format(self.name))
         participations = frappe.db.sql(sql_query, as_dict=True)
@@ -71,12 +71,13 @@ class Person(Document):
     
     def get_passive_participation(self):
         sql_query = ("""SELECT 
-              `t1`.`meeting` AS `block`,     
-        FROM `tabBlock Planning` AS `t1`
-            LEFT JOIN `tabRegistration` AS `t3` ON `t3`.`person` = `t1`.`person`
+              `t1`.`block` AS `block`,
+              `t2`.`official_title` AS `off_title` 
+        FROM `tabRegistration` AS `t1`
+        LEFT JOIN `tabBlock` AS `t2` ON `t2`.`name` = `t1`.`block`
             WHERE `t1`.`person` = '{0}' 
-            GROUP BY `t3`.`name`
-            ORDER BY `t3`.`name` ASC""".format(self.name))
+            GROUP BY `t1`.`meeting`
+            ORDER BY `t1`.`meeting` ASC""".format(self.name))
         registrations = frappe.db.sql(sql_query, as_dict=True)
         return { 'registrations': registrations }
     

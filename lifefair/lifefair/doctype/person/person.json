@@ -29,6 +29,7 @@
   "person_group",
   "stakeholder",
   "hierarchiestufe",
+  "ausland",
   "column_classification",
   "branche",
   "engagement",
@@ -510,10 +511,16 @@
    "fieldname": "registration",
    "fieldtype": "HTML",
    "label": "registration"
+  },
+  {
+   "default": "0",
+   "fieldname": "ausland",
+   "fieldtype": "Check",
+   "label": "Ausland"
   }
  ],
  "image_field": "image",
- "modified": "2021-02-26 17:59:16.694135",
+ "modified": "2021-03-01 12:20:01.215418",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",
