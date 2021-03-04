@@ -72,6 +72,10 @@ function display_people(frm) {
 			if (r.message) {
 				//console.log(r.message);
 				
+				
+				
+				
+				/*
 				var html = "";
 				r.message.people.forEach(function (person) {
 					// person code generator
@@ -85,6 +89,42 @@ function display_people(frm) {
 					}
 					html += "</a></p>";
 				});
+				
+				*/
+				
+						// render business card
+		var html = "";				
+		r.message.people.forEach(function (person) {
+			html += '<p>';	
+			html += person.full_name;
+			    if (person.website_description) {
+                html += " (" + person.website_description + ")<br>";
+                } else {
+                html += "<br>";
+                }
+                if (person.company_phone) {
+                html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + person.company_phone + ", ";
+                } else if (person.private_phone) {
+                html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + person.private_phone + ", ";
+                }
+                if (person.mobile_phone) {
+                html += '<span class="octicon octicon-device-mobile"></span>&nbsp;' + person.mobile_phone + ", ";
+                } 
+                html += '&nbsp;<span class="octicon octicon-mail"></span>&nbsp;';
+                if (person.email) {
+                html += "<a href=\"mailto:" + person.email + "\">" + person.email + "</a>" + ", ";
+                } else if (person.email2) {
+                html += "<a href=\"mailto:" + person.email2 + "\">" + person.email2 + "</a>" + ", ";
+                } else if (person.email3) {
+                html += "<a href=\"mailto:" + person.email3 + "\">" + person.email3 + "</a>" + ", ";
+                }
+                if (person.linkedin_id) {
+                html += '<span class="fa fa-linkedin-square"></span>&nbsp;' + person.linkedin_id;
+                }
+                
+			html += '</p>';
+		})//for each
+	
 				
 				if (frm.fields_dict['people_html']) {
 					$(frm.fields_dict['people_html'].wrapper).html(html);
