@@ -13,6 +13,7 @@
   "section_information",
   "short_name",
   "official_title",
+  "sub_title",
   "time",
   "location",
   "location_detail_1",
@@ -23,7 +24,9 @@
   "topic",
   "content",
   "use",
+  "footnote",
   "ist_kein_aktiver_block",
+  "kinderbetreuung",
   "section_links",
   "website_link",
   "facebook_link",
@@ -35,7 +38,13 @@
   "section_partnerships",
   "partnerships_html",
   "section_flyer",
-  "flyer_print_format"
+  "flyer_print_format",
+  "prospekt_section",
+  "deckblatt",
+  "column_break_35",
+  "sponsor_1",
+  "section_break_36",
+  "sponsor_2"
  ],
  "fields": [
   {
@@ -199,9 +208,53 @@
    "fieldname": "ist_kein_aktiver_block",
    "fieldtype": "Check",
    "label": "Ist kein aktiver Block"
+  },
+  {
+   "fieldname": "sub_title",
+   "fieldtype": "Data",
+   "label": "Sub Titel"
+  },
+  {
+   "default": "0",
+   "fieldname": "kinderbetreuung",
+   "fieldtype": "Check",
+   "label": "Kinderbetreuung"
+  },
+  {
+   "fieldname": "prospekt_section",
+   "fieldtype": "Section Break",
+   "label": "Prospekt"
+  },
+  {
+   "fieldname": "deckblatt",
+   "fieldtype": "Attach Image",
+   "label": "Deckblatt"
+  },
+  {
+   "fieldname": "sponsor_1",
+   "fieldtype": "Attach Image",
+   "label": "Sponsor 1"
+  },
+  {
+   "fieldname": "section_break_36",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "sponsor_2",
+   "fieldtype": "Attach Image",
+   "label": "Sponsor 2"
+  },
+  {
+   "fieldname": "column_break_35",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "footnote",
+   "fieldtype": "Data",
+   "label": "Fusszeile"
   }
  ],
- "modified": "2021-02-28 23:55:21.617354",
+ "modified": "2021-03-08 13:25:51.902539",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",
