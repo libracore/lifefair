@@ -41,10 +41,8 @@
   "flyer_print_format",
   "prospekt_section",
   "deckblatt",
-  "column_break_35",
-  "sponsor_1",
-  "section_break_36",
-  "sponsor_2"
+  "section_break_40",
+  "a_bis_z"
  ],
  "fields": [
   {
@@ -231,30 +229,22 @@
    "label": "Deckblatt"
   },
   {
-   "fieldname": "sponsor_1",
-   "fieldtype": "Attach Image",
-   "label": "Sponsor 1"
-  },
-  {
-   "fieldname": "section_break_36",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "sponsor_2",
-   "fieldtype": "Attach Image",
-   "label": "Sponsor 2"
-  },
-  {
-   "fieldname": "column_break_35",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "footnote",
    "fieldtype": "Data",
    "label": "Fusszeile"
+  },
+  {
+   "fieldname": "a_bis_z",
+   "fieldtype": "Table",
+   "label": "A bis Z",
+   "options": "Block A bis Z"
+  },
+  {
+   "fieldname": "section_break_40",
+   "fieldtype": "Section Break"
   }
  ],
- "modified": "2021-03-08 13:25:51.902539",
+ "modified": "2021-03-18 18:21:17.234390",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",

@@ -17,7 +17,8 @@ def execute(filters=None):
                "Meeting::100",
                "Image",
                "Registered",
-               "Interests"]
+               "Interests",
+               "Mitglied eines Vereines"]
     if filters:
         data = get_actors(meeting=filters.meeting, block=filters.block, interests=filters.interests, as_list=True)
     else:
@@ -38,13 +39,16 @@ def get_actors(meeting=None, block=None, interests=None, as_list=True):
                 `t4`.`image` AS `Image`,
                 /*`t5`.`name` AS `Registered`*/
                 (SELECT IF(`t5`.`name` IS NOT NULL, "ja", "nein")) AS `Registered`,
-                GROUP_CONCAT(`t6`.`interesse`) AS `Interests`
+                GROUP_CONCAT(`t6`.`interesse`) AS `Interests`,
+                IFNULL(`t9`.`ist_ver`, 0) AS `Mitglied eines Vereines` 
             FROM `tabMeeting` AS `t1`
             INNER JOIN `tabBlock` AS `t2` ON `t1`.`title` = `t2`.`meeting` 
             INNER JOIN `tabBlock Planning` AS `t3` ON (`t2`.`title` = `t3`.`parent` AND `t3`.`person` IS NOT NULL)
             LEFT JOIN `tabPerson` AS `t4` ON `t3`.`person` = `t4`.`name`
             LEFT JOIN `tabRegistration` AS `t5` ON (`t1`.`name` = `t5`.`meeting` AND `t4`.`name` = `t5`.`person`)
-            LEFT JOIN `tabPerson Interest` AS `t6` ON (`t6`.`parent` = `t4`.`name`)"""
+            LEFT JOIN `tabPerson Interest` AS `t6` ON (`t6`.`parent` = `t4`.`name`)
+            LEFT JOIN `tabPerson Organisation` AS `t8` ON (`t8`.`parent` = `t4`.`name`)
+			LEFT JOIN  `tabOrganisation`  AS `t9` ON (`t9`.`name` = `t8`.`organisation`)"""
     if meeting:
         sql_query += """ WHERE `t1`.`title` = '{0}'""".format(meeting)
     elif block:

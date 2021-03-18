@@ -23,6 +23,7 @@ def execute(filters=None):
                "Private phone",
                "Stakeholder",
                "Primary organisation",
+               "Mitgleid eines Vereines",
                "First Characters",
                "Contact function",
                "Contact name",
@@ -58,13 +59,16 @@ def get_actors(interests=None, as_list=True):
         `t4`.`private_phone` AS `Private phone`,
         IFNULL(`t4`.`person_group`, "-") AS `Stakeholder`,
         IFNULL(`t4`.`primary_organisation`, "-") AS `Primary organisation`,
+        IFNULL(`t9`.`ist_ver`, 0) AS `Mitglied eines Vereines`,
+        /*IFNULL(`t9`.`ist_ver`, 0) AS `Mitglied eines Vereines`, */
         IFNULL(`t4`.`first_characters`, "----") AS `First Characters`,
         IFNULL(`t5`.`function`, "-") AS `Contact function`,
         IFNULL(`t6`.`long_name`, "-") As `Contact name`,
         `t6`.`email` As `Contact email`,
         `t6`.`company_phone` AS `Contact phone`,
-        `t7`.`ticket_number` AS `Ticket nubmer`,
-        (SELECT IF(`t7`.`name` IS NOT NULL, "ja", "nein")) AS `Registered`
+        `t7`.`ticket_number` AS `Ticket number`,
+        (SELECT IF(`t7`.`name` IS NOT NULL, "ja", "nein")) AS `Registered`,
+        GROUP_CONCAT(`t10`.`interesse`) AS `Interests`
     FROM `tabMeeting` AS `t1`
     INNER JOIN `tabBlock` AS `t2` ON `t1`.`title` = `t2`.`meeting` 
     INNER JOIN `tabBlock Planning` AS `t3` ON (`t2`.`title` = `t3`.`parent` AND `t3`.`person` IS NOT NULL)
@@ -72,12 +76,15 @@ def get_actors(interests=None, as_list=True):
     LEFT JOIN `tabPerson Contact` AS `t5` ON (`t5`.`parent` = `t4`.`name` AND `t5`.`idx` = 1)
     LEFT JOIN `tabPerson`AS `t6` ON (`t6`.`name` = `t5`.`person`)
     LEFT JOIN `tabRegistration` AS `t7` ON (`t7`.`person` = `t4`.`name` AND `t7`.`meeting` = `t2`.`meeting` /*'SGES 2018'*/ AND `t7`.`status` != "Cancelled")
+	LEFT JOIN `tabPerson Interest` AS `t10` ON (`t10`.`parent` = `t4`.`name`)
+    LEFT JOIN `tabPerson Organisation` AS `t8` ON (`t8`.`parent` = `t4`.`name`)
+    LEFT JOIN  `tabOrganisation`  AS `t9` ON (`t9`.`name` = `t8`.`organisation`)
 /* display each person once per block (disabled by request on 2020-08-17 LaMu) */
-/* GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))*/;
+/*	GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))*/
     """
     if interests:
         sql_query += """ WHERE `t1`.`interesse_1` = '{0}' OR `t1`.`interesse_2` = '{0}' OR `t1`.`interesse_3` = '{0}'""".format(interests)		
-    #sql_query += """ GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))"""
+    sql_query += """ GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))"""
     #sql_query += """ ORDER BY `t1`.`title` ASC, `t2`.`title` ASC, `t4`.`idx` ASC"""
     if as_list:
         data = frappe.db.sql(sql_query, as_list = True)
