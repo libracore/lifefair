@@ -1,52 +1,39 @@
 {
- "autoname": "field:titel",
- "creation": "2021-03-15 18:14:06.196437",
+ "creation": "2021-03-16 18:39:30.147314",
  "doctype": "DocType",
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "titel",
+  "a_bis_z",
   "column_break_2",
   "beschreibung"
  ],
  "fields": [
   {
-   "fieldname": "titel",
-   "fieldtype": "Data",
+   "fieldname": "a_bis_z",
+   "fieldtype": "Link",
    "in_list_view": 1,
-   "label": "Titel",
-   "reqd": 1,
-   "unique": 1
+   "label": "A bis Z",
+   "options": "A bis Z"
   },
   {
    "fieldname": "column_break_2",
    "fieldtype": "Column Break"
   },
   {
+   "fetch_from": "a_bis_z.beschreibung",
    "fieldname": "beschreibung",
    "fieldtype": "Small Text",
    "label": "Beschreibung"
   }
  ],
- "modified": "2021-03-16 19:17:41.569559",
+ "istable": 1,
+ "modified": "2021-03-18 18:29:56.838174",
  "modified_by": "Administrator",
  "module": "Lifefair",
- "name": "A bis Z",
+ "name": "Block A bis Z",
  "owner": "Administrator",
- "permissions": [
-  {
-   "create": 1,
-   "delete": 1,
-   "email": 1,
-   "export": 1,
-   "print": 1,
-   "read": 1,
-   "report": 1,
-   "role": "Lifefair User",
-   "share": 1,
-   "write": 1
-  }
- ],
+ "permissions": [],
  "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
