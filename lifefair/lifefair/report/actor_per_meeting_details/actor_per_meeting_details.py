@@ -23,7 +23,7 @@ def execute(filters=None):
                "Private phone",
                "Stakeholder",
                "Primary organisation",
-               "Mitgleid eines Vereines",
+               "Verbandsmitglied",
                "First Characters",
                "Contact function",
                "Contact name",
@@ -83,7 +83,7 @@ def get_actors(interests=None, as_list=True):
 /*	GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))*/
     """
     if interests:
-        sql_query += """ WHERE `t1`.`interesse_1` = '{0}' OR `t1`.`interesse_2` = '{0}' OR `t1`.`interesse_3` = '{0}'""".format(interests)		
+        sql_query += """ WHERE `t2`.`interest_1` = '{0}' OR `t2`.`interest_2` = '{0}' OR `t2`.`interest_3` = '{0}'""".format(interests)		
     sql_query += """ GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))"""
     #sql_query += """ ORDER BY `t1`.`title` ASC, `t2`.`title` ASC, `t4`.`idx` ASC"""
     if as_list:

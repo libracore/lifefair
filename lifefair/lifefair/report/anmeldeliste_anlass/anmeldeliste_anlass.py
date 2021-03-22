@@ -24,6 +24,7 @@ def execute(filters=None):
                 {"label": ("Block"), "fieldname": "block", "fieldtype": "Link", "options": "Block", "width": 100}, 
                 {"label": ("Funktion"), "fieldname": "funktion", "fieldtype": "Data", "width": 150},
                 {"label": ("Organisation"), "fieldname": "organisation", "fieldtype": "Link", "options": "Organisation", "width": 200}, 
+                {"label": ("Verbandsmitglied"), "fieldname": "verbandsmitglied", "fieldtype": "Data", "width": 200}, 
                 {"label": ("Branche"), "fieldname": "branche", "fieldtype": "Data", "width": 100},
                 {"label": ("Stakeholder"), "fieldname": "stakeholder", "fieldtype": "Data", "width": 100},
                 {"label": ("Hierarchiestufe"), "fieldname": "hierarchiestufe", "fieldtype": "Data", "width": 100},
@@ -63,6 +64,7 @@ def get_data(meeting="%", as_dict=True):
          `tabRegistration`.`meeting` AS `meeting`,
          IFNULL(`tabPerson`.`primary_function`, "-") AS `funktion`,
          IFNULL(`tabPerson`.`primary_organisation`, "-") AS `organisation`,
+         IFNULL(`tabOrganisation`.`ist_ver`, 0) AS `verbandsmitglied`,
          `tabRegistration`.`code` AS `gutscheincode`,
          `tabPerson`.`email` AS `email`,
          `tabPerson`.`company_phone` AS `company_phone`,
@@ -76,6 +78,8 @@ def get_data(meeting="%", as_dict=True):
          `tabPerson`.`last_name` AS `last_name`
         FROM `tabRegistration`
         LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
+        LEFT JOIN `tabPerson Organisation` ON `tabPerson Organisation`.`parent` = `tabPerson`.`name`
+		LEFT JOIN `tabOrganisation` ON `tabOrganisation`.`name` = `tabPerson Organisation`.`organisation`
         WHERE
           `meeting` LIKE '{0}'
           AND `status` NOT IN ("Cancelled", "Abgemeldet", "Tentative")

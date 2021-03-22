@@ -51,7 +51,6 @@
   "skype",
   "preferred_language",
   "do_not_contact",
-  "cfp_abbestellen",
   "nur_einmal_kontaktieren",
   "email_invalid",
   "email_invalid_data",
@@ -490,13 +489,6 @@
    "label": "Personal Postal Code"
   },
   {
-   "default": "0",
-   "fieldname": "cfp_abbestellen",
-   "fieldtype": "Check",
-   "label": "CFP Abbestellen",
-   "permlevel": 1
-  },
-  {
    "fieldname": "linkedin_id",
    "fieldtype": "Data",
    "label": "Linkedin ID"
@@ -520,7 +512,7 @@
   }
  ],
  "image_field": "image",
- "modified": "2021-03-01 12:20:01.215418",
+ "modified": "2021-03-22 10:28:40.866562",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",
