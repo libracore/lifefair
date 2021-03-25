@@ -27,6 +27,12 @@
   "footnote",
   "ist_kein_aktiver_block",
   "kinderbetreuung",
+  "section_interests",
+  "interest_1",
+  "column_break_24",
+  "interest_2",
+  "column_break_26",
+  "interest_3",
   "section_links",
   "website_link",
   "facebook_link",
@@ -39,6 +45,7 @@
   "partnerships_html",
   "section_flyer",
   "flyer_print_format",
+  "program",
   "prospekt_section",
   "deckblatt",
   "section_break_40",
@@ -113,17 +120,17 @@
   {
    "fieldname": "topic",
    "fieldtype": "Small Text",
-   "label": "Thema und Inhalt"
+   "label": "IF: Herausforderungen; LFF: Beschrieb Header"
   },
   {
    "fieldname": "content",
    "fieldtype": "Small Text",
-   "label": "Zentrale Fragen"
+   "label": "IF: Zentrale Fragen; LFF: Beschrieb"
   },
   {
    "fieldname": "use",
    "fieldtype": "Small Text",
-   "label": "Zielgruppen und Nutzen"
+   "label": "IF: Ihr Nutzen; LFF: Beschrieb Fussnote"
   },
   {
    "fieldname": "section_links",
@@ -179,7 +186,7 @@
    "collapsible": 1,
    "fieldname": "section_flyer",
    "fieldtype": "Section Break",
-   "label": "Flyer"
+   "label": "Prospekt"
   },
   {
    "default": "Block Flyer",
@@ -242,9 +249,46 @@
   {
    "fieldname": "section_break_40",
    "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "section_interests",
+   "fieldtype": "Section Break",
+   "label": "Interessen"
+  },
+  {
+   "fieldname": "interest_1",
+   "fieldtype": "Link",
+   "label": "Interesse 1",
+   "options": "Interesse"
+  },
+  {
+   "fieldname": "column_break_24",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "interest_2",
+   "fieldtype": "Link",
+   "label": "Interesse 2",
+   "options": "Interesse"
+  },
+  {
+   "fieldname": "column_break_26",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "interest_3",
+   "fieldtype": "Link",
+   "label": "Interesse 3",
+   "options": "Interesse"
+  },
+  {
+   "fieldname": "program",
+   "fieldtype": "Table",
+   "label": "Programm",
+   "options": "Programm Table"
   }
  ],
- "modified": "2021-03-18 18:21:17.234390",
+ "modified": "2021-03-25 14:44:53.894343",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",
