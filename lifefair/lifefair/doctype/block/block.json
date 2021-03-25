@@ -45,6 +45,7 @@
   "partnerships_html",
   "section_flyer",
   "flyer_print_format",
+  "program",
   "prospekt_section",
   "deckblatt",
   "section_break_40",
@@ -185,7 +186,7 @@
    "collapsible": 1,
    "fieldname": "section_flyer",
    "fieldtype": "Section Break",
-   "label": "Flyer"
+   "label": "Prospekt"
   },
   {
    "default": "Block Flyer",
@@ -279,9 +280,15 @@
    "fieldtype": "Link",
    "label": "Interesse 3",
    "options": "Interesse"
+  },
+  {
+   "fieldname": "program",
+   "fieldtype": "Table",
+   "label": "Programm",
+   "options": "Programm Table"
   }
  ],
- "modified": "2021-03-22 10:16:11.996381",
+ "modified": "2021-03-25 14:44:53.894343",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",

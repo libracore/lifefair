@@ -9,12 +9,6 @@ frappe.query_reports["Anmeldeliste Anlass"] = {
             "label": __("Meeting"),
             "fieldtype": "Link",
             "options": "Meeting"
-        },
-                {
-            "fieldname":"interests",
-            "label": __("Interests"),
-            "fieldtype": "Link",
-            "options": "Interesse"
         }
     ]
 }

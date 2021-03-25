@@ -8,84 +8,91 @@ import frappe
 def execute(filters=None):
     columns, data = [], []
     
-    columns = [
-                {"label": ("Kontakt KNT"), "fieldname": "person", "fieldtype": "Link", "options": "Person", "width": 100},
-                {"label": ("Personenkürzel"), "fieldname": "chars", "fieldtype": "Data",  "width": 50},
-                {"label": ("Name"), "fieldname": "full_name", "fieldtype": "Data", "width": 200},
-                {"label": ("Geschlecht"), "fieldname": "geschlecht", "fieldtype": "Data", "width": 100},
-                {"label": ("Zeile 1"), "fieldname": "line1", "fieldtype": "Data", "width": 100},
-                {"label": ("Zeile 2"), "fieldname": "line2", "fieldtype": "Data", "width": 100},
-                {"label": ("Geprüft von"), "fieldname": "checked", "fieldtype": "Data", "width": 100},
-                {"label": ("Registrierung"), "fieldname": "registrierung", "fieldtype": "Link", "options": "Registration", "width": 100}, 
-                {"label": ("Gutscheincode"), "fieldname": "gutscheincode", "fieldtype": "Data", "width": 200},
-                {"label": ("Anlass"), "fieldname": "meeting", "fieldtype": "Data", "width": 200},
-                {"label": ("Bemerkungen"), "fieldname": "remarks", "fieldtype": "Data", "width": 200},
-                {"label": ("Teilnahme"), "fieldname": "teilnahme", "fieldtype": "Data", "width": 200},
-                {"label": ("Block"), "fieldname": "block", "fieldtype": "Link", "options": "Block", "width": 100}, 
-                {"label": ("Funktion"), "fieldname": "funktion", "fieldtype": "Data", "width": 150},
-                {"label": ("Organisation"), "fieldname": "organisation", "fieldtype": "Link", "options": "Organisation", "width": 200}, 
-                {"label": ("Verbandsmitglied"), "fieldname": "verbandsmitglied", "fieldtype": "Data", "width": 200}, 
-                {"label": ("Branche"), "fieldname": "branche", "fieldtype": "Data", "width": 100},
-                {"label": ("Stakeholder"), "fieldname": "stakeholder", "fieldtype": "Data", "width": 100},
-                {"label": ("Hierarchiestufe"), "fieldname": "hierarchiestufe", "fieldtype": "Data", "width": 100},
-                {"label": ("Email"), "fieldname": "email", "fieldtype": "Data", "width": 150},
-                {"label": ("Tel. gesch."), "fieldname": "company_phone", "fieldtype": "Data", "width": 150},
-                {"label": ("Mobile"), "fieldname": "mobile_phone", "fieldtype": "Data", "width": 150},
-                {"label": ("Nur einmal kontaktieren"), "fieldname": "contact_only_once", "fieldtype": "Data", "width": 100},
-                {"label": ("Briefanrede"), "fieldname": "briefanrede", "fieldtype": "Data", "width": 100},
-                {"label": ("Nachname"), "fieldname": "last_name", "fieldtype": "Data", "width": 100},
-                {"label": ("PLZ"), "fieldname": "plz", "fieldtype": "Data", "width": 50}
-            ]
-
+    columns = ["Kontakt KNT:Link/Person:100",
+               "Personenkürzel::50",  
+               "Name::200",     
+               "Geschlecht::100",           
+               "Zeile 1::100", 
+               "Zeile 2::100",
+               "Geprüft von::100",
+               "Registrierung::100",
+               "Gutscheincode::200",
+               "Anlass::200",
+               "Bemerkungen::200",
+               "Teilnahme::200",
+               "Block::200",
+               "Funktion::150",
+               "Organisation::200",
+               "Verbandsmitglied::200",
+               "Branche::100",
+               "Stakeholder::100",
+               "Hierarchiestufe::100",
+               "Email::150",
+               "Tel. gesch.::150",
+               "Mobile::150",
+               "Nur einmal kontaktieren::100",
+               "Briefanrede::100",
+               "Nachname::100",
+               "PLZ::50",
+               "Interessen::200"
+               ]
     if filters:
-        data = get_data(meeting=filters.meeting, as_dict=True)
+        data = get_data(meeting=filters.meeting, interests=filters.interests, as_list=True)
     else:
-        data = get_data(as_dict=True)
-
+        data = get_data(as_list=True)
+          
     return columns, data
 
-def get_data(meeting="%", as_dict=True):
+
+def get_data(meeting=None, interests=None, as_list=True):
     sql_query = """SELECT
-         `tabRegistration`.`person` AS `person`,
-         IFNULL(`tabRegistration`.`participation`, "-") AS `teilnahme`,
-         `tabPerson`.`first_characters` AS `chars`,
-         `tabPerson`.`long_name` AS `full_name`,
-         `tabPerson`.`gender` AS `geschlecht`,
-         `tabPerson`.`branche` AS `branche`,
-         `tabPerson`.`stakeholder` AS `stakeholder`,
-         `tabPerson`.`hierarchiestufe` AS `hierarchiestufe`,
-         `tabPerson`.`personal_postal_code` AS `plz`,
-         SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1) AS `line1`,
+         `tabRegistration`.`person` AS `Kontakt KNT`,
+         `tabPerson`.`first_characters` AS `Personenkürzel`,
+         `tabPerson`.`long_name` AS `Name`,
+         `tabPerson`.`gender` AS `Geschlecht`,
+         SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1) AS `Zeile 1`,
          IF (SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1) !=
-             SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1),
-             SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1), "") AS `line2`,
-         (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `checked`,
-         `tabRegistration`.`name` AS `registrierung`,
-         `tabRegistration`.`meeting` AS `meeting`,
-         IFNULL(`tabPerson`.`primary_function`, "-") AS `funktion`,
-         IFNULL(`tabPerson`.`primary_organisation`, "-") AS `organisation`,
-         IFNULL(`tabOrganisation`.`ist_ver`, 0) AS `verbandsmitglied`,
-         `tabRegistration`.`code` AS `gutscheincode`,
-         `tabPerson`.`email` AS `email`,
-         `tabPerson`.`company_phone` AS `company_phone`,
-         `tabPerson`.`mobile_phone` AS `mobile_phone`,
-         `tabPerson`.`nur_einmal_kontaktieren` AS `contact_only_once`,
-         IFNULL(`tabRegistration`.`block`, "-") AS `block`,
-         IFNULL(`tabRegistration`.`remarks`, "-") AS `remarks`,
-         IF (`tabPerson`.`salutation` LIKE "%",
-             CONCAT(`tabPerson`.`letter_salutation`, " ", `tabPerson`.`salutation`),
-             `tabPerson`.`letter_salutation`) AS `briefanrede`,
-         `tabPerson`.`last_name` AS `last_name`
-        FROM `tabRegistration`
-        LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
-        LEFT JOIN `tabPerson Organisation` ON `tabPerson Organisation`.`parent` = `tabPerson`.`name`
-		LEFT JOIN `tabOrganisation` ON `tabOrganisation`.`name` = `tabPerson Organisation`.`organisation`
-        WHERE
-          `meeting` LIKE '{0}'
-          AND `status` NOT IN ("Cancelled", "Abgemeldet", "Tentative")
-        LIMIT 10000;""".format(meeting)
-    if as_dict:
-        data = frappe.db.sql(sql_query, as_dict = True)
+            SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1),
+            SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1), "") AS `Zeile 2`,
+         (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,
+         `tabRegistration`.`name` AS `Registrierung`,
+         `tabRegistration`.`code` AS `Gutscheincode`,
+         `tabRegistration`.`meeting` AS `Anlass`,
+         IFNULL(`tabRegistration`.`remarks`, "-") AS `Bemerkungen`,
+         IFNULL(`tabRegistration`.`participation`, "-") AS `Teilnahme`,
+         IFNULL(`tabRegistration`.`block`, "-") AS `Block`,
+         IFNULL(`tabPerson`.`primary_function`, "-") AS `Funktion`,
+         IFNULL(`tabPerson`.`primary_organisation`, "-") AS `Organisation`,
+         IFNULL(`tabOrganisation`.`ist_ver`, 0) AS `Verbandsmitglied`,
+         `tabPerson`.`branche` AS `Branche`,
+         `tabPerson`.`stakeholder` AS `Stakeholder`,
+         `tabPerson`.`hierarchiestufe` AS `Hierarchiestufe`,
+         `tabPerson`.`email` AS `Email`,
+        `tabPerson`.`company_phone` AS `Tel. gesch.`,
+         `tabPerson`.`mobile_phone` AS `Mobile`,
+         `tabPerson`.`nur_einmal_kontaktieren` AS `Nur einmal kontaktieren`,
+         `tabPerson`.`letter_salutation` AS `Briefanrede`,
+         `tabPerson`.`last_name` AS `Nachname`,
+         `tabPerson`.`personal_postal_code` AS `PLZ`
+         /*GROUP_CONCAT(IFNULL(`tabPerson Interest`.`interesse`, "-")) AS `Interessen`*/
+    FROM `tabRegistration`
+    LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
+    LEFT JOIN `tabPerson Interest` ON `tabPerson Interest`.`parent` = `tabPerson`.`name`
+    LEFT JOIN `tabPerson Organisation` ON `tabPerson Organisation`.`parent` = `tabPerson`.`name`
+    LEFT JOIN `tabOrganisation` ON `tabOrganisation`.`name` = `tabPerson Organisation`.`organisation`
+    LEFT JOIN `tabBlock` ON `tabBlock`.`name` = `tabRegistration`.`block`
+        WHERE 
+			`tabRegistration`.`status` NOT IN ("Cancelled", "Abgemeldet", "Tentative")
+        """
+    if meeting:
+        sql_query += """ AND `tabRegistration`.`meeting` = '{0}'""".format(meeting)
+    #elif interests:
+    #   sql_query += """ WHERE `t2`.`interest_1` = '{0}' OR `t2`.`interest_2` = '{0}' OR `t2`.`interest_3` = '{0}'""".format(interests)	
+    sql_query += """ LIMIT 10000;"""
+
+    if as_list:
+        data = frappe.db.sql(sql_query, as_list = True)
     else:
-        data = frappe.db.sql(sql_query, as_dict = True)
+        data = frappe.db.sql(sql_query, as_list = True)
     return data
+
