@@ -4,17 +4,15 @@
  "editable_grid": 1,
  "engine": "InnoDB",
  "field_order": [
-  "title",
-  "kontakt_knt",
-  "column_break_2",
   "time",
-  "person_name"
+  "description",
+  "person_name",
+  "column_break_4",
+  "kontakt_knt",
+  "show_on_website",
+  "status"
  ],
  "fields": [
-  {
-   "fieldname": "column_break_2",
-   "fieldtype": "Column Break"
-  },
   {
    "fieldname": "kontakt_knt",
    "fieldtype": "Link",
@@ -30,19 +28,37 @@
    "label": "Name"
   },
   {
-   "fieldname": "title",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Titel"
-  },
-  {
    "fieldname": "time",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Zeit"
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Beschreibung"
+  },
+  {
+   "default": "0",
+   "fieldname": "show_on_website",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Auf Website anzeigen"
+  },
+  {
+   "fetch_from": "kontakt_knt.status",
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Status"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
   }
  ],
- "modified": "2021-03-25 14:48:36.661143",
+ "modified": "2021-03-29 01:26:31.891487",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Programm Table",
