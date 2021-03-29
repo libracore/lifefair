@@ -1,0 +1,105 @@
+{
+ "creation": "2021-03-29 17:20:47.717728",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "block_section",
+  "block",
+  "deckblatt_und_sponsor_section",
+  "deckblatt",
+  "sponer_section",
+  "partner_seite_7",
+  "column_break_5",
+  "partner_seite_8",
+  "programm_lff_section",
+  "programm_lff",
+  "a_bis_z_section",
+  "a_bis_z"
+ ],
+ "fields": [
+  {
+   "fieldname": "deckblatt_und_sponsor_section",
+   "fieldtype": "Section Break",
+   "label": "Deckblatt"
+  },
+  {
+   "fieldname": "deckblatt",
+   "fieldtype": "Attach Image",
+   "label": "Deckblatt"
+  },
+  {
+   "fieldname": "partner_seite_7",
+   "fieldtype": "Attach Image",
+   "label": "Partner Seite 7"
+  },
+  {
+   "fieldname": "partner_seite_8",
+   "fieldtype": "Attach Image",
+   "label": "Partner Seite 8"
+  },
+  {
+   "fieldname": "programm_lff_section",
+   "fieldtype": "Section Break",
+   "label": "PROGRAMM LFF"
+  },
+  {
+   "fieldname": "programm_lff",
+   "fieldtype": "Table",
+   "options": "Programm Table"
+  },
+  {
+   "fieldname": "a_bis_z_section",
+   "fieldtype": "Section Break",
+   "label": "A bis Z"
+  },
+  {
+   "fieldname": "a_bis_z",
+   "fieldtype": "Table",
+   "options": "Block A bis Z"
+  },
+  {
+   "fieldname": "sponer_section",
+   "fieldtype": "Section Break",
+   "label": "Sponer"
+  },
+  {
+   "fieldname": "column_break_5",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "block_section",
+   "fieldtype": "Section Break",
+   "label": "Block"
+  },
+  {
+   "fieldname": "block",
+   "fieldtype": "Link",
+   "label": "Block",
+   "options": "Block"
+  }
+ ],
+ "modified": "2021-03-29 17:25:41.098843",
+ "modified_by": "Administrator",
+ "module": "Lifefair",
+ "name": "Prospekt",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

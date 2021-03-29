@@ -47,7 +47,6 @@
    "label": "Auf Website anzeigen"
   },
   {
-   "fetch_from": "kontakt_knt.status",
    "fieldname": "status",
    "fieldtype": "Data",
    "in_list_view": 1,
@@ -58,7 +57,7 @@
    "fieldtype": "Column Break"
   }
  ],
- "modified": "2021-03-29 01:26:31.891487",
+ "modified": "2021-03-29 15:28:33.221863",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Programm Table",
