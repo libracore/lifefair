@@ -39,20 +39,12 @@
   "column_links",
   "linkedin_link",
   "twitter_link",
-  "section_flyer",
-  "program",
   "section_planning",
   "planning",
   "section_partnerships",
   "partnerships_html",
   "prospekt_section",
-  "flyer_print_format",
-  "partner_seite_7",
-  "column_break_43",
-  "deckblatt",
-  "partner_seite_8",
-  "section_break_40",
-  "a_bis_z"
+  "flyer_print_format"
  ],
  "fields": [
   {
@@ -186,12 +178,6 @@
    "label": "Partnerships"
   },
   {
-   "collapsible": 1,
-   "fieldname": "section_flyer",
-   "fieldtype": "Section Break",
-   "label": "PROGRAMM LFF"
-  },
-  {
    "default": "Block Flyer",
    "fieldname": "flyer_print_format",
    "fieldtype": "Link",
@@ -231,27 +217,12 @@
   {
    "fieldname": "prospekt_section",
    "fieldtype": "Section Break",
-   "label": "Prospekt"
-  },
-  {
-   "fieldname": "deckblatt",
-   "fieldtype": "Attach Image",
-   "label": "Deckblatt"
+   "label": "Druckformat"
   },
   {
    "fieldname": "footnote",
    "fieldtype": "Data",
    "label": "Fusszeile"
-  },
-  {
-   "fieldname": "a_bis_z",
-   "fieldtype": "Table",
-   "label": "A bis Z",
-   "options": "Block A bis Z"
-  },
-  {
-   "fieldname": "section_break_40",
-   "fieldtype": "Section Break"
   },
   {
    "fieldname": "section_interests",
@@ -283,29 +254,9 @@
    "fieldtype": "Link",
    "label": "Interesse 3",
    "options": "Interesse"
-  },
-  {
-   "fieldname": "program",
-   "fieldtype": "Table",
-   "label": "Programm LFF",
-   "options": "Programm Table"
-  },
-  {
-   "fieldname": "partner_seite_7",
-   "fieldtype": "Attach Image",
-   "label": "Partner Seite 7"
-  },
-  {
-   "fieldname": "column_break_43",
-   "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "partner_seite_8",
-   "fieldtype": "Attach Image",
-   "label": "Partner Seite 8"
   }
  ],
- "modified": "2021-03-29 01:35:52.462777",
+ "modified": "2021-03-29 17:49:39.567060",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",
