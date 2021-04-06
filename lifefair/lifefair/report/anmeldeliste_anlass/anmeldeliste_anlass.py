@@ -88,6 +88,7 @@ def get_data(meeting=None, interests=None, as_list=True):
         sql_query += """ AND `tabRegistration`.`meeting` = '{0}'""".format(meeting)
     #elif interests:
     #   sql_query += """ WHERE `t2`.`interest_1` = '{0}' OR `t2`.`interest_2` = '{0}' OR `t2`.`interest_3` = '{0}'""".format(interests)	
+    sql_query += """ GROUP BY `tabRegistration`.`person`, `tabRegistration`.`date`"""
     sql_query += """ LIMIT 10000;"""
 
     if as_list:
