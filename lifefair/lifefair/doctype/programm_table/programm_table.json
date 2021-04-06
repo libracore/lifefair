@@ -7,6 +7,7 @@
   "time",
   "description",
   "person_name",
+  "website_description",
   "column_break_4",
   "kontakt_knt",
   "show_on_website",
@@ -55,9 +56,15 @@
   {
    "fieldname": "column_break_4",
    "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "kontakt_knt.website_description",
+   "fieldname": "website_description",
+   "fieldtype": "Small Text",
+   "label": "Websiten-Beschreibung"
   }
  ],
- "modified": "2021-03-29 15:28:33.221863",
+ "modified": "2021-04-06 13:33:04.240504",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Programm Table",
