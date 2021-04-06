@@ -63,7 +63,13 @@ def get_data(meeting=None, interests=None, as_list=True):
          IFNULL(`tabRegistration`.`block`, "-") AS `Block`,
          IFNULL(`tabPerson`.`primary_function`, "-") AS `Funktion`,
          IFNULL(`tabPerson`.`primary_organisation`, "-") AS `Organisation`,
-         IFNULL(`tabOrganisation`.`ist_ver`, 0) AS `Verbandsmitglied`,
+         IFNULL((SELECT `tabOrganisation`.`ist_ver`
+          FROM `tabOrganisation`
+          WHERE `tabOrganisation`.`name` IN (SELECT `tabPerson Organisation`.`organisation`
+                                             FROM `tabPerson Organisation`
+                                             WHERE `tabPerson Organisation`.`parent` = `tabPerson`.`name`)
+          ORDER BY `tabOrganisation`.`ist_ver` DESC
+          LIMIT 1), 0) AS `Verbandsmitglied`,
          `tabPerson`.`branche` AS `Branche`,
          `tabPerson`.`stakeholder` AS `Stakeholder`,
          `tabPerson`.`hierarchiestufe` AS `Hierarchiestufe`,
@@ -78,8 +84,6 @@ def get_data(meeting=None, interests=None, as_list=True):
     FROM `tabRegistration`
     LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
     LEFT JOIN `tabPerson Interest` ON `tabPerson Interest`.`parent` = `tabPerson`.`name`
-    LEFT JOIN `tabPerson Organisation` ON `tabPerson Organisation`.`parent` = `tabPerson`.`name`
-    LEFT JOIN `tabOrganisation` ON `tabOrganisation`.`name` = `tabPerson Organisation`.`organisation`
     LEFT JOIN `tabBlock` ON `tabBlock`.`name` = `tabRegistration`.`block`
         WHERE 
 			`tabRegistration`.`status` NOT IN ("Cancelled", "Abgemeldet", "Tentative")
@@ -88,6 +92,7 @@ def get_data(meeting=None, interests=None, as_list=True):
         sql_query += """ AND `tabRegistration`.`meeting` = '{0}'""".format(meeting)
     #elif interests:
     #   sql_query += """ WHERE `t2`.`interest_1` = '{0}' OR `t2`.`interest_2` = '{0}' OR `t2`.`interest_3` = '{0}'""".format(interests)	
+    sql_query += """ GROUP BY  `tabRegistration`.`name`"""
     sql_query += """ LIMIT 10000;"""
 
     if as_list:
