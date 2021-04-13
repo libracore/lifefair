@@ -59,8 +59,13 @@ def get_actors(interests=None, as_list=True):
         `t4`.`private_phone` AS `Private phone`,
         IFNULL(`t4`.`person_group`, "-") AS `Stakeholder`,
         IFNULL(`t4`.`primary_organisation`, "-") AS `Primary organisation`,
-        IFNULL(`t9`.`ist_ver`, 0) AS `Mitglied eines Vereines`,
-        /*IFNULL(`t9`.`ist_ver`, 0) AS `Mitglied eines Vereines`, */
+        IFNULL((SELECT `tabOrganisation`.`ist_ver`
+          FROM `tabOrganisation`
+          WHERE `tabOrganisation`.`name` IN (SELECT `tabPerson Organisation`.`organisation`
+                                             FROM `tabPerson Organisation`
+                                             WHERE `tabPerson Organisation`.`parent` = `t4`.`name`)
+          ORDER BY `tabOrganisation`.`ist_ver` DESC
+          LIMIT 1), 0) AS `Verbandsmitglied`,
         IFNULL(`t4`.`first_characters`, "----") AS `First Characters`,
         IFNULL(`t5`.`function`, "-") AS `Contact function`,
         IFNULL(`t6`.`long_name`, "-") As `Contact name`,
@@ -77,8 +82,6 @@ def get_actors(interests=None, as_list=True):
     LEFT JOIN `tabPerson`AS `t6` ON (`t6`.`name` = `t5`.`person`)
     LEFT JOIN `tabRegistration` AS `t7` ON (`t7`.`person` = `t4`.`name` AND `t7`.`meeting` = `t2`.`meeting` /*'SGES 2018'*/ AND `t7`.`status` != "Cancelled")
 	LEFT JOIN `tabPerson Interest` AS `t10` ON (`t10`.`parent` = `t4`.`name`)
-    LEFT JOIN `tabPerson Organisation` AS `t8` ON (`t8`.`parent` = `t4`.`name`)
-    LEFT JOIN  `tabOrganisation`  AS `t9` ON (`t9`.`name` = `t8`.`organisation`)
 /* display each person once per block (disabled by request on 2020-08-17 LaMu) */
 /*	GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))*/
     """
