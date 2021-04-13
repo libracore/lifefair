@@ -11,7 +11,8 @@
   "column_break_4",
   "kontakt_knt",
   "show_on_website",
-  "status"
+  "status",
+  "information"
  ],
  "fields": [
   {
@@ -62,9 +63,14 @@
    "fieldname": "website_description",
    "fieldtype": "Small Text",
    "label": "Websiten-Beschreibung"
+  },
+  {
+   "fieldname": "information",
+   "fieldtype": "Small Text",
+   "label": "Information"
   }
  ],
- "modified": "2021-04-06 13:33:04.240504",
+ "modified": "2021-04-13 10:11:47.949823",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Programm Table",
