@@ -10,6 +10,8 @@
   "amended_from",
   "title",
   "date",
+  "column_break_4",
+  "date_date_format",
   "section_partnerships",
   "partnerships_html",
   "interessen_section",
@@ -82,9 +84,18 @@
    "fieldtype": "Link",
    "label": "Interesse 3",
    "options": "Interesse"
+  },
+  {
+   "fieldname": "column_break_4",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date_date_format",
+   "fieldtype": "Date",
+   "label": "Date (Date Format)"
   }
  ],
- "modified": "2021-03-04 15:39:28.312888",
+ "modified": "2021-04-27 13:00:50.089225",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Meeting",
