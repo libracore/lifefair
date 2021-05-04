@@ -288,7 +288,14 @@ function update_website_description(frm) {
         if (!description == "") {
             description += "; ";
         }
-        description += organisation.function + ", " + organisation.organisation;
+        
+        if (organisation.function){
+			description += organisation.function + ", ";
+		}
+		if (organisation.organisation){
+			description += organisation.organisation;
+		}
+
     });
     cur_frm.set_value('website_description', description);
 }
