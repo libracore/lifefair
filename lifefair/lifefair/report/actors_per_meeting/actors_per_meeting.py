@@ -11,7 +11,7 @@ def execute(filters=None):
     columns = ["Block:Link/Block:150",
                "Name::200",  
                "Website description::200",     
-               "Vereinesmitglied",           
+               "Verbandsmitglied",           
                "Role::200", 
                "Person:Link/Person:100",
                "Show on website",

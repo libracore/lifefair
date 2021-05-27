@@ -96,6 +96,7 @@ function display_people(frm) {
 		var html = "";				
 		r.message.people.forEach(function (person) {
 			html += '<p>';	
+			html += '<a href="/desk#Form/Person/' + person.name + '">';
 			html += person.full_name;
 			    if (person.website_description) {
                 html += " (" + person.website_description + ")<br>";

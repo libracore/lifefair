@@ -13,6 +13,7 @@
   "image",
   "homepage",
   "ist_ver",
+  "ist_kein_ver",
   "column_general",
   "alternative_names",
   "french_name",
@@ -132,10 +133,16 @@
    "fieldname": "ist_ver",
    "fieldtype": "Check",
    "label": "Ist Verband "
+  },
+  {
+   "default": "0",
+   "fieldname": "ist_kein_ver",
+   "fieldtype": "Check",
+   "label": "Ist kein Verband"
   }
  ],
  "image_field": "image",
- "modified": "2021-02-26 10:53:30.410215",
+ "modified": "2021-05-23 15:34:11.640935",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Organisation",

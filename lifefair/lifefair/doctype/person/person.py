@@ -68,7 +68,7 @@ class Person(Document):
         participations = frappe.db.sql(sql_query, as_dict=True)
         return { 'participations': participations }
     
-    
+    '''
     def get_passive_participation(self):
         sql_query = ("""SELECT 
               `t1`.`block` AS `block`,
@@ -80,6 +80,41 @@ class Person(Document):
             ORDER BY `t1`.`meeting` ASC""".format(self.name))
         registrations = frappe.db.sql(sql_query, as_dict=True)
         return { 'registrations': registrations }
+    
+    
+    def get_passive_participation(self):
+        sql_query = ("""SELECT  `t2`.`title` AS `block`, `t2`.short_name AS `short`, `t2`.official_title AS `official`
+				FROM `tabRegistration` AS `t1` 
+				LEFT JOIN `tabBlock` AS `t2`
+				ON `t1`.`meeting` = `t2`.`meeting`
+				WHERE `t1`.`person` ='{0}' AND `t2`.title LIKE '%%hauptprogramm%%'
+            GROUP BY `t1`.`meeting`
+            ORDER BY `t1`.`meeting` ASC""".format(self.name))
+        registrations = frappe.db.sql(sql_query, as_dict=True)
+        return { 'registrations': registrations }
+    
+    '''
+    def get_passive_participation(self):
+        registrations = []    
+        registration = frappe.get_all('Registration', filters=[['person', '=', self.name]], fields=['meeting', 'remarks']) 
+        for r in registration:
+            i = 0
+            blocks = frappe.get_all('Block', filters=[['meeting', '=', r.meeting]], fields=['official_title', 'short_name', 'title']) 
+            if len(blocks) == 1:
+                registrations.append({'title': blocks[0]["title"], 'short_name': blocks[0]["short_name"], 'official_title': blocks[0]["official_title"]})
+            elif len(blocks) == 0:
+                frappe.msgprint("Achtung! Diese Person ist für einen Anlass registriert, welcher keine Blöcke hat.")
+            else:
+                for b in blocks:
+                    if "Hauptprogramm" in blocks[i]["title"]:
+                        registrations.append({'title': blocks[i]["title"], 'short_name': blocks[i]["short_name"], 'official_title': blocks[i]["official_title"]})
+                    i += 1
+        return { 'registrations': registrations }
+        
+    
+    
+    
+    
     
     # generates a vCard record (UTF-8, not Outlook configuration)
     def get_vcard(self):
