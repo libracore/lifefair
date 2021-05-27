@@ -249,27 +249,20 @@ function display_passive_participation(frm) {
 	doc: frm.doc,
 	callback: function(r) {
 		
+		console.log(r.message);
 	    if (r.message) {
             var html = "";
-         
+			
          if (r.message.registrations.length == 0) {
                 html = "<p>" + __("Diese Person hat bis jetzt noch keinen Anlass besucht.") + "</p>";
             } else {
 				html = "<p>" + __("Diese Person war bereits für ") + "<strong>" + r.message.registrations.length + "</strong>" +" Anlässe registriert.</p> <br>";
- 
                 r.message.registrations.forEach(function (registrations) {
                     // participation code generator
-                    html += '<a href="/desk#Form/Block/' + registrations.block + '">';
-                    html += registrations.block + ", " + registrations.off_title + ", " + "</a></p>";
+                    html += '<a href="/desk#Form/Block/' + registrations.title + '">';
+                    html += registrations.short_name + ", " + registrations.official_title + ", " + "</a></p>";
                 });
 				}
-           
-         
-         
-         
-         
-         
-         
             if (frm.fields_dict['registration']) {
                 $(frm.fields_dict['registration'].wrapper).html(html);
             }
