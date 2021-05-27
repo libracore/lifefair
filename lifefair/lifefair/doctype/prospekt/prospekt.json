@@ -1,4 +1,6 @@
 {
+ "allow_rename": 1,
+ "autoname": "field:block",
  "creation": "2021-03-29 17:20:47.717728",
  "doctype": "DocType",
  "editable_grid": 1,
@@ -61,7 +63,7 @@
   {
    "fieldname": "sponer_section",
    "fieldtype": "Section Break",
-   "label": "Sponer"
+   "label": "Sponsoren"
   },
   {
    "fieldname": "column_break_5",
@@ -76,10 +78,11 @@
    "fieldname": "block",
    "fieldtype": "Link",
    "label": "Block",
-   "options": "Block"
+   "options": "Block",
+   "unique": 1
   }
  ],
- "modified": "2021-04-14 12:01:06.522389",
+ "modified": "2021-05-18 10:21:28.435697",
  "modified_by": "ben.helmy@libracore.com",
  "module": "Lifefair",
  "name": "Prospekt",
