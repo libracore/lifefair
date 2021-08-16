@@ -8,18 +8,20 @@ import frappe
 def execute(filters=None):
     columns, data = [], []
     
-    columns = ["Kontakt KNT:Link/Person:100",
+    columns = ["Kontakt KNT:Link/Person:50",
                "Personenkürzel::50",  
                "Name::150",     
                "Geschlecht::50",           
                "Zeile 1::250", 
-               "Zeile 2::100",
+               "Zeile 2::75",
                "Geprüft von::50",
+               "Meldedatum::100",
+               "Email Clerk::75",
                "Registrierung:Link/Registration:100",
                "Gutscheincode::200",
                "Anlass::200",
-               "Bemerkungen::200",
-               "Teilnahme::200",
+               "Bemerkungen::120",
+               "Teilnahme::100",
                "Block::200",
                "Funktion::150",
                "Organisation::200",
@@ -34,7 +36,10 @@ def execute(filters=None):
                "Briefanrede::100",
                "Nachname::100",
                "PLZ::50",
-               "Interessen::200"
+               "Interessen::200",
+               "Typ::100",
+               "Ticketnummer::125",
+               "Barcode::125"
                ]
     if filters:
         data = get_data(meeting=filters.meeting, interests=filters.interests, as_list=True)
@@ -55,6 +60,8 @@ def get_data(meeting=None, interests=None, as_list=True):
             SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1),
             SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1), "") AS `Zeile 2`,
          (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,
+         `tabRegistration`.`meldedatum` AS `Meldedatum`,
+         `tabRegistration`.`email_clerk` AS `Email Clerk`,
          `tabRegistration`.`name` AS `Registrierung`,
          `tabRegistration`.`code` AS `Gutscheincode`,
          `tabRegistration`.`meeting` AS `Anlass`,
@@ -79,8 +86,11 @@ def get_data(meeting=None, interests=None, as_list=True):
          `tabPerson`.`nur_einmal_kontaktieren` AS `Nur einmal kontaktieren`,
          `tabPerson`.`letter_salutation` AS `Briefanrede`,
          `tabPerson`.`last_name` AS `Nachname`,
-         `tabPerson`.`personal_postal_code` AS `PLZ`
-         /*GROUP_CONCAT(IFNULL(`tabPerson Interest`.`interesse`, "-")) AS `Interessen`*/
+         `tabPerson`.`personal_postal_code` AS `PLZ`,
+         GROUP_CONCAT(IFNULL(`tabPerson Interest`.`interesse`, "-")) AS `Interessen`,
+         `tabRegistration`.`type` AS `Typ`,
+         `tabRegistration`.`ticket_number` AS `Ticketnummer`,
+         `tabRegistration`.`barcode` AS `Barcode`
     FROM `tabRegistration`
     LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
     LEFT JOIN `tabPerson Interest` ON `tabPerson Interest`.`parent` = `tabPerson`.`name`
