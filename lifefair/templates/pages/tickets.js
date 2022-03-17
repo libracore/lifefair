@@ -50,7 +50,7 @@ function loadBlocks(anlass) {
  	filters: [
  	    ["meeting", "=", anlass]
  	],
-        fields: ["meeting, short_name, neues_datum, time, interest_1, interest_2, interest_3"],
+        fields: ["short_name, neues_datum, time, interest_1, interest_2, interest_3"],
     },
     'callback': function (response) {
             var blocks = response.message;
