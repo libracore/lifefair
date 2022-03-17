@@ -1,19 +1,30 @@
 .title {
-  font-size: 50px;
+  font-size: 45px;
   color: #E94E26;
   margin-left: 15px;
 }
 
+.filterTitle {
+  color: #003764;
+  font-size: 10px;
+}
 
 .filterDiv {
   float: left;
   border: 1px solid #009FE3;
   color: #003764;
-  width: 300px;
+  width: 330px;
+  height: 228px;
   padding: 30px;
+  margin: 5px;
   text-align: center;
-  margin: 2px;
   display: none;
+  text-align: left;
+}
+
+.blockTitle {
+  color: #E94E26;
+  font-weight: 10;
 }
 
 .show {
@@ -21,18 +32,20 @@
 }
 
 .container {
-  margin-top: 20px;
   overflow: hidden;
 }
 
 #myBtnContainer {
-  margin-left: 15px;
+  margin-left: 18px;
+  margin-bottom: 30px;
+  width: 1024px;
 }
 
 .btn {
   border: 1px solid #009FE3;
   border-radius: 0px;
   color: #009FE3;
+  font-size: 12px;
   outline: none;
   padding: 12px 16px;
   cursor: pointer;

@@ -50,7 +50,7 @@ function loadBlocks(anlass) {
  	filters: [
  	    ["meeting", "=", anlass]
  	],
-        fields: ["short_name, neues_datum, time, interest_1, interest_2, interest_3"],
+        fields: ["official_title, short_name, neues_datum, time, interest_1, interest_2, interest_3"],
     },
     'callback': function (response) {
             var blocks = response.message;
@@ -58,11 +58,14 @@ function loadBlocks(anlass) {
             
             var text = document.querySelector(".display");
 			text.innerHTML = "";
-			blocks.forEach(function (block) {
+			blocks.forEach(function (block, i) {
+				console.log(block[1]);
 				var card = document.createElement('div');
 				card.classList.add('filterDiv');
 				card.value = block.short_name;
-				card.innerHTML = "<p>" + block.short_name + "&nbsp;&nbsp;&nbsp;"+ block.time  +"</p>";
+				card.innerHTML = "<p>" + block.official_title +"</p>";
+				card.firstChild.className = 'blockTitle';		
+				card.innerHTML += "<p>" + block.short_name + "&nbsp;&nbsp;&nbsp;"+ block.time  +"</p>";
 				text.appendChild(card);
 			});       
 	}});
