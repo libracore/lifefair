@@ -58,8 +58,7 @@ function loadBlocks(anlass) {
             
             var text = document.querySelector(".display");
 			text.innerHTML = "";
-			blocks.forEach(function (block, i) {
-				console.log(block[1]);
+			blocks.forEach(function (block) {
 				var card = document.createElement('div');
 				card.classList.add('filterDiv');
 				card.value = block.short_name;
@@ -67,6 +66,55 @@ function loadBlocks(anlass) {
 				card.firstChild.className = 'blockTitle';		
 				card.innerHTML += "<p>" + block.short_name + "&nbsp;&nbsp;&nbsp;"+ block.time  +"</p>";
 				text.appendChild(card);
+				
+				for (const [key, value] of Object.entries(block)) {
+				  switch (value) {
+				    case 'Gesundheit':
+					  card.classList.add('gesundheit');
+					  break;
+					case 'Nahrung':
+					  card.classList.add('nahrung');
+					  break;
+					case 'Bauen':
+					  card.classList.add('bauen');
+					  break;
+					case 'Mobilität':
+					  card.classList.add('mobilität');
+					  break;
+					case 'Investieren und Finanzieren':
+					  card.classList.add('investieren');
+					  break;
+					case 'Kommunikation':
+					  card.classList.add('kommunikation');
+					  break;
+					case 'Smart Cities':
+					  card.classList.add('smart');
+					  break;
+					case 'Energie':
+					  card.classList.add('energie');
+					  break;
+					case 'Klima':
+					  card.classList.add('klima');
+					  break;
+					case 'Ressourcen':
+					  card.classList.add('ressourcen');
+					  break;
+					case 'Kreislaufwirtschaft':
+					  card.classList.add('kreislaufwirtschaft');
+					  break;
+					case 'Kultur':
+					  card.classList.add('kultur');
+					  break;
+					case 'Aviation':
+					  card.classList.add('aviation');
+					  break;
+					case 'Entrepreneurship':
+					  card.classList.add('entrepreneurship');
+					  break;
+				    default:
+					  console.log("Sorry");
+				  }
+				}		
 			});       
 	}});
 }
