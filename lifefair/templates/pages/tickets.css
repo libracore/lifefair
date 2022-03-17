@@ -1,0 +1,49 @@
+.title {
+  font-size: 50px;
+  color: #E94E26;
+  margin-left: 15px;
+}
+
+
+.filterDiv {
+  float: left;
+  border: 1px solid #009FE3;
+  color: #003764;
+  width: 300px;
+  padding: 30px;
+  text-align: center;
+  margin: 2px;
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+.container {
+  margin-top: 20px;
+  overflow: hidden;
+}
+
+#myBtnContainer {
+  margin-left: 15px;
+}
+
+.btn {
+  border: 1px solid #009FE3;
+  border-radius: 0px;
+  color: #009FE3;
+  outline: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  margin: 2px; 
+}
+
+.btn:hover {
+  border: 2px solid #003764;
+}
+
+.btn.active {
+  border: 2px solid #003764;
+  color: #003764;
+}
