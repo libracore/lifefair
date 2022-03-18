@@ -42,6 +42,10 @@ for (var i = 0; i < btns.length; i++) {
   });
 }
 
+function addToCart() {
+  console.log('hello')
+}
+
 function loadBlocks(anlass) {
 	frappe.call({
     method:"frappe.client.get_list",
@@ -56,16 +60,27 @@ function loadBlocks(anlass) {
             var blocks = response.message;
             console.log(blocks);
             
-            var text = document.querySelector(".display");
-			text.innerHTML = "";
+            var textContainer = document.querySelector(".display");
+			textContainer.innerHTML = "";
 			blocks.forEach(function (block) {
+				addToCart()
 				var card = document.createElement('div');
 				card.classList.add('filterDiv');
-				card.value = block.short_name;
-				card.innerHTML = "<p>" + block.official_title +"</p>";
-				card.firstChild.className = 'blockTitle';		
-				card.innerHTML += "<p>" + block.short_name + "&nbsp;&nbsp;&nbsp;"+ block.time  +"</p>";
-				text.appendChild(card);
+				var cardText = block.official_title.split(":");
+				card.innerHTML += `<p class='blockTitle'>  ${cardText[0]} </p> <p class='blockTime'>  ${block.short_name} &nbsp;&nbsp;&nbsp; ${block.time} </p>`;
+				if(cardText.length > 1) {
+				   card.innerHTML += `<p class='blockText'> ${cardText[1]} </p>`;
+				}	
+				card.innerHTML += `<div class='buttonsContainer'> <div class='cart' >Cart</div> <div class='video'>Video</div> <a href="https://sges.ch/about" target="_blank" class='info'>Info</a> </div>`;
+				textContainer.appendChild(card); 
+				
+				if (block.neues_datum) {
+					  console.log()
+				  }
+				if (block.time) {
+					  var timeRange = block.time.split("-");;
+					  console.log(timeRange)
+				  }
 				
 				for (const [key, value] of Object.entries(block)) {
 				  switch (value) {
@@ -111,11 +126,25 @@ function loadBlocks(anlass) {
 					case 'Entrepreneurship':
 					  card.classList.add('entrepreneurship');
 					  break;
+					case '08:15 - 12:15 Uhr':
+					  card.classList.add('vormittag');
+					  break;
+					case '14:00 - 16:45 Uhr':
+					  card.classList.add('nachmittag');
+					  break;
+					case '20.00 - 22.00 Uhr':
+					  card.classList.add('abend');
+					  break;
 				    default:
-					  console.log("Sorry");
+					  console.log("1", block.interest_1, "2", block.interest_2, "3", block.interest_3);
+					  break;
 				  }
 				}		
-			});       
+			});
+			
+			function addToCart(blocks) {
+				console.log('hello')
+			}			      
 	}});
 }
 
