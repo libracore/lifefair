@@ -1,4 +1,11 @@
-filterSelection("all")
+var globalBlocks = [];
+var initialState = {
+	userAge: null,
+	cart : [] //|| JSON.parse(localStorage.getItem("CART")) 
+};
+openModal();
+filterSelection("all");
+updateCart();
 
 function filterSelection(c) {
   var x, i;
@@ -32,7 +39,7 @@ function removeClass(element, name) {
 }
 
 // Add active class to the current button (highlight it)
-var btnContainer = document.getElementById("myBtnContainer");
+var btnContainer = document.getElementById("filterBtnContainer");
 var btns = btnContainer.getElementsByClassName("btn");
 for (var i = 0; i < btns.length; i++) {
   btns[i].addEventListener("click", function(){
@@ -42,8 +49,158 @@ for (var i = 0; i < btns.length; i++) {
   });
 }
 
-function addToCart() {
-  console.log('hello')
+function checkTime(time) {
+	//7 - 13 Vormitag; 13:01 - 18 Nachmittag; 18:01 - 23 Abend;
+	var timeSplitFrom = time[0].split(":");
+	var timeSplitTo = time[1].split(":");
+	var result = [];
+	
+	result.push(timeOfDay(timeSplitFrom));
+	result.push(timeOfDay(timeSplitTo));
+	if (result[0] == result[1]) {
+		result.pop();
+		return result;
+		} else {
+			return result;
+			}
+}
+
+function timeOfDay(timeRange) {
+	//return 1 : vormittag
+	//return 2 : nachtmittag
+	//return 3 : abend
+	if (parseInt(timeRange[0]) <= 13) {
+		if (parseInt(timeRange[0]) == 13 && parseInt(timeRange[1]) > 0) {
+			return 2
+		} else {
+			return 1		
+		}	
+	} 	
+	else if ( parseInt(timeRange[0]) >= 18) {
+		if (parseInt(timeRange[0]) == 18 && parseInt(timeRange[1]) == 0) {
+			return 2	
+		} else {
+			return 3				
+		}
+	} else {
+		return 2
+	}	
+}
+
+function addToCart(i) {
+	 if (initialState.userAge == null) {
+		 openModal();
+	} else {
+		if (initialState.cart.some((item) => item.short_name == globalBlocks[i].short_name)) {
+		changeNoOfUnits("plus", globalBlocks[i].short_name);
+		} else {
+			initialState.cart.push({
+				 ...globalBlocks[i], 
+				 numberOfUnits: 1
+			});
+		}	
+	}
+	 
+	updateCart();
+}
+
+function openModal() {
+	var backdrop = document.createElement('div');
+	backdrop.classList.add('backdrop');
+	var divContainer = document.querySelector(".container");
+	document.insertBefore(backdrop, divContainer);
+	backdrop.addEventListener('click', closeModal)
+	
+	var modal = document.createElement('div');
+	modal.addEventListener('click', closeModal)
+	modal.innerHTML += `
+			<div class="modal"> 
+				<h1 class="modalTitle"> Please select which type of user are you</h1>
+				<div class="modalSelection">
+					<div>1</div>
+					<div>2</div>
+					<div>3</div>
+				</div>
+			</div>
+			`;
+}
+
+function closeModal() {
+	if (backdrop && modal) {
+		backdrop.remove();
+		modal.remove();
+	}
+}
+
+function updateCart() {
+	updateItems();
+	updateTotal();
+	
+	//localStorage.setItem("CART", JSON.stringify(initialState.cart));
+}
+
+function updateTotal() {
+	var cartTotal = document.querySelector(".cartTotal");
+	var totalPrice = 0;
+	
+	initialState.cart.forEach((item, i) => {
+		totalPrice += 20.00 * item.numberOfUnits;
+		cartTotal.innerHTML = `<p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p>`;	
+	});
+		
+}
+
+function updateItems() {
+	var cartElement = document.querySelector(".cartElement");
+	cartElement.innerHTML = ""; //Clearing the cart to avoid duplication
+	initialState.cart.forEach((item, i) => {
+		var cardText = item.official_title.split(":");
+		cartElement.innerHTML += `
+			<div class="cartItems"> 
+				<div class="cartInfo"> 
+					<p class="cartItem"> ${item.neues_datum} </p>
+					<p class="cartItem"> ${item.short_name} &nbsp; ${cardText[0]} </p>
+					<p class="cartItem"> ${item.time} </p>
+				</div>
+				<div class="cartAmount">
+					<div class="itemPrice" >20.00</div>
+					<div class="cartUnits">
+						<div class="btnMinus" onclick="changeNoOfUnits('minus', ${i})">-</div>
+						<div class="ItemNum">${item.numberOfUnits}</div>
+						<div class="btnPlus" onclick="changeNoOfUnits('plus', ${i})">+</div>
+					</div>
+				</div>
+				<div class="cartCancel" onclick="removeCartItem(${i})"> X </div>
+			</div>
+			`;
+		});
+}
+
+function changeNoOfUnits(action, i) {
+		console.log(action, i);
+		initialState.cart = initialState.cart.map((item, x) => {
+			var numberOfUnits = item.numberOfUnits;
+			if ( i == x || i == item.short_name ) {
+				if (action == "minus" && numberOfUnits > 1) {
+					numberOfUnits--;
+				} else if (action == "plus") {
+					numberOfUnits++;
+				}
+			}
+			return {
+				...item,
+				numberOfUnits,
+				}
+		});
+		
+		updateCart();
+}
+
+function removeCartItem(i) {
+	console.log('removing');
+	console.log(globalBlocks[i].short_name);
+	initialState.cart = initialState.cart.filter((item)=> item.short_name != globalBlocks[i].short_name);
+	updateCart();
 }
 
 function loadBlocks(anlass) {
@@ -62,8 +219,8 @@ function loadBlocks(anlass) {
             
             var textContainer = document.querySelector(".display");
 			textContainer.innerHTML = "";
-			blocks.forEach(function (block) {
-				addToCart()
+			blocks.forEach(function (block, i) {
+				globalBlocks.push(block);
 				var card = document.createElement('div');
 				card.classList.add('filterDiv');
 				var cardText = block.official_title.split(":");
@@ -71,15 +228,44 @@ function loadBlocks(anlass) {
 				if(cardText.length > 1) {
 				   card.innerHTML += `<p class='blockText'> ${cardText[1]} </p>`;
 				}	
-				card.innerHTML += `<div class='buttonsContainer'> <div class='cart' >Cart</div> <div class='video'>Video</div> <a href="https://sges.ch/about" target="_blank" class='info'>Info</a> </div>`;
+				card.innerHTML += `<div class='buttonsContainer'> <div class='cart' onclick="addToCart(${i})">Cart</div> <div class='video'>Video</div> <a href="https://sges.ch/about" target="_blank" class='info'>Info</a> </div>`;
 				textContainer.appendChild(card); 
 				
-				if (block.neues_datum) {
-					  console.log()
-				  }
+				
 				if (block.time) {
-					  var timeRange = block.time.split("-");;
-					  console.log(timeRange)
+					var twoTimeRange = block.time.split("und");
+					
+					if (twoTimeRange.length > 1) {
+						for (var i = 0; i < twoTimeRange.length; i++ ) {
+							
+							var OnetimeRange = twoTimeRange[i].split("-");
+							var timeFilter = checkTime(OnetimeRange);
+							  for (var j = 0; j < timeFilter.length; j++ ) {
+								  if (timeFilter[j] == 1) {
+									  card.classList.add('vormittag');
+									  } else if ( timeFilter[j] == 2){
+										  card.classList.add('nachmittag');
+										  } else {
+											  card.classList.add('abend');
+											  }
+								  }
+							}
+						} else {
+							
+							var OnetimeRange = block.time.split("-");
+							var timeFilter = checkTime(OnetimeRange);
+							  for (var i = 0; i < timeFilter.length; i++ ) {
+								  if (timeFilter[i] == 1) {
+									  card.classList.add('vormittag');
+									  } else if ( timeFilter[i] == 2){
+										  card.classList.add('nachmittag');
+										  } else {
+											  card.classList.add('abend');
+											  }
+								  }
+							
+							}
+					  
 				  }
 				
 				for (const [key, value] of Object.entries(block)) {
@@ -126,25 +312,12 @@ function loadBlocks(anlass) {
 					case 'Entrepreneurship':
 					  card.classList.add('entrepreneurship');
 					  break;
-					case '08:15 - 12:15 Uhr':
-					  card.classList.add('vormittag');
-					  break;
-					case '14:00 - 16:45 Uhr':
-					  card.classList.add('nachmittag');
-					  break;
-					case '20.00 - 22.00 Uhr':
-					  card.classList.add('abend');
-					  break;
 				    default:
-					  console.log("1", block.interest_1, "2", block.interest_2, "3", block.interest_3);
+					  
 					  break;
 				  }
 				}		
-			});
-			
-			function addToCart(blocks) {
-				console.log('hello')
-			}			      
+			});					      
 	}});
 }
 
@@ -157,9 +330,7 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 function get_arguments() {
     var arguments = window.location.toString().split("?");
-    console.log("in the arguments", arguments);
     if (!arguments[arguments.length - 1].startsWith("http")) {
-		console.log("in the if statement");
         var args_raw = arguments[arguments.length - 1].split("&");
         var args = {};
         args_raw.forEach(function (arg) {
@@ -168,7 +339,7 @@ function get_arguments() {
                 args[kv[0]] = decodeURI(kv[1]);
             }
         });
-        console.log("in the args", args);
+        console.log(args);
         if (args['anlass']) {
             // fetch payment status
             loadBlocks(args['anlass']);
