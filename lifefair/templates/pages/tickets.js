@@ -1,30 +1,26 @@
 var globalBlocks = [];
 var initialState = {
-	userAge : "",
-	cart : [] //|| JSON.parse(localStorage.getItem("CART")) 
+	userType : "",
+	userFirma: "",
+	cart : [] //|| JSON.parse(localStorage.getItem("CART")); 
 };
+var cartbButton = document.getElementById("btnCart");
+
 filterSelection("all");
 updateCart();
 
-function start() {
-    document.getElementById("step0").style.display = "block";
-    document.getElementById("step1").style.display = "none";
-    // prepare topic
-    filterSelection("all");
-
-}
-
-function checkOut() {
-	document.getElementById("step0").style.display = "none";
-    document.getElementById("step1").style.display = "block"
-}
-
 function userSelection(c) {
-  initialState.userAge = c;
+  initialState.userType = c;
+  console.log("the user", initialState.userType);
+}
+
+function firmaSelection(c) {
+  initialState.userFirma = c;
+  console.log("the firma", initialState.userFirma );
 }
 
 function filterSelection(c) {
-  console.log("in the filter", c)
+  console.log("the filter", c)
   var x, i;
   x = document.getElementsByClassName("filterDiv");
   if (c == "all") c = "";
@@ -219,6 +215,29 @@ function removeCartItem(i) {
 	console.log(globalBlocks[i].short_name);
 	initialState.cart = initialState.cart.filter((item)=> item.short_name != globalBlocks[i].short_name);
 	updateCart();
+}
+
+function start() {
+    document.getElementById("step0").style.display = "block";
+    document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "none";
+    // prepare topic
+    cartbButton.innerHTML = `<p onclick="checkOut()" class="cartBtnText">ZUM WARENKORB</p>`
+    filterSelection("all");
+
+}
+
+function checkOut() {
+	document.getElementById("step0").style.display = "none";
+    document.getElementById("step1").style.display = "block"
+    
+    cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT ZAHLEN</p>`
+}
+
+function checkDataAndPay() {
+	console.log("in the pay func");
+	document.getElementById("step1").style.display = "none";
+    document.getElementById("step2").style.display = "block";
 }
 
 function loadBlocks(anlass) {

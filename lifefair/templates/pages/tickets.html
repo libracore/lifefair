@@ -6,11 +6,10 @@
 		  <h2 class="cartTitle">WARENKORB</h2>
 		  <div class="cartElement"></div>
 		  <div class="cartTotal"></div>
-		  <button class="cartBtn" onclick="checkOut()"> ZUM WARENKORB</button>
+		  <button id="btnCart" class="cartBtn"> <p onclick="checkOut()" class="cartBtnText">ZUM WARENKORB</p></button>
 		</div>
 		
 <div id="step0">
-		
 		
 		<div id="filterBtnContainerOne">
 		  <h2 class="filterTitle">ICH BIN ...</h2>
@@ -23,10 +22,10 @@
 		
 			<div id="filterBtnContainerTwo">
 			  <h2 class="filterTitle">ICH ARBEITE FÜR ...</h2>
-			  <button class="btnOrange" onclick="filterSelection('9')"> FIRMA 1 - 9 MA</button>
-			  <button class="btnOrange" onclick="filterSelection('99')">FIRMA 10 - 99 MA</button>
-			  <button class="btnOrange" onclick="filterSelection('199')">FIRMA 100 - 199 MA</button>
-			  <button class="btnOrange" onclick="filterSelection('more')">FIRMA 199+ MA</button>
+			  <button class="btnOrange" onclick="firmaSelection('9')"> FIRMA 1 - 9 MA</button>
+			  <button class="btnOrange" onclick="firmaSelection('99')">FIRMA 10 - 99 MA</button>
+			  <button class="btnOrange" onclick="firmaSelection('199')">FIRMA 100 - 199 MA</button>
+			  <button class="btnOrange" onclick="firmaSelection('more')">FIRMA 199+ MA</button>
 			</div>
 			
 			<div id="filterBtnContainerThree">
@@ -128,10 +127,20 @@
 			</td>
 		</tr>
 	 </table>
-	 <button class="zuruckButton" onclick="start();">ZURÜCK</button>  
+	 <button class="zuruckBtnOne" onclick="start();">ZURÜCK</button>  
 </div>
 
-	
+<div id="step2" style="display: none">
+	<div class="endMsgContainer">
+		<h2 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h2>
+		<p class="endMsgTextOne"> Herzlichen Dank Herr/Frau XY für Ihren Ticketkauf. Ihr Ticket Nr.XXX wird Ihnen per E-mail an info@xyz.ch zugestellt.</p>
+		<div class="endMsgButtonsContainer">
+			<button class="downloadBtn">TICKET HERUNTERLADEN</button>  
+			<button class="zuruckBtnTwo" onclick="start();">ZURÜCK ZUR STARTSEITE</button>  
+		</div>
+		<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
+	</div>
+</div>	
 
   
   
