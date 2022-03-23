@@ -2,7 +2,7 @@
 
 		<h2 class="title">LIFEFAIR EVENTS</h2>
 		
-		<div class="warenkorb">
+		<div id="warenkorb">
 		  <h2 class="cartTitle">WARENKORB</h2>
 		  <div class="cartElement"></div>
 		  <div class="cartTotal"></div>
@@ -63,7 +63,7 @@
 <div id="step1" style="display: none">
 	<h2 class="tableTitle">CHECKOUT</h2>
 	<h5 class="tableTitleTwo">IHRE ANGABEN</h5>
-	 <table class="table">
+	 <table class="table"  id="clearField">
 		<tr class="tr">
 			<td class="td">	
                 <span class="tableSpan">Name</span>
@@ -77,31 +77,31 @@
 		<tr class="tr">
 			<td class="td">
 				<span class="tableSpan">Firma</span>
-                <input class="tableInput" type="text" id="firma" placeholder="Firma" class="input-xlarge" title="Die Firma ist zwingend!" required>
+                <input class="tableInput" type="text" id="inputFirma" placeholder="Firma" class="input-xlarge" title="Die Firma ist zwingend!" required>
 			</td>
 			<td class="td">
 				<span class="tableSpan">Funktion</span>
-                <input class="tableInput" type="text" id="funktion" placeholder="Funktion" class="input-xlarge" title="Die Funktion ist zwingend!" pattern="[0-9]{10}" required>
+                <input class="tableInput" type="text" id="inputFunktion" placeholder="Funktion" class="input-xlarge" title="Die Funktion ist zwingend!" pattern="[0-9]{10}" required>
 			</td>
 		</tr>
 		<tr class="tr">
 			<td class="td">
 				<span class="tableSpan">Telefonnummer</span>
-                <input class="tableInput" type="text" id="telefone" placeholder="Telefonnummer" class="input-xlarge" title="Die Telefonnummer ist zwingend!" required>
+                <input class="tableInput" type="text" id="inputPhone" placeholder="Telefonnummer" class="input-xlarge" title="Die Telefonnummer ist zwingend!" required>
 			</td>
 			<td class="td">
 				<span class="tableSpan">E-mail</span>
-                <input class="tableInput" type="text" id="email" placeholder="E-mail" class="input-xlarge" title="Die E-mail zwingend!" required>
+                <input class="tableInput" type="text" id="inputEmail" placeholder="E-mail" class="input-xlarge" title="Die E-mail zwingend!" required>
 			</td>
 		</tr>
 		<tr class="tr">
 			<td class="td">
 				<span class="tableSpan">Adresse</span>
-                <input class="tableInput" type="text" id="Adresse" placeholder="Adresse" class="input-xlarge" title="Der Adresse ist zwingend!" required>
+                <input class="tableInput" type="text" id="inputAdresse" placeholder="Adresse" class="input-xlarge" title="Der Adresse ist zwingend!" required>
 			</td>
 			<td class="td">
 				<span class="tableSpan">PLZ/Ort</span>
-                <input class="tableInput" type="text" id="ort" placeholder="PLZ/Ort" class="input-xlarge" title="Der PLZ/Ort ist zwingend!" required>
+                <input class="tableInput" type="text" id="inputOrt" placeholder="PLZ/Ort" class="input-xlarge" title="Der PLZ/Ort ist zwingend!" required>
 			</td>
 		</tr>
 		<tr class="tr">
@@ -114,7 +114,7 @@
 			</td>
 			<td class="td zahlungs">
 				<h5>ZAHLUNGSMITTEL</h5>
-				<div class="zahlungsOptions">
+				<div class="zahlungsOptions" id="clearField">
 					<div class="zahlungsCheckOne">
 						<input class="checkInput" type="checkbox" id="kreditkarte" name="kreditkarte" value="KREDITKARTE">
 						<label class="checkLabel" for="kreditkarte">Kreditkarte</label>
@@ -131,15 +131,7 @@
 </div>
 
 <div id="step2" style="display: none">
-	<div class="endMsgContainer">
-		<h2 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h2>
-		<p class="endMsgTextOne"> Herzlichen Dank Herr/Frau XY für Ihren Ticketkauf. Ihr Ticket Nr.XXX wird Ihnen per E-mail an info@xyz.ch zugestellt.</p>
-		<div class="endMsgButtonsContainer">
-			<button class="downloadBtn">TICKET HERUNTERLADEN</button>  
-			<button class="zuruckBtnTwo" onclick="start();">ZURÜCK ZUR STARTSEITE</button>  
-		</div>
-		<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
-	</div>
+	<div class="endMsgContainer"></div>
 </div>	
 
   

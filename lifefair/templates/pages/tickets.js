@@ -4,9 +4,12 @@ var initialState = {
 	userFirma: "",
 	cart : [] //|| JSON.parse(localStorage.getItem("CART")); 
 };
+
+var cartElement = document.querySelector(".cartElement");
+var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
 
-filterSelection("all");
+//filterSelection("all");
 updateCart();
 
 function userSelection(c) {
@@ -58,37 +61,37 @@ function removeClass(element, name) {
 }
 
 // Add active class to the current button (highlight it)
-var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button")
+var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button");
 btnContainerOne.forEach((element) => {
 	element.addEventListener("click", function(){
-		btnContainerOne.forEach(btn => btn.classList.remove("active"))
+		btnContainerOne.forEach(btn => btn.classList.remove("active"));
 		this.classList.add("active");
-	})
-})
+	});
+});
 
-var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySelectorAll("button")
+var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySelectorAll("button");
 btnContainerTwo.forEach((element) => {
 	element.addEventListener("click", function(){
-		btnContainerTwo.forEach(btn => btn.classList.remove("active"))
+		btnContainerTwo.forEach(btn => btn.classList.remove("active"));
 		this.classList.add("active");
-	})
-})
+	});
+});
 
-var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button")
+var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
 btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
-		btnContainerThree.forEach(btn => btn.classList.remove("active"))
+		btnContainerThree.forEach(btn => btn.classList.remove("active"));
 		this.classList.add("active");
-	})
-})
+	});
+});
 
-var btnContainerFour = document.getElementById("filterBtnContainerFour").querySelectorAll("button")
+var btnContainerFour = document.getElementById("filterBtnContainerFour").querySelectorAll("button");
 btnContainerFour.forEach((element) => {
 	element.addEventListener("click", function(){
-		btnContainerFour.forEach(btn => btn.classList.remove("active"))
+		btnContainerFour.forEach(btn => btn.classList.remove("active"));
 		this.classList.add("active");
-	})
-})
+	});
+});
 
 
 function checkTime(time) {
@@ -149,7 +152,6 @@ function updateCart() {
 }
 
 function updateTotal() {
-	var cartTotal = document.querySelector(".cartTotal");
 	var totalPrice = 0;
 	
 	initialState.cart.forEach((item, i) => {
@@ -160,7 +162,6 @@ function updateTotal() {
 }
 
 function updateItems() {
-	var cartElement = document.querySelector(".cartElement");
 	if ( initialState.cart.length > 0) {
 		cartElement.innerHTML = ""; //Clearing the cart to avoid duplication
 		initialState.cart.forEach((item, i) => {
@@ -218,27 +219,118 @@ function removeCartItem(i) {
 }
 
 function start() {
+	document.getElementById("warenkorb").style.display = "block";
     document.getElementById("step0").style.display = "block";
     document.getElementById("step1").style.display = "none";
     document.getElementById("step2").style.display = "none";
     // prepare topic
     cartbButton.innerHTML = `<p onclick="checkOut()" class="cartBtnText">ZUM WARENKORB</p>`
-    filterSelection("all");
 
 }
 
 function checkOut() {
-	document.getElementById("step0").style.display = "none";
-    document.getElementById("step1").style.display = "block"
-    
-    cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT ZAHLEN</p>`
+	
+	if (initialState.cart.length == 0) {
+		var shaketext = document.querySelector(".cartLeer")
+			shaketext.classList.add("shake");
+		} else {
+			document.getElementById("step0").style.display = "none";
+			document.getElementById("step1").style.display = "block"
+			
+			cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT ZAHLEN</p>`
+		}
 }
+
+//Watching over the checkbox in the checkout 
+var gleicheAdresse = document.getElementById("gleiche");
+gleicheAdresse.addEventListener('change', function(e){
+	if (gleicheAdresse.checked) {
+		console.log("gleiche check");
+	}
+});
+
+var kreditkarte = document.getElementById("kreditkarte");
+kreditkarte.addEventListener('change', function(e){
+	if (kreditkarte.checked) {
+		console.log("kreditkarte check");
+	}
+});
+
+var rechnung = document.getElementById("rechnung");
+rechnung.addEventListener('change', function(e){
+	if (rechnung.checked) {
+		console.log("rechnung check");
+	}
+});
 
 function checkDataAndPay() {
 	console.log("in the pay func");
-	document.getElementById("step1").style.display = "none";
-    document.getElementById("step2").style.display = "block";
+	
+	var lastname = document.getElementById("inputSurname").value;
+	var firstname = document.getElementById("inputFirstname").value;
+	var firma = document.getElementById("inputFirma").value;
+	var funktion = document.getElementById("inputFunktion").value;
+	var phone = document.getElementById("inputPhone").value;
+    var email = document.getElementById("inputEmail").value;  
+    var adresse = document.getElementById("inputAdresse").value;
+    var plzOrt = document.getElementById("inputOrt").value;
+    
+    console.log(lastname, firstname, firma, funktion, phone, email, adresse, plzOrt);
+    
+    if (!lastname) {
+        document.getElementById("inputSurname").style.border = "1px solid red;"
+        document.getElementById("inputSurname").focus();
+    } else if (!firstname) {
+        document.getElementById("inputFirstname").style.border = "1px solid red;"
+        document.getElementById("inputFirstname").focus();
+    } else if (!firma) {
+        document.getElementById("inputFirma").style.border = "1px solid red;"
+        document.getElementById("inputFirma").focus();
+    } else if (!funktion) {
+        document.getElementById("inputFunktion").style.border = "1px solid red;"
+        document.getElementById("inputFunktion").focus();
+    } else if (!phone) {
+        document.getElementById("inputPhone").style.border = "1px solid red;"
+        document.getElementById("inputPhone").focus();
+    } else if (!email) {
+        document.getElementById("inputEmail").style.border = "1px solid red;"
+        document.getElementById("inputEmail").focus();
+    } else if (!adresse) {
+        document.getElementById("inputAdresse").style.border = "1px solid red;"
+        document.getElementById("inputAdresse").focus();
+    } else if (!plzOrt) {
+        document.getElementById("inputOrt").style.border = "1px solid red;"
+        document.getElementById("inputOrt").focus();
+    } else {
+		var endMsgContainer = document.querySelector(".endMsgContainer");
+		endMsgContainer.innerHTML = `
+			<h2 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h2>
+			<p class="endMsgTextOne"> Herzlichen Dank Herr/Frau ${lastname} ${firstname} für Ihren Ticketkauf. Ihr Ticket Nr.XXX wird Ihnen per E-mail an ${email} zugestellt.</p>
+			<div class="endMsgButtonsContainer">
+				<button class="downloadBtn">TICKET HERUNTERLADEN</button>  
+				<button class="zuruckBtnTwo" onclick="start();">ZURÜCK ZUR STARTSEITE</button>  
+			</div>
+			<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
+		`;
+		
+		document.getElementById("warenkorb").style.display = "none";
+		document.getElementById("step1").style.display = "none";
+		document.getElementById("step2").style.display = "block";
+		var clearFields = document.getElementById("clearField").querySelectorAll("input");
+		clearFields.forEach((element) => {
+			if (element.type == "text") {
+				element.value = "";
+			} else if (element.type == "checkbox") {
+				element.checked = false;
+				}
+			});
+			
+		initialState.cart = [];
+		cartTotal.innerHTML = "";
+		cartElement.innerHTML = "<p class='cartLeer'>DEIN WARENKORB IST MOMENTAN LEER</p>";
+    } 
 }
+    
 
 function loadBlocks(anlass) {
 	frappe.call({
