@@ -1,13 +1,30 @@
 var globalBlocks = [];
 var initialState = {
-	userAge: null,
+	userAge : "",
 	cart : [] //|| JSON.parse(localStorage.getItem("CART")) 
 };
-openModal();
 filterSelection("all");
 updateCart();
 
+function start() {
+    document.getElementById("step0").style.display = "block";
+    document.getElementById("step1").style.display = "none";
+    // prepare topic
+    filterSelection("all");
+
+}
+
+function checkOut() {
+	document.getElementById("step0").style.display = "none";
+    document.getElementById("step1").style.display = "block"
+}
+
+function userSelection(c) {
+  initialState.userAge = c;
+}
+
 function filterSelection(c) {
+  console.log("in the filter", c)
   var x, i;
   x = document.getElementsByClassName("filterDiv");
   if (c == "all") c = "";
@@ -18,18 +35,24 @@ function filterSelection(c) {
 }
 
 function addClass(element, name) {
+	console.log("in the add", element, name)
   var i, arr1, arr2;
   arr1 = element.className.split(" ");
+  console.log("in the add arr1", arr1)
   arr2 = name.split(" ");
+    console.log("in the add arr2", arr2)
   for (i = 0; i < arr2.length; i++) {
     if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
   }
 }
 
 function removeClass(element, name) {
+	console.log("in the remove", element, name)
   var i, arr1, arr2;
   arr1 = element.className.split(" ");
+  console.log("in the remove arr1", arr1)
   arr2 = name.split(" ");
+  console.log("in the remove arr2", arr2)
   for (i = 0; i < arr2.length; i++) {
     while (arr1.indexOf(arr2[i]) > -1) {
       arr1.splice(arr1.indexOf(arr2[i]), 1);     
@@ -39,15 +62,38 @@ function removeClass(element, name) {
 }
 
 // Add active class to the current button (highlight it)
-var btnContainer = document.getElementById("filterBtnContainer");
-var btns = btnContainer.getElementsByClassName("btn");
-for (var i = 0; i < btns.length; i++) {
-  btns[i].addEventListener("click", function(){
-    var current = document.getElementsByClassName("active");
-    current[0].className = current[0].className.replace(" active", "");
-    this.className += " active";
-  });
-}
+var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button")
+btnContainerOne.forEach((element) => {
+	element.addEventListener("click", function(){
+		btnContainerOne.forEach(btn => btn.classList.remove("active"))
+		this.classList.add("active");
+	})
+})
+
+var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySelectorAll("button")
+btnContainerTwo.forEach((element) => {
+	element.addEventListener("click", function(){
+		btnContainerTwo.forEach(btn => btn.classList.remove("active"))
+		this.classList.add("active");
+	})
+})
+
+var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button")
+btnContainerThree.forEach((element) => {
+	element.addEventListener("click", function(){
+		btnContainerThree.forEach(btn => btn.classList.remove("active"))
+		this.classList.add("active");
+	})
+})
+
+var btnContainerFour = document.getElementById("filterBtnContainerFour").querySelectorAll("button")
+btnContainerFour.forEach((element) => {
+	element.addEventListener("click", function(){
+		btnContainerFour.forEach(btn => btn.classList.remove("active"))
+		this.classList.add("active");
+	})
+})
+
 
 function checkTime(time) {
 	//7 - 13 Vormitag; 13:01 - 18 Nachmittag; 18:01 - 23 Abend;
@@ -88,48 +134,15 @@ function timeOfDay(timeRange) {
 }
 
 function addToCart(i) {
-	 if (initialState.userAge == null) {
-		 openModal();
-	} else {
-		if (initialState.cart.some((item) => item.short_name == globalBlocks[i].short_name)) {
+	 if (initialState.cart.some((item) => item.short_name == globalBlocks[i].short_name)) {
 		changeNoOfUnits("plus", globalBlocks[i].short_name);
-		} else {
-			initialState.cart.push({
-				 ...globalBlocks[i], 
-				 numberOfUnits: 1
-			});
-		}	
-	}
-	 
+	 } else {
+		initialState.cart.push({
+			 ...globalBlocks[i], 
+			 numberOfUnits: 1
+		});
+	 }	
 	updateCart();
-}
-
-function openModal() {
-	var backdrop = document.createElement('div');
-	backdrop.classList.add('backdrop');
-	var divContainer = document.querySelector(".container");
-	document.insertBefore(backdrop, divContainer);
-	backdrop.addEventListener('click', closeModal)
-	
-	var modal = document.createElement('div');
-	modal.addEventListener('click', closeModal)
-	modal.innerHTML += `
-			<div class="modal"> 
-				<h1 class="modalTitle"> Please select which type of user are you</h1>
-				<div class="modalSelection">
-					<div>1</div>
-					<div>2</div>
-					<div>3</div>
-				</div>
-			</div>
-			`;
-}
-
-function closeModal() {
-	if (backdrop && modal) {
-		backdrop.remove();
-		modal.remove();
-	}
 }
 
 function updateCart() {
@@ -152,28 +165,33 @@ function updateTotal() {
 
 function updateItems() {
 	var cartElement = document.querySelector(".cartElement");
-	cartElement.innerHTML = ""; //Clearing the cart to avoid duplication
-	initialState.cart.forEach((item, i) => {
-		var cardText = item.official_title.split(":");
-		cartElement.innerHTML += `
-			<div class="cartItems"> 
-				<div class="cartInfo"> 
-					<p class="cartItem"> ${item.neues_datum} </p>
-					<p class="cartItem"> ${item.short_name} &nbsp; ${cardText[0]} </p>
-					<p class="cartItem"> ${item.time} </p>
-				</div>
-				<div class="cartAmount">
-					<div class="itemPrice" >20.00</div>
-					<div class="cartUnits">
-						<div class="btnMinus" onclick="changeNoOfUnits('minus', ${i})">-</div>
-						<div class="ItemNum">${item.numberOfUnits}</div>
-						<div class="btnPlus" onclick="changeNoOfUnits('plus', ${i})">+</div>
+	if ( initialState.cart.length > 0) {
+		cartElement.innerHTML = ""; //Clearing the cart to avoid duplication
+		initialState.cart.forEach((item, i) => {
+			var cardText = item.official_title.split(":");
+			cartElement.innerHTML += `
+				<div class="cartItems"> 
+					<div class="cartInfo"> 
+						<p class="cartItem"> ${item.neues_datum} </p>
+						<p class="cartItem"> ${item.short_name} &nbsp; ${cardText[0]} </p>
+						<p class="cartItem"> ${item.time} </p>
 					</div>
+					<div class="cartAmount">
+						<div class="itemPrice" >20.00</div>
+						<div class="cartUnits">
+							<div class="btnMinus" onclick="changeNoOfUnits('minus', ${i})">-</div>
+							<div class="ItemNum">${item.numberOfUnits}</div>
+							<div class="btnPlus" onclick="changeNoOfUnits('plus', ${i})">+</div>
+						</div>
+					</div>
+					<div class="cartCancel" onclick="removeCartItem(${i})"> X </div>
 				</div>
-				<div class="cartCancel" onclick="removeCartItem(${i})"> X </div>
-			</div>
-			`;
-		});
+				`;
+			});
+	} else {
+		cartElement.innerHTML = "<p class='cartLeer'>DEIN WARENKORB IST MOMENTAN LEER</p>";
+	}
+	
 }
 
 function changeNoOfUnits(action, i) {
@@ -211,7 +229,7 @@ function loadBlocks(anlass) {
  	filters: [
  	    ["meeting", "=", anlass]
  	],
-        fields: ["official_title, short_name, neues_datum, time, interest_1, interest_2, interest_3"],
+        fields: ["official_title, sub_title, short_name, neues_datum, time, interest_1, interest_2, interest_3"],
     },
     'callback': function (response) {
             var blocks = response.message;
@@ -223,14 +241,10 @@ function loadBlocks(anlass) {
 				globalBlocks.push(block);
 				var card = document.createElement('div');
 				card.classList.add('filterDiv');
-				var cardText = block.official_title.split(":");
-				card.innerHTML += `<p class='blockTitle'>  ${cardText[0]} </p> <p class='blockTime'>  ${block.short_name} &nbsp;&nbsp;&nbsp; ${block.time} </p>`;
-				if(cardText.length > 1) {
-				   card.innerHTML += `<p class='blockText'> ${cardText[1]} </p>`;
-				}	
-				card.innerHTML += `<div class='buttonsContainer'> <div class='cart' onclick="addToCart(${i})">Cart</div> <div class='video'>Video</div> <a href="https://sges.ch/about" target="_blank" class='info'>Info</a> </div>`;
-				textContainer.appendChild(card); 
 				
+				card.innerHTML += `<div class='blockContainer'> <p class='blockTime'>  ${block.short_name} &nbsp;&nbsp;&nbsp; ${block.time} </p> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  ${block.sub_title} </p><div>`;
+				card.innerHTML += `<div class='buttonsContainer'> <a href="https://sges.ch/about" target="_blank" class='info'>Info</a> <div class='cart' onclick="addToCart(${i})">Cart</div> </div>`;
+				textContainer.appendChild(card);
 				
 				if (block.time) {
 					var twoTimeRange = block.time.split("und");
@@ -269,14 +283,16 @@ function loadBlocks(anlass) {
 				  }
 				
 				for (const [key, value] of Object.entries(block)) {
+					
 				  switch (value) {
+					  
 				    case 'Gesundheit':
 					  card.classList.add('gesundheit');
 					  break;
 					case 'Nahrung':
 					  card.classList.add('nahrung');
 					  break;
-					case 'Bauen':
+					case 'Bauen':	
 					  card.classList.add('bauen');
 					  break;
 					case 'Mobilität':
@@ -339,7 +355,6 @@ function get_arguments() {
                 args[kv[0]] = decodeURI(kv[1]);
             }
         });
-        console.log(args);
         if (args['anlass']) {
             // fetch payment status
             loadBlocks(args['anlass']);

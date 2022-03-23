@@ -4,43 +4,132 @@
 		
 		<div class="warenkorb">
 		  <h2 class="cartTitle">WARENKORB</h2>
-		  <div class="cartElement">Nothing yet.</div>
-		  <div class="cartTotal"> <p>TOTAL</p><p>0.00</p></div>
-		  <button class="cartBtn"> ZUM WARENKORB</button>
+		  <div class="cartElement"></div>
+		  <div class="cartTotal"></div>
+		  <button class="cartBtn" onclick="checkOut()"> ZUM WARENKORB</button>
 		</div>
 		
-		<div id="filterBtnContainer">
-		  <h2 class="filterTitle">DATUM</h2>
-		  <button class="btn active" onclick="filterSelection('all')"> SHOW ALL</button>
-		  <button class="btn" onclick="filterSelection('vormittag')">VORMITTAG</button>
-		  <button class="btn" onclick="filterSelection('nachmittag')">NACHMITTAG</button>
-		  <button class="btn" onclick="filterSelection('abend')">ABEND</button>
-		</div>
-
-		<div id="filterBtnContainer">
-		  <h2 class="filterTitle">THEMA</h2>
-		  <button class="btn active" onclick="filterSelection('all')"> SHOW ALL</button>
-		  <button class="btn" onclick="filterSelection('gesundheit')">GESUNDHEIT</button>
-		  <button class="btn" onclick="filterSelection('nahrung')">NAHRUNG</button>
-		  <button class="btn" onclick="filterSelection('bauen')">BAUEN</button>
-		  <button class="btn" onclick="filterSelection('mobilität')">MOBILITÄT</button>
-		  <button class="btn" onclick="filterSelection('investieren')">INVESTIEREN & FINANZIEREN</button>
-		  <button class="btn" onclick="filterSelection('kommunikation')">KOMMUNIKATION</button>
-		  <button class="btn" onclick="filterSelection('smart')">SMART CITIES & REGIONS</button>
-		  <button class="btn" onclick="filterSelection('energie')">ENERGIE</button>
-		  <button class="btn" onclick="filterSelection('klima')">KLIMA</button>
-		  <button class="btn" onclick="filterSelection('ressourcen')">RESSOURCEN</button>
-		  <button class="btn" onclick="filterSelection('kreislaufwirtschaft')">KREISLAUFWIRTSCHAFT</button>
-		  <button class="btn" onclick="filterSelection('kultur')">KULTUR & DIVERSITÄT</button>
-		  <button class="btn" onclick="filterSelection('aviation')">SUSTAINABLE AVIATION</button>
-		  <button class="btn" onclick="filterSelection('entrepreneurship')">ENTREPRENEURSHIP</button>
+<div id="step0">
+		
+		
+		<div id="filterBtnContainerOne">
+		  <h2 class="filterTitle">ICH BIN ...</h2>
+		  <button class="btnOrange" onclick="userSelection('privatperson')"> PRIVATPERSON</button>
+		  <button class="btnOrange" onclick="userSelection('student')">STUDENT</button>
+		  <button class="btnOrange" onclick="userSelection('rentner')">AHV/IV RENTNER</button>
+		  <button class="btnOrange" onclick="userSelection('arbeitssuchend')">ARBEITSSUCHEND</button>
 		</div>
 		
-		<div>
-		  <div class="display"></div>
-		</div>
+		
+			<div id="filterBtnContainerTwo">
+			  <h2 class="filterTitle">ICH ARBEITE FÜR ...</h2>
+			  <button class="btnOrange" onclick="filterSelection('9')"> FIRMA 1 - 9 MA</button>
+			  <button class="btnOrange" onclick="filterSelection('99')">FIRMA 10 - 99 MA</button>
+			  <button class="btnOrange" onclick="filterSelection('199')">FIRMA 100 - 199 MA</button>
+			  <button class="btnOrange" onclick="filterSelection('more')">FIRMA 199+ MA</button>
+			</div>
+			
+			<div id="filterBtnContainerThree">
+			  <h2 class="filterTitle">DATUM</h2>
+			  <button class="btn" onclick="filterSelection('all')"> SHOW ALL</button>
+			  <button class="btn" onclick="filterSelection('vormittag')">VORMITTAG</button>
+			  <button class="btn" onclick="filterSelection('nachmittag')">NACHMITTAG</button>
+			  <button class="btn" onclick="filterSelection('abend')">ABEND</button>
+			</div>
 
+			<div id="filterBtnContainerFour">
+			  <h2 class="filterTitle">THEMA</h2>
+			  <button class="btn" onclick="filterSelection('all')"> SHOW ALL</button>
+			  <button class="btn" onclick="filterSelection('gesundheit')">GESUNDHEIT</button>
+			  <button class="btn" onclick="filterSelection('nahrung')">NAHRUNG</button>
+			  <button class="btn" onclick="filterSelection('bauen')">BAUEN</button>
+			  <button class="btn" onclick="filterSelection('mobilität')">MOBILITÄT</button>
+			  <button class="btn" onclick="filterSelection('investieren')">INVESTIEREN & FINANZIEREN</button>
+			  <button class="btn" onclick="filterSelection('kommunikation')">KOMMUNIKATION</button>
+			  <button class="btn" onclick="filterSelection('smart')">SMART CITIES & REGIONS</button>
+			  <button class="btn" onclick="filterSelection('energie')">ENERGIE</button>
+			  <button class="btn" onclick="filterSelection('klima')">KLIMA</button>
+			  <button class="btn" onclick="filterSelection('ressourcen')">RESSOURCEN</button>
+			  <button class="btn" onclick="filterSelection('kreislaufwirtschaft')">KREISLAUFWIRTSCHAFT</button>
+			  <button class="btn" onclick="filterSelection('kultur')">KULTUR & DIVERSITÄT</button>
+			  <button class="btn" onclick="filterSelection('aviation')">SUSTAINABLE AVIATION</button>
+			  <button class="btn" onclick="filterSelection('entrepreneurship')">ENTREPRENEURSHIP</button>
+			</div>
+			
+			<div>
+			  <div class="display"></div>
+			</div>
 
+</div>
+<div id="step1" style="display: none">
+	<h2 class="tableTitle">CHECKOUT</h2>
+	<h5 class="tableTitleTwo">IHRE ANGABEN</h5>
+	 <table class="table">
+		<tr class="tr">
+			<td class="td">	
+                <span class="tableSpan">Name</span>
+                <input class="tableInput" type="text" id="inputSurname" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
+			</td>
+			<td class="td">
+				<span class="tableSpan">Vorname</span>
+                <input class="tableInput" type="text" id="inputFirstname" placeholder="Vorname" class="input-xlarge" title="Der Vorname ist zwingend!" required/>
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td">
+				<span class="tableSpan">Firma</span>
+                <input class="tableInput" type="text" id="firma" placeholder="Firma" class="input-xlarge" title="Die Firma ist zwingend!" required>
+			</td>
+			<td class="td">
+				<span class="tableSpan">Funktion</span>
+                <input class="tableInput" type="text" id="funktion" placeholder="Funktion" class="input-xlarge" title="Die Funktion ist zwingend!" pattern="[0-9]{10}" required>
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td">
+				<span class="tableSpan">Telefonnummer</span>
+                <input class="tableInput" type="text" id="telefone" placeholder="Telefonnummer" class="input-xlarge" title="Die Telefonnummer ist zwingend!" required>
+			</td>
+			<td class="td">
+				<span class="tableSpan">E-mail</span>
+                <input class="tableInput" type="text" id="email" placeholder="E-mail" class="input-xlarge" title="Die E-mail zwingend!" required>
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td">
+				<span class="tableSpan">Adresse</span>
+                <input class="tableInput" type="text" id="Adresse" placeholder="Adresse" class="input-xlarge" title="Der Adresse ist zwingend!" required>
+			</td>
+			<td class="td">
+				<span class="tableSpan">PLZ/Ort</span>
+                <input class="tableInput" type="text" id="ort" placeholder="PLZ/Ort" class="input-xlarge" title="Der PLZ/Ort ist zwingend!" required>
+			</td>
+		</tr>
+		<tr class="tr">
+			<td class="td rechnung">
+				<h5>RECHNUNGSADRESSE</h5>
+				<div class="rechnungOptions">
+					<input class="checkInput" type="checkbox" id="gleiche" name="gleiche_adresse" value="GLEICHE">
+					<label class="checkLabel" for="gleiche">An die gleiche Lieferadresse schicken</label>
+				</div>
+			</td>
+			<td class="td zahlungs">
+				<h5>ZAHLUNGSMITTEL</h5>
+				<div class="zahlungsOptions">
+					<div class="zahlungsCheckOne">
+						<input class="checkInput" type="checkbox" id="kreditkarte" name="kreditkarte" value="KREDITKARTE">
+						<label class="checkLabel" for="kreditkarte">Kreditkarte</label>
+					</div>
+					<div class="zahlungsCheckTwo">
+						<input class="checkInput" type="checkbox" id="rechnung" name="rechnung" value="RECHNUNG">
+						<label class="checkLabel" for="rechnung">Rechnung</label>
+					</div>
+				</div>
+			</td>
+		</tr>
+	 </table>
+	 <button class="zuruckButton" onclick="start();">ZURÜCK</button>  
+</div>
 
 	
 
