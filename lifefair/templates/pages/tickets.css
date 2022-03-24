@@ -14,33 +14,34 @@
   width: 1012px;
   border-bottom: 1px solid #E8E8E8;
   margin-left: 15px;
-  margin-bottom: 30px;
-  margin-top: 30px; 
+  margin-bottom: 20px;
+  margin-top: 30px;
+  display: flex; 
 }
 
-.orangeFilter {
-  width: 160px;
+.filter {
+  width: 120px;
   border: none;
   border-radius: 0px;
   color: white;
-  font-size: 14px;
+  font-size: 10px;
   outline: none;
-  padding: 12px 16px;
+  padding: 9px 5px;
   cursor: pointer;
-  margin: 0px;
+  margin: 2px;
+  margin-bottom: 20px;
+  text-transform: uppercase; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.orangeFilter {
+  margin-left: 0px;
   background: #E94E26;
 }
 
 .blueFilter {
-  width: 160px;
-  border: none;
-  border-radius: 0px;
-  color: white;
-  font-size: 14px;
-  outline: none;
-  padding: 12px 16px;
-  cursor: pointer;
-  margin: 0px;
   background: #003764;
 }
 
@@ -421,33 +422,34 @@
   font-weight: lighter;
 }
 
-.downloadBtn {
-  width: 300px;
+.endMsgButtonsContainer {
+  width: 100%;
+  border: solid red;
+  
+}
+
+.endMsgBtn {
+  width: 250px;
   border: none;
   border-radius: 0px;
   color: white;
-  font-size: 15px;
+  font-size: 12px;
   outline: none;
-  padding: 12px 16px;
+  padding: 6px 10px;
   cursor: pointer;
-  margin: 2px;
-  margin-top: 5px;
+  margin: 5px;
+}
+
+.downloadBtn {
   margin-left: 0px;
-  margin-right: 5px;
   background: #E94E26;
 }
 
+.nachbestellenBtn {
+  background: #003764;
+}
+
 .zuruckBtnTwo {
-  width: 300px;
-  border: none;
-  border-radius: 0px;
-  color: white;
-  font-size: 15px;
-  outline: none;
-  padding: 12px 16px;
-  cursor: pointer;
-  margin: 2px;
-  margin-top: 5px;
   background: #009FE3;
 }
 

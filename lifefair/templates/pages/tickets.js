@@ -1,60 +1,58 @@
 var blocks;
+var itemVal;
+var inTheChekout = false;
 var initialState = {
-	userType : "",
-	priceValue: 0,
+	userTypeValue : 0,
 	cart : [] //|| JSON.parse(localStorage.getItem("CART")); 
 };
 
 var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
-//var selectedFilter = document.querySelector(".selectedFilters");
 
 //filterSelection("all");
 updateCart();
 
 function userSelection(c) {
-	  initialState.userType = c;
-	  setPriceValue(c);
-	  document.getElementById("ichBin").classList.remove("shake");
-	  document.getElementById("filterBtnContainerTwo").classList.remove("grey");
-	  document.getElementById("filterBtnContainerThree").classList.remove("grey");
-	  document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
-	  document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
-	  console.log("the user", initialState.userType);
-}
-
-function setPriceValue(c){
-	switch (c) {
+	
+	  selectedFilter(c); 
+	  switch (c) {
 		case 'selbstzahlende':
-			initialState.priceValue = 60.00;
+			initialState.userTypeValue = 1.50;
 			break;
 		case 'privatperson':
-			initialState.priceValue = 20.00;
+			initialState.userTypeValue = 2.00;
 			break;
 		case 'FIRMA 1 - 9 MA':	
-			initialState.priceValue = 100.00;
+			initialState.userTypeValue = 5.00;
 			break;
 		case 'FIRMA 10 - 99 MA':
-			initialState.priceValue = 120.00;
+			initialState.userTypeValue = 6.00;
 			break;
 		case 'FIRMA 100 - 199 MA':
-			initialState.priceValue = 160.00;
+			initialState.userTypeValue = 7.70;
 			break;
 		case 'FIRMA 199+ MA':
-			initialState.priceValue = 200.00;
+			initialState.userTypeValue = 10.00;
 			break;
-		default:		  
+		default:
 			break;
 	}
+	
+	document.getElementById("ichBin").classList.remove("shake");
+	document.getElementById("filterBtnContainerTwo").classList.remove("grey");
+	document.getElementById("filterBtnContainerThree").classList.remove("grey");
+	document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
+	document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
+	console.log("the user", initialState.userTypeValue);
 }
 
 function filterSelection(c) {
-	if (initialState.userType == "") {
+	if (initialState.userTypeValue == 0) {
 		document.getElementById("ichBin").classList.add("shake");
 	} else {
 	  console.log("the filter", c);
-	  //selectedFilter(c);
+	  selectedFilter(c);  
 	  var x, i;
 	  x = document.getElementsByClassName("filterDiv");
 	  if (c == "all") c = "";
@@ -86,19 +84,6 @@ function removeClass(element, name) {
   element.className = arr1.join(" ");
 }
 
-/*
-function selectedFilter(c) {
-	var filterBlock = document.createElement('div');
-	filterBlock.innerHTML += `<div>${c}</div>`
-	if (c == 'privatperson' || c == 'student' || c == 'rentner' || c == 'arbeitssuchend' || c == 'FIRMA 1 - 9 MA' || c == '99' || c == '199' || c == 'more') {
-		filterBlock.classList.add('orangeFilter');
-	} else {
-		filterBlock.classList.add('blueFilter');
-	}
-	
-	selectedFilter.appendChild(filterBlock);
-}*/
-
 // Add active class to the current button in the respective container and highlight it
 var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button");
 btnContainerOne.forEach((element) => {
@@ -124,6 +109,22 @@ btnContainerFour.forEach((element) => {
 	});
 });
 
+
+function selectedFilter(c) {
+	var selectedFilterBtn = document.querySelector(".selectedFilters");
+	var filterBlock = document.createElement('div');
+	filterBlock.innerHTML += `${c} &nbsp;&nbsp; <div>X</div>`
+	
+	if (c == "selbstzahlende" || c == "privatperson" || c == "FIRMA 1 - 9 MA" || c == "FIRMA 10 - 99 MA" || c == "FIRMA 100 - 199 MA" || c == "FIRMA 199+ MA") {
+		filterBlock.classList.add('orangeFilter');
+		filterBlock.classList.add('filter');
+		selectedFilterBtn.appendChild(filterBlock);
+	} else {
+		filterBlock.classList.add('blueFilter');
+		filterBlock.classList.add('filter');
+		selectedFilterBtn.appendChild(filterBlock);
+	}	
+}
 
 function checkTime(time) {
 	//7 - 13 Vormitag; 13:01 - 18 Nachmittag; 18:01 - 23 Abend;
@@ -185,7 +186,7 @@ function updateTotal() {
 	var totalPrice = 0;
 	if ( initialState.cart.length > 0) {
 		initialState.cart.forEach((item, i) => {
-			totalPrice += initialState.priceValue;
+			totalPrice += 20 * initialState.userTypeValue;
 			cartTotal.innerHTML = `<p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p>`;	
 		});
 	} else { cartTotal.innerHTML = ""}
@@ -197,6 +198,7 @@ function updateItems() {
 		cartElement.innerHTML = ""; //Clearing the cart to avoid duplication
 		initialState.cart.forEach((item, i) => {
 			var cardText = item.official_title.split(":");
+			itemVal = 20.00 * initialState.userTypeValue;
 			cartElement.innerHTML += `
 				<div class="cartItems"> 
 					<div class="cartInfo"> 
@@ -205,7 +207,7 @@ function updateItems() {
 						<p class="cartItem"> ${item.time} </p>
 					</div>
 					<div class="cartAmount">
-						<div class="itemPrice" >${initialState.priceValue}</div>
+						<div class="itemPrice" >${itemVal.toFixed(2)}</div>
 					</div>
 					<div class="cartCancel" onclick="removeCartItem(${i})"> X </div>
 				</div>
@@ -239,11 +241,19 @@ function updateItems() {
 
 function removeCartItem(i) {
 	//console.log('removing', i, initialState.cart[i]);
-	initialState.cart = initialState.cart.filter((item)=> item.short_name != initialState.cart[i].short_name);
-	updateCart();
+	if (inTheChekout == true) {
+		if (initialState.cart.length > 1) {
+			initialState.cart = initialState.cart.filter((item)=> item.short_name != initialState.cart[i].short_name);
+			updateCart();
+		}
+	} else {
+		initialState.cart = initialState.cart.filter((item)=> item.short_name != initialState.cart[i].short_name);
+		updateCart();
+	}
 }
 
 function start() {
+	inTheChekout = false;
 	document.getElementById("warenkorb").style.display = "block";
     document.getElementById("step0").style.display = "block";
     document.getElementById("step1").style.display = "none";
@@ -259,9 +269,10 @@ function checkOut() {
 		var shaketext = document.querySelector(".cartLeer")
 			shaketext.classList.add("shake");
 		} else {
+			inTheChekout = true;
+			document.getElementById("gleiche").checked = true;
 			document.getElementById("step0").style.display = "none";
 			document.getElementById("step1").style.display = "block"
-			
 			cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT ZAHLEN</p>`
 		}
 }
@@ -269,8 +280,8 @@ function checkOut() {
 //Watching over the checkbox in the checkout 
 var gleicheAdresse = document.getElementById("gleiche");
 gleicheAdresse.addEventListener('change', function(e){
-	if (gleicheAdresse.checked) {
-		console.log("gleiche check");
+	if (!gleicheAdresse.checked) {
+		console.log("Not gleiche check");
 	}
 });
 
@@ -333,8 +344,9 @@ function checkDataAndPay() {
 			<h2 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h2>
 			<p class="endMsgTextOne"> Herzlichen Dank Herr/Frau ${lastname} ${firstname} für Ihren Ticketkauf. Ihr Ticket Nr.XXX wird Ihnen per E-mail an ${email} zugestellt.</p>
 			<div class="endMsgButtonsContainer">
-				<button class="downloadBtn">TICKET HERUNTERLADEN</button>  
-				<button class="zuruckBtnTwo" onclick="start();">ZURÜCK ZUR STARTSEITE</button>  
+				<button class="endMsgBtn downloadBtn">TICKET HERUNTERLADEN</button>
+				<button class="endMsgBtn nachbestellenBtn">TICKETS NACHBESTELLEN</button>   
+				<button class="endMsgBtn zuruckBtnTwo" onclick="start();">ZURÜCK ZUR STARTSEITE</button>  
 			</div>
 			<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
 		`;
