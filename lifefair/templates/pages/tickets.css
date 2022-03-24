@@ -10,12 +10,51 @@
   padding-left: 14px;
 }
 
+.selectedFilters {
+  width: 1012px;
+  border-bottom: 1px solid #E8E8E8;
+  margin-left: 15px;
+  margin-bottom: 30px;
+  margin-top: 30px; 
+}
+
+.orangeFilter {
+  width: 160px;
+  border: none;
+  border-radius: 0px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  margin: 0px;
+  background: #E94E26;
+}
+
+.blueFilter {
+  width: 160px;
+  border: none;
+  border-radius: 0px;
+  color: white;
+  font-size: 14px;
+  outline: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  margin: 0px;
+  background: #003764;
+}
+
+.grey {
+  filter: grayscale(1);
+  opacity: 0.3;
+}
+
 .filterDiv {
   float: left;
-  border: 1px solid #009FE3;
+  border: 1.5px solid #009FE3;
   color: #003764;
   width: 330px;
-  height: 215px;
+  height: 195px;
   padding: 20px;
   padding-bottom: 0px;
   padding-right: 0px;
@@ -23,6 +62,7 @@
   margin-bottom: 50px;
   display: none;
   text-align: left;
+  position: relative;
 }
 
 .show {
@@ -44,28 +84,35 @@
   padding-bottom: 0px;
   margin: 0px;
   margin-bottom: 5px;
+  font-size: 16px;
 }
 
 .blockTime {
   margin: 0px;
   margin-bottom: 5px;
+  font-size: 14px;
 }
 
 .blockText {
   font-size: 14px;
   margin: 0px;
+  margin-right: 10px;
+  font-size: 13px;
 }
 
 .buttonsContainer {
   display:flex;
   justify-content: end;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
 }
 
 .cart, .info {
   background: #009FE3;
   border: none;
-  width: 35px;
-  height: 35px;
+  width: 36px;
+  height: 36px;
   margin-left: 4px;
   padding-top: 6.5px;
   font-size: 8px;
@@ -81,15 +128,14 @@
   color: white;
 }
 
-
-
-#filterBtnContainerOne, #filterBtnContainerTwo, #filterBtnContainerThree, #filterBtnContainerFour {
-  margin-bottom: 30px;
+#filterBtnContainerOne, #filterBtnContainerTwo, #filterBtnContainerThree {
+  margin-bottom: 25px;
   width: 1012px;
   margin-left: 15px;
 }
 
 .display {
+  margin-top: 50px;
   margin-left: 10px;
   width: 1042px;
 }
@@ -110,6 +156,10 @@
   cursor: pointer;
   margin: 2px;
   background: none;
+}
+
+.btnOrangeLarge {
+  width: 750px;
 }
 
 .btnOrange:hover {
@@ -133,7 +183,7 @@
   margin: 2px; 
 }
 
-.btn:hover {
+.btnHover:hover {
   background: #003764;
   color: white;
 }
@@ -243,20 +293,21 @@
   font-weight: bold;
   font-size: 15px;
   text-align: center;
-  padding-bottom: 10px;
+  padding-bottom: 0px;
 }
 
-.cartUnits {
+/*.cartUnits {
   display: flex;
   justify-content: space-between;
-}
+}*/
 
 .cartCancel {
   width: 5%;
   font-weight: bold;
   text-align: center;
   padding: 5px;
-  padding-top: 13px;
+  padding-top: 1.5px;
+  padding-bottom: 0px;
   color: #E94E26;
 }
 
@@ -274,58 +325,58 @@
 }
 
 .table {
-	width: 80%;
-	margin: 15px;
+  width: 80%;
+  margin: 15px;
 }
 
 .tr {
-	display: flex;
-	width: 100%;
+  display: flex;
+  width: 100%;
 }
 
 .td {
-	border: none !important;
-	padding: 0px !important;
-	padding-bottom: 8px !important;
-	width: 50%;
-	display: flex;
-	flex-direction: column;
-	margin: 0px;
-	margin-right: 10px;
+  border: none !important;
+  padding: 0px !important;
+  padding-bottom: 8px !important;
+  width: 50%;
+  display: flex;
+  flex-direction: column;
+  margin: 0px;
+  margin-right: 10px;
 }
 
 .tableInput {
-	width: 451px;
-	height: 50px;
-	border: 1.5px solid #ebecf1;
-	padding: 5px;
+  width: 451px;
+  height: 50px;
+  border: 1.5px solid #ebecf1;
+  padding: 5px;
 }
 
 .tableSpan {
-	color: #003764;
-	font-size: 17px;
-	padding: 5px;
-	padding-left: 0px;
+  color: #003764;
+  font-size: 17px;
+  padding: 5px;
+  padding-left: 0px;
 }
 
 .zuruckBtnOne {
-	width: 130px;
-    border: 1px solid #E94E26;
-    border-radius: 0px;
-    color: #E94E26;
-    font-size: 15px;
-    outline: none;
-    padding: 12px 16px;
-    cursor: pointer;
-    margin: 2px;
-    margin-left: 15px;
-    margin-top: 40px;
-    background: none;
+  width: 130px;
+  border: 1px solid #E94E26;
+  border-radius: 0px;
+  color: #E94E26;
+  font-size: 15px;
+  outline: none;
+  padding: 12px 16px;
+  cursor: pointer;
+  margin: 2px;
+  margin-left: 15px;
+  margin-top: 40px;
+  background: none;
 }
 
 .rechnung, .zahlungs {
-	margin-top: 30px;
-    color: #009FE3;
+  margin-top: 30px;
+  color: #009FE3;
 }
 
 .rechnungOptions {
@@ -344,8 +395,8 @@
 }
 
 .checkLabel {
-	margin: 0px;
-	margin-left: 5px;
+  margin: 0px;
+  margin-left: 5px;
 }
 
 .zahlungsCheckOne {

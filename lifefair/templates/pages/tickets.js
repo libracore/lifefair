@@ -1,57 +1,83 @@
-var globalBlocks = [];
+var blocks;
 var initialState = {
 	userType : "",
-	userFirma: "",
+	priceValue: 0,
 	cart : [] //|| JSON.parse(localStorage.getItem("CART")); 
 };
 
 var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
+//var selectedFilter = document.querySelector(".selectedFilters");
 
 //filterSelection("all");
 updateCart();
 
 function userSelection(c) {
-  initialState.userType = c;
-  console.log("the user", initialState.userType);
+	  initialState.userType = c;
+	  setPriceValue(c);
+	  document.getElementById("ichBin").classList.remove("shake");
+	  document.getElementById("filterBtnContainerTwo").classList.remove("grey");
+	  document.getElementById("filterBtnContainerThree").classList.remove("grey");
+	  document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
+	  document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
+	  console.log("the user", initialState.userType);
 }
 
-function firmaSelection(c) {
-  initialState.userFirma = c;
-  console.log("the firma", initialState.userFirma );
+function setPriceValue(c){
+	switch (c) {
+		case 'selbstzahlende':
+			initialState.priceValue = 60.00;
+			break;
+		case 'privatperson':
+			initialState.priceValue = 20.00;
+			break;
+		case 'FIRMA 1 - 9 MA':	
+			initialState.priceValue = 100.00;
+			break;
+		case 'FIRMA 10 - 99 MA':
+			initialState.priceValue = 120.00;
+			break;
+		case 'FIRMA 100 - 199 MA':
+			initialState.priceValue = 160.00;
+			break;
+		case 'FIRMA 199+ MA':
+			initialState.priceValue = 200.00;
+			break;
+		default:		  
+			break;
+	}
 }
 
 function filterSelection(c) {
-  console.log("the filter", c)
-  var x, i;
-  x = document.getElementsByClassName("filterDiv");
-  if (c == "all") c = "";
-  for (i = 0; i < x.length; i++) {
-    removeClass(x[i], "show");
-    if (x[i].className.indexOf(c) > -1) addClass(x[i], "show");
-  }
+	if (initialState.userType == "") {
+		document.getElementById("ichBin").classList.add("shake");
+	} else {
+	  console.log("the filter", c);
+	  //selectedFilter(c);
+	  var x, i;
+	  x = document.getElementsByClassName("filterDiv");
+	  if (c == "all") c = "";
+	  for (i = 0; i < x.length; i++) {
+		removeClass(x[i], "show");
+		if (x[i].className.indexOf(c) > -1) addClass(x[i], "show");
+	  }
+	}
 }
 
 function addClass(element, name) {
-	console.log("in the add", element, name)
   var i, arr1, arr2;
   arr1 = element.className.split(" ");
-  console.log("in the add arr1", arr1)
   arr2 = name.split(" ");
-    console.log("in the add arr2", arr2)
   for (i = 0; i < arr2.length; i++) {
     if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
   }
 }
 
 function removeClass(element, name) {
-	console.log("in the remove", element, name)
   var i, arr1, arr2;
   arr1 = element.className.split(" ");
-  console.log("in the remove arr1", arr1)
   arr2 = name.split(" ");
-  console.log("in the remove arr2", arr2)
   for (i = 0; i < arr2.length; i++) {
     while (arr1.indexOf(arr2[i]) > -1) {
       arr1.splice(arr1.indexOf(arr2[i]), 1);     
@@ -60,24 +86,29 @@ function removeClass(element, name) {
   element.className = arr1.join(" ");
 }
 
-// Add active class to the current button (highlight it)
+/*
+function selectedFilter(c) {
+	var filterBlock = document.createElement('div');
+	filterBlock.innerHTML += `<div>${c}</div>`
+	if (c == 'privatperson' || c == 'student' || c == 'rentner' || c == 'arbeitssuchend' || c == 'FIRMA 1 - 9 MA' || c == '99' || c == '199' || c == 'more') {
+		filterBlock.classList.add('orangeFilter');
+	} else {
+		filterBlock.classList.add('blueFilter');
+	}
+	
+	selectedFilter.appendChild(filterBlock);
+}*/
+
+// Add active class to the current button in the respective container and highlight it
 var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button");
 btnContainerOne.forEach((element) => {
 	element.addEventListener("click", function(){
 		btnContainerOne.forEach(btn => btn.classList.remove("active"));
 		this.classList.add("active");
-	});
+	}); 
 });
 
-var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySelectorAll("button");
-btnContainerTwo.forEach((element) => {
-	element.addEventListener("click", function(){
-		btnContainerTwo.forEach(btn => btn.classList.remove("active"));
-		this.classList.add("active");
-	});
-});
-
-var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
+var btnContainerThree = document.getElementById("filterBtnContainerTwo").querySelectorAll("button");
 btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
 		btnContainerThree.forEach(btn => btn.classList.remove("active"));
@@ -85,7 +116,7 @@ btnContainerThree.forEach((element) => {
 	});
 });
 
-var btnContainerFour = document.getElementById("filterBtnContainerFour").querySelectorAll("button");
+var btnContainerFour = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
 btnContainerFour.forEach((element) => {
 	element.addEventListener("click", function(){
 		btnContainerFour.forEach(btn => btn.classList.remove("active"));
@@ -133,12 +164,11 @@ function timeOfDay(timeRange) {
 }
 
 function addToCart(i) {
-	 if (initialState.cart.some((item) => item.short_name == globalBlocks[i].short_name)) {
-		changeNoOfUnits("plus", globalBlocks[i].short_name);
+	 if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
+		console.log("already there", blocks[i].short_name)
 	 } else {
 		initialState.cart.push({
-			 ...globalBlocks[i], 
-			 numberOfUnits: 1
+			 ...blocks[i], 
 		});
 	 }	
 	updateCart();
@@ -153,11 +183,12 @@ function updateCart() {
 
 function updateTotal() {
 	var totalPrice = 0;
-	
-	initialState.cart.forEach((item, i) => {
-		totalPrice += 20.00 * item.numberOfUnits;
-		cartTotal.innerHTML = `<p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p>`;	
-	});
+	if ( initialState.cart.length > 0) {
+		initialState.cart.forEach((item, i) => {
+			totalPrice += initialState.priceValue;
+			cartTotal.innerHTML = `<p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p>`;	
+		});
+	} else { cartTotal.innerHTML = ""}
 		
 }
 
@@ -174,12 +205,7 @@ function updateItems() {
 						<p class="cartItem"> ${item.time} </p>
 					</div>
 					<div class="cartAmount">
-						<div class="itemPrice" >20.00</div>
-						<div class="cartUnits">
-							<div class="btnMinus" onclick="changeNoOfUnits('minus', ${i})">-</div>
-							<div class="ItemNum">${item.numberOfUnits}</div>
-							<div class="btnPlus" onclick="changeNoOfUnits('plus', ${i})">+</div>
-						</div>
+						<div class="itemPrice" >${initialState.priceValue}</div>
 					</div>
 					<div class="cartCancel" onclick="removeCartItem(${i})"> X </div>
 				</div>
@@ -191,7 +217,7 @@ function updateItems() {
 	
 }
 
-function changeNoOfUnits(action, i) {
+/*function changeNoOfUnits(action, i) {
 		console.log(action, i);
 		initialState.cart = initialState.cart.map((item, x) => {
 			var numberOfUnits = item.numberOfUnits;
@@ -209,12 +235,11 @@ function changeNoOfUnits(action, i) {
 		});
 		
 		updateCart();
-}
+} */
 
 function removeCartItem(i) {
-	console.log('removing');
-	console.log(globalBlocks[i].short_name);
-	initialState.cart = initialState.cart.filter((item)=> item.short_name != globalBlocks[i].short_name);
+	//console.log('removing', i, initialState.cart[i]);
+	initialState.cart = initialState.cart.filter((item)=> item.short_name != initialState.cart[i].short_name);
 	updateCart();
 }
 
@@ -263,6 +288,7 @@ rechnung.addEventListener('change', function(e){
 	}
 });
 
+//Cheking the Values after proceeding to pay
 function checkDataAndPay() {
 	console.log("in the pay func");
 	
@@ -343,13 +369,13 @@ function loadBlocks(anlass) {
         fields: ["official_title, sub_title, short_name, neues_datum, time, interest_1, interest_2, interest_3"],
     },
     'callback': function (response) {
-            var blocks = response.message;
+            blocks = response.message;
             console.log(blocks);
             
             var textContainer = document.querySelector(".display");
 			textContainer.innerHTML = "";
 			blocks.forEach(function (block, i) {
-				globalBlocks.push(block);
+				//globalBlocks.push(block);
 				var card = document.createElement('div');
 				card.classList.add('filterDiv');
 				

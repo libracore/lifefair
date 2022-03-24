@@ -1,7 +1,5 @@
 	
-
-		<h2 class="title">LIFEFAIR EVENTS</h2>
-		
+	
 		<div id="warenkorb">
 		  <h2 class="cartTitle">WARENKORB</h2>
 		  <div class="cartElement"></div>
@@ -11,53 +9,48 @@
 		
 <div id="step0">
 		
+		<div class="selectedFilters"></div>
+		
 		<div id="filterBtnContainerOne">
-		  <h2 class="filterTitle">ICH BIN ...</h2>
-		  <button class="btnOrange" onclick="userSelection('privatperson')"> PRIVATPERSON</button>
-		  <button class="btnOrange" onclick="userSelection('student')">STUDENT</button>
-		  <button class="btnOrange" onclick="userSelection('rentner')">AHV/IV RENTNER</button>
-		  <button class="btnOrange" onclick="userSelection('arbeitssuchend')">ARBEITSSUCHEND</button>
+			<h2 class="filterTitle" id="ichBin">DIE PREISE DES SGES TICKETS NEHMEN RÜCKSICHT AUF DIE SITUATION DER TEILNEHMENDEN.<br>BITTE TEILEN SIE UNS MIT, OB SIE SIND: </h2>
+			<button class="btnOrange btnOrangeLarge" onclick="userSelection('selbstzahlende')">SELBSTZAHLENDE VOLLZEIT-STUDIERENDE ODER PERSON IN SCHWIERIGER WIRTSCHAFTLICHER SITUATION</button> 
+			<button class="btnOrange" onclick="userSelection('privatperson')"> PRIVATPERSON UND NGO</button> 
+			<button class="btnOrange" onclick="userSelection('FIRMA 1 - 9 MA')"> FIRMA 1 - 9 MA</button>
+			<button class="btnOrange" onclick="userSelection('FIRMA 10 - 99 MA')">FIRMA 10 - 99 MA</button>
+			<button class="btnOrange" onclick="userSelection('FIRMA 100 - 199 MA')">FIRMA 100 - 199 MA</button>
+			<button class="btnOrange" onclick="userSelection('FIRMA 199+ MA')">FIRMA 199+ MA</button>
 		</div>
-		
-		
-			<div id="filterBtnContainerTwo">
-			  <h2 class="filterTitle">ICH ARBEITE FÜR ...</h2>
-			  <button class="btnOrange" onclick="firmaSelection('9')"> FIRMA 1 - 9 MA</button>
-			  <button class="btnOrange" onclick="firmaSelection('99')">FIRMA 10 - 99 MA</button>
-			  <button class="btnOrange" onclick="firmaSelection('199')">FIRMA 100 - 199 MA</button>
-			  <button class="btnOrange" onclick="firmaSelection('more')">FIRMA 199+ MA</button>
-			</div>
 			
-			<div id="filterBtnContainerThree">
-			  <h2 class="filterTitle">DATUM</h2>
-			  <button class="btn" onclick="filterSelection('all')"> SHOW ALL</button>
-			  <button class="btn" onclick="filterSelection('vormittag')">VORMITTAG</button>
-			  <button class="btn" onclick="filterSelection('nachmittag')">NACHMITTAG</button>
-			  <button class="btn" onclick="filterSelection('abend')">ABEND</button>
-			</div>
+		<div id="filterBtnContainerTwo" class="grey">
+			 <h2 class="filterTitle">DATUM</h2>
+			 <button class="btn" onclick="filterSelection('all')"> SHOW ALL</button>
+			 <button class="btn" onclick="filterSelection('vormittag')">VORMITTAG</button>
+			 <button class="btn" onclick="filterSelection('nachmittag')">NACHMITTAG</button>
+			 <button class="btn" onclick="filterSelection('abend')">ABEND</button>
+		</div>
 
-			<div id="filterBtnContainerFour">
-			  <h2 class="filterTitle">THEMA</h2>
-			  <button class="btn" onclick="filterSelection('all')"> SHOW ALL</button>
-			  <button class="btn" onclick="filterSelection('gesundheit')">GESUNDHEIT</button>
-			  <button class="btn" onclick="filterSelection('nahrung')">NAHRUNG</button>
-			  <button class="btn" onclick="filterSelection('bauen')">BAUEN</button>
-			  <button class="btn" onclick="filterSelection('mobilität')">MOBILITÄT</button>
-			  <button class="btn" onclick="filterSelection('investieren')">INVESTIEREN & FINANZIEREN</button>
-			  <button class="btn" onclick="filterSelection('kommunikation')">KOMMUNIKATION</button>
-			  <button class="btn" onclick="filterSelection('smart')">SMART CITIES & REGIONS</button>
-			  <button class="btn" onclick="filterSelection('energie')">ENERGIE</button>
-			  <button class="btn" onclick="filterSelection('klima')">KLIMA</button>
-			  <button class="btn" onclick="filterSelection('ressourcen')">RESSOURCEN</button>
-			  <button class="btn" onclick="filterSelection('kreislaufwirtschaft')">KREISLAUFWIRTSCHAFT</button>
-			  <button class="btn" onclick="filterSelection('kultur')">KULTUR & DIVERSITÄT</button>
-			  <button class="btn" onclick="filterSelection('aviation')">SUSTAINABLE AVIATION</button>
-			  <button class="btn" onclick="filterSelection('entrepreneurship')">ENTREPRENEURSHIP</button>
-			</div>
+		<div id="filterBtnContainerThree" class="grey">
+			 <h2 class="filterTitle">THEMA</h2>
+			 <button class="btn" onclick="filterSelection('all')"> SHOW ALL</button>
+			 <button class="btn" onclick="filterSelection('gesundheit')">GESUNDHEIT</button>
+			 <button class="btn" onclick="filterSelection('nahrung')">NAHRUNG</button>
+			 <button class="btn" onclick="filterSelection('bauen')">BAUEN</button>
+			 <button class="btn" onclick="filterSelection('mobilität')">MOBILITÄT</button>
+			 <button class="btn" onclick="filterSelection('investieren')">INVESTIEREN & FINANZIEREN</button>
+			 <button class="btn" onclick="filterSelection('kommunikation')">KOMMUNIKATION</button>
+			 <button class="btn" onclick="filterSelection('smart')">SMART CITIES & REGIONS</button>
+			 <button class="btn" onclick="filterSelection('energie')">ENERGIE</button>
+			 <button class="btn" onclick="filterSelection('klima')">KLIMA</button>
+			 <button class="btn" onclick="filterSelection('ressourcen')">RESSOURCEN</button>
+			 <button class="btn" onclick="filterSelection('kreislaufwirtschaft')">KREISLAUFWIRTSCHAFT</button>
+			 <button class="btn" onclick="filterSelection('kultur')">KULTUR & DIVERSITÄT</button>
+			 <button class="btn" onclick="filterSelection('aviation')">SUSTAINABLE AVIATION</button>
+			 <button class="btn" onclick="filterSelection('entrepreneurship')">ENTREPRENEURSHIP</button>
+		</div>
 			
-			<div>
-			  <div class="display"></div>
-			</div>
+		<div>
+			 <div class="display"></div>
+		</div>
 
 </div>
 <div id="step1" style="display: none">
