@@ -10,23 +10,24 @@
   padding-left: 14px;
 }
 
-.selectedFilters {
+#selectedFilters {
   width: 1012px;
   border-bottom: 1px solid #E8E8E8;
   margin-left: 15px;
   margin-bottom: 20px;
   margin-top: 30px;
   display: flex; 
+  padding: 0px;
 }
 
 .filter {
-  width: 120px;
+  width: auto;
   border: none;
   border-radius: 0px;
   color: white;
   font-size: 10px;
   outline: none;
-  padding: 9px 5px;
+  padding: 10px 15px;
   cursor: pointer;
   margin: 2px;
   margin-bottom: 20px;
@@ -41,7 +42,7 @@
   background: #E94E26;
 }
 
-.blueFilter {
+.datumBlueFilter, .themaBlueFilter {
   background: #003764;
 }
 
@@ -55,11 +56,11 @@
   border: 1.5px solid #009FE3;
   color: #003764;
   width: 330px;
-  height: 195px;
+  height: 193px;
   padding: 20px;
   padding-bottom: 0px;
   padding-right: 0px;
-  margin: 5px;
+  margin: 5.5px;
   margin-bottom: 50px;
   display: none;
   text-align: left;
@@ -136,7 +137,7 @@
 }
 
 .display {
-  margin-top: 50px;
+  margin-top: 60px;
   margin-left: 10px;
   width: 1042px;
 }
@@ -423,19 +424,17 @@
 }
 
 .endMsgButtonsContainer {
-  width: 100%;
-  border: solid red;
-  
+  width: 100%;  
 }
 
 .endMsgBtn {
-  width: 250px;
+  width: 255px;
   border: none;
   border-radius: 0px;
   color: white;
-  font-size: 12px;
+  font-size: 13px;
   outline: none;
-  padding: 6px 10px;
+  padding: 13px 10px;
   cursor: pointer;
   margin: 5px;
 }

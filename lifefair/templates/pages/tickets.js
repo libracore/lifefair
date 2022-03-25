@@ -9,13 +9,15 @@ var initialState = {
 var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
+var selectedFilterDiv = document.getElementById("selectedFilters");
 
-//filterSelection("all");
 updateCart();
 
+/*if (selectedFilterDiv.children.length == 0) {
+		filterSelection("all")
+}*/
+
 function userSelection(c) {
-	
-	  selectedFilter(c); 
 	  switch (c) {
 		case 'selbstzahlende':
 			initialState.userTypeValue = 1.50;
@@ -51,8 +53,6 @@ function filterSelection(c) {
 	if (initialState.userTypeValue == 0) {
 		document.getElementById("ichBin").classList.add("shake");
 	} else {
-	  console.log("the filter", c);
-	  selectedFilter(c);  
 	  var x, i;
 	  x = document.getElementsByClassName("filterDiv");
 	  if (c == "all") c = "";
@@ -84,46 +84,126 @@ function removeClass(element, name) {
   element.className = arr1.join(" ");
 }
 
-// Add active class to the current button in the respective container and highlight it
+// Add active class to the current button in the respective container and highlight it the top
 var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button");
 btnContainerOne.forEach((element) => {
 	element.addEventListener("click", function(){
+		
 		btnContainerOne.forEach(btn => btn.classList.remove("active"));
-		this.classList.add("active");
+		
+		var orange = document.querySelector(".orangeFilter");
+		var answer = selectedFilterDiv.contains(orange);
+		var orangeFilterBlock;
+		if (answer == true) {
+			var userTypeChildLi = selectedFilterDiv.getElementsByTagName('li')[0];
+			orangeFilterBlock = document.createElement('li');
+			orangeFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 1)">X</div>`;
+			orangeFilterBlock.classList.add('orangeFilter');
+			orangeFilterBlock.classList.add('filter');
+			selectedFilterDiv.replaceChild(orangeFilterBlock, userTypeChildLi);
+			
+		} else {
+			orangeFilterBlock = document.createElement('li');
+			orangeFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 1)">X</div>`;
+			orangeFilterBlock.classList.add('orangeFilter');
+			orangeFilterBlock.classList.add('filter');
+			selectedFilterDiv.insertBefore(orangeFilterBlock, selectedFilterDiv.firstChild);	
+		}
+		
+		this.classList.add("active");	
+		
 	}); 
 });
 
-var btnContainerThree = document.getElementById("filterBtnContainerTwo").querySelectorAll("button");
+var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySelectorAll("button");
+btnContainerTwo.forEach((element) => {
+	element.addEventListener("click", function(){
+		
+		if (initialState.userTypeValue == 0) {
+		document.getElementById("ichBin").classList.add("shake");
+		} else {
+			document.getElementById("ichBin").classList.remove("shake");
+			btnContainerTwo.forEach(btn => btn.classList.remove("active"));
+			
+			
+			var blueDatum = document.querySelector(".datumBlueFilter");
+			var answer = selectedFilterDiv.contains(blueDatum); 
+			var blueFilterBlock;
+			if (answer == true) {
+				var datumChildLi = selectedFilterDiv.getElementsByTagName('li')[1];
+				blueFilterBlock = document.createElement('li');
+				blueFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 2)">X</div>`;
+				blueFilterBlock.classList.add('datumBlueFilter');
+				blueFilterBlock.classList.add('filter');
+				selectedFilterDiv.replaceChild(blueFilterBlock, datumChildLi);	
+			} else {
+				blueFilterBlock = document.createElement('li');
+				blueFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 2)">X</div>`;
+				blueFilterBlock.classList.add('datumBlueFilter');
+				blueFilterBlock.classList.add('filter');
+				if (selectedFilterDiv.children.length == 2) {
+					//console.log("in the first if", selectedFilterDiv.children.length)
+					selectedFilterDiv.insertBefore(blueFilterBlock, selectedFilterDiv.lastElementChild);
+				} else {
+					//console.log("in the second if", selectedFilterDiv.children.length)
+					selectedFilterDiv.appendChild(blueFilterBlock);
+				}
+				
+			}
+			
+			this.classList.add("active");
+		
+		}
+	});
+});
+
+var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
 btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
-		btnContainerThree.forEach(btn => btn.classList.remove("active"));
-		this.classList.add("active");
+		if (initialState.userTypeValue == 0) {
+			document.getElementById("ichBin").classList.add("shake");
+		} else {
+			document.getElementById("ichBin").classList.remove("shake");
+			btnContainerThree.forEach(btn => btn.classList.remove("active"));
+			
+			var blueThema = document.querySelector(".themaBlueFilter");
+			var answer = selectedFilterDiv.contains(blueThema);
+			var blueFilterBlock;
+			if (answer == true) {
+				console.log("in the blueThema true")
+				var themaChildLi = selectedFilterDiv.getElementsByTagName('li')[2];
+				blueFilterBlock = document.createElement('li');
+				blueFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 3)">X</div>`;
+				blueFilterBlock.classList.add('themaBlueFilter');
+				blueFilterBlock.classList.add('filter');
+				selectedFilterDiv.replaceChild(blueFilterBlock, themaChildLi);		
+			} else {
+				blueFilterBlock = document.createElement('li');
+				blueFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 3)">X</div>`;
+				blueFilterBlock.classList.add('themaBlueFilter');
+				blueFilterBlock.classList.add('filter');
+				selectedFilterDiv.appendChild(blueFilterBlock);
+			}
+			
+			this.classList.add("active");
+		}	
 	});
 });
 
-var btnContainerFour = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
-btnContainerFour.forEach((element) => {
-	element.addEventListener("click", function(){
-		btnContainerFour.forEach(btn => btn.classList.remove("active"));
-		this.classList.add("active");
-	});
-});
-
-
-function selectedFilter(c) {
-	var selectedFilterBtn = document.querySelector(".selectedFilters");
-	var filterBlock = document.createElement('div');
-	filterBlock.innerHTML += `${c} &nbsp;&nbsp; <div>X</div>`
+function removeFilter(li, num) {
+	li.parentNode.parentNode.removeChild(li.parentNode);
 	
-	if (c == "selbstzahlende" || c == "privatperson" || c == "FIRMA 1 - 9 MA" || c == "FIRMA 10 - 99 MA" || c == "FIRMA 100 - 199 MA" || c == "FIRMA 199+ MA") {
-		filterBlock.classList.add('orangeFilter');
-		filterBlock.classList.add('filter');
-		selectedFilterBtn.appendChild(filterBlock);
-	} else {
-		filterBlock.classList.add('blueFilter');
-		filterBlock.classList.add('filter');
-		selectedFilterBtn.appendChild(filterBlock);
-	}	
+	if (num == 1 ){
+		btnContainerOne.forEach(btn => btn.classList.remove("active"));
+	} else if ( num == 2) {
+		btnContainerTwo.forEach(btn => btn.classList.remove("active"));
+	} else if ( num == 3) {
+		btnContainerThree.forEach(btn => btn.classList.remove("active"));
+	}
+	
+	if (selectedFilterDiv.children.length == 0) {
+		filterSelection("all")
+	}
 }
 
 function checkTime(time) {
@@ -178,7 +258,7 @@ function addToCart(i) {
 function updateCart() {
 	updateItems();
 	updateTotal();
-	
+
 	//localStorage.setItem("CART", JSON.stringify(initialState.cart));
 }
 
