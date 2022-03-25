@@ -13,9 +13,8 @@ var selectedFilterDiv = document.getElementById("selectedFilters");
 
 updateCart();
 
-/*if (selectedFilterDiv.children.length == 0) {
-		filterSelection("all")
-}*/
+//filterSelection("all")
+
 
 function userSelection(c) {
 	  switch (c) {
@@ -44,6 +43,7 @@ function userSelection(c) {
 	document.getElementById("ichBin").classList.remove("shake");
 	document.getElementById("filterBtnContainerTwo").classList.remove("grey");
 	document.getElementById("filterBtnContainerThree").classList.remove("grey");
+	document.querySelector(".display").classList.remove("grey");
 	document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
 	document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
 	console.log("the user", initialState.userTypeValue);
@@ -195,13 +195,17 @@ function removeFilter(li, num) {
 	
 	if (num == 1 ){
 		btnContainerOne.forEach(btn => btn.classList.remove("active"));
+		initialState.userTypeValue = 0;
+		document.getElementById("filterBtnContainerTwo").classList.add("grey");
+		document.getElementById("filterBtnContainerThree").classList.add("grey");
+		document.querySelector(".display").classList.add("grey");
 	} else if ( num == 2) {
 		btnContainerTwo.forEach(btn => btn.classList.remove("active"));
 	} else if ( num == 3) {
 		btnContainerThree.forEach(btn => btn.classList.remove("active"));
 	}
 	
-	if (selectedFilterDiv.children.length == 0) {
+	if (selectedFilterDiv.children.length == 1) {
 		filterSelection("all")
 	}
 }
@@ -245,14 +249,19 @@ function timeOfDay(timeRange) {
 }
 
 function addToCart(i) {
-	 if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
+	if (initialState.userTypeValue == 0) {
+		document.getElementById("ichBin").classList.add("shake");
+	} else {
+		if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
 		console.log("already there", blocks[i].short_name)
-	 } else {
-		initialState.cart.push({
-			 ...blocks[i], 
-		});
-	 }	
-	updateCart();
+		 } else {
+			initialState.cart.push({
+				 ...blocks[i], 
+			});
+		 }	
+		updateCart();
+	}
+	 
 }
 
 function updateCart() {
