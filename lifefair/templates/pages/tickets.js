@@ -10,10 +10,11 @@ var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
 var selectedFilterDiv = document.getElementById("selectedFilters");
+var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
 
 updateCart();
 
-//filterSelection("all")
+//filterSelection("all");
 
 
 function userSelection(c) {
@@ -60,6 +61,110 @@ function filterSelection(c) {
 		removeClass(x[i], "show");
 		if (x[i].className.indexOf(c) > -1) addClass(x[i], "show");
 	  }
+	  titleFilter(c)
+	}
+	
+}
+
+
+function titleFilter(c) {
+	
+	if (c) {
+	
+	for (var i = 0; i < blocks.length; i++ ) {
+		
+		if (document.getElementById(`vormittag_${blocks[i].neues_datum}`) != null) {
+			if (document.getElementById(`vormittag_${blocks[i].neues_datum}`).querySelector(`.${c}`) == null) {
+				document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "none";					
+			} else {
+				document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "block";
+			}
+		}
+		if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`) != null) {
+			if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`).querySelector(`.${c}`) == null) {
+				document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "none";
+					
+			} else {
+				document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "block";
+			}
+		} 
+		if (document.getElementById(`abend_${blocks[i].neues_datum}`) != null) {
+			if (document.getElementById(`abend_${blocks[i].neues_datum}`).querySelector(`.${c}`) == null) {
+				document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "none";
+					
+			} else {
+				document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "block";
+			}
+		} 	
+	};
+ }
+}
+
+
+
+function filterTimeSlot(c) {
+	
+	if (initialState.userTypeValue == 0) {
+		document.getElementById("ichBin").classList.add("shake");
+	} else {
+	
+		if (selectedFilterDiv.children.length == 3) {
+			document.getElementById("themaAll").classList.add("active");
+			btnContainerThree.forEach(btn => btn.classList.remove("active"));
+			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+		}
+		
+		
+		for (var i = 0; i < blocks.length; i++ ) {
+		
+			switch (c) {
+				case 'vormittag':
+					if (document.getElementById(`vormittag_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "block";	
+					}
+					if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "none";	
+					}
+					if (document.getElementById(`abend_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "none";	
+					}
+					break;
+				case 'nachmittag':
+					if (document.getElementById(`vormittag_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "none";	
+					}
+					if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "block";	
+					}
+					if (document.getElementById(`abend_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "none";	
+					}
+					break;
+				case 'abend':	
+					if (document.getElementById(`vormittag_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "none";	
+					}
+					if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "none";	
+					}
+					if (document.getElementById(`abend_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "block";	
+					}
+					break;
+				case 'all':
+					if (document.getElementById(`vormittag_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "block";	
+					}
+					if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "block";	
+					}
+					if (document.getElementById(`abend_${blocks[i].neues_datum}`) != null) {
+						document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "block";	
+					}
+					break;
+			}	 		 	
+		}
+		filterSelection("all");
 	}
 }
 
@@ -157,7 +262,7 @@ btnContainerTwo.forEach((element) => {
 	});
 });
 
-var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
+
 btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
 		if (initialState.userTypeValue == 0) {
@@ -206,7 +311,7 @@ function removeFilter(li, num) {
 	}
 	
 	if (selectedFilterDiv.children.length == 1) {
-		filterSelection("all")
+		filterTimeSlot("all")
 	}
 }
 
@@ -471,18 +576,32 @@ function loadBlocks(anlass) {
     },
     'callback': function (response) {
             blocks = response.message;
-            console.log(blocks);
+            
+            var sortBlocks = blocks.slice().sort((a, b) => Date.parse(a.neues_datum) - Date.parse(b.neues_datum));
+			blocks = sortBlocks;
+			console.log(blocks);
             
             var textContainer = document.querySelector(".display");
 			textContainer.innerHTML = "";
+			var currentDate = "1600-01-01";
 			blocks.forEach(function (block, i) {
 				//globalBlocks.push(block);
 				var card = document.createElement('div');
 				card.classList.add('filterDiv');
 				
+				if (Date.parse(block.neues_datum) != Date.parse(currentDate) ) {
+					currentDate = block.neues_datum;
+			
+					var dateTitle = document.createElement('div');
+					dateTitle.innerHTML += `<div style="display: none" id="vormittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'> ${block.neues_datum} </td> <td class='timeName'>VORMITTAG</td> </tr> </table></div>`;
+					dateTitle.innerHTML += `<div style="display: none" id="nachmittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'> ${block.neues_datum} </td> <td class='timeName'>NACHMITTAG</td> </tr> </table></div>`;
+					dateTitle.innerHTML += `<div style="display: none" id="abend_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'> ${block.neues_datum} </td> <td class='timeName'>ABEND</td> </tr> </table></div>`;
+					textContainer.appendChild(dateTitle);
+				}
+
 				card.innerHTML += `<div class='blockContainer'> <p class='blockTime'>  ${block.short_name} &nbsp;&nbsp;&nbsp; ${block.time} </p> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  ${block.sub_title} </p><div>`;
-				card.innerHTML += `<div class='buttonsContainer'> <a href="https://sges.ch/about" target="_blank" class='info'>Info</a> <div class='cart' onclick="addToCart(${i})">Cart</div> </div>`;
-				textContainer.appendChild(card);
+				card.innerHTML += `<div class='buttonsContainer'> <a href="https://sges.ch/about" target="_blank" class='info'><img class='infoImg' src="https://cdn-icons-png.flaticon.com/512/1828/1828885.png"/></a> <div class='cart' onclick="addToCart(${i})"><img class='cartImg' src="https://cdn-icons-png.flaticon.com/512/628/628543.png"/></div> </div>`;
+			
 				
 				if (block.time) {
 					var twoTimeRange = block.time.split("und");
@@ -495,10 +614,13 @@ function loadBlocks(anlass) {
 							  for (var j = 0; j < timeFilter.length; j++ ) {
 								  if (timeFilter[j] == 1) {
 									  card.classList.add('vormittag');
+										document.getElementById(`vormittag_${block.neues_datum}`).appendChild(card);
 									  } else if ( timeFilter[j] == 2){
 										  card.classList.add('nachmittag');
+										  document.getElementById(`nachmittag_${block.neues_datum}`).appendChild(card);
 										  } else {
 											  card.classList.add('abend');
+											  document.getElementById(`abend_${block.neues_datum}`).appendChild(card);
 											  }
 								  }
 							}
@@ -509,10 +631,13 @@ function loadBlocks(anlass) {
 							  for (var i = 0; i < timeFilter.length; i++ ) {
 								  if (timeFilter[i] == 1) {
 									  card.classList.add('vormittag');
+									  document.getElementById(`vormittag_${block.neues_datum}`).appendChild(card);
 									  } else if ( timeFilter[i] == 2){
 										  card.classList.add('nachmittag');
+										  document.getElementById(`nachmittag_${block.neues_datum}`).appendChild(card);
 										  } else {
 											  card.classList.add('abend');
+											  document.getElementById(`abend_${block.neues_datum}`).appendChild(card);
 											  }
 								  }
 							
@@ -571,7 +696,27 @@ function loadBlocks(anlass) {
 					  break;
 				  }
 				}		
-			});					      
+			});
+			
+			for (var i = 0; i < blocks.length; i++ ) {
+				if (document.getElementById(`vormittag_${blocks[i].neues_datum}`) != null) {
+					if (document.getElementById(`vormittag_${blocks[i].neues_datum}`).querySelector(".blockContainer") == null) {
+					document.getElementById(`vormittag_${blocks[i].neues_datum}`).remove();
+						
+					}
+				}
+				if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`) != null) {
+					if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`).querySelector(".blockContainer") == null) {
+						document.getElementById(`nachmittag_${blocks[i].neues_datum}`).remove();
+					}
+				} 
+				if (document.getElementById(`abend_${blocks[i].neues_datum}`) != null) {
+					if (document.getElementById(`abend_${blocks[i].neues_datum}`).querySelector(".blockContainer") == null) {
+						document.getElementById(`abend_${blocks[i].neues_datum}`).remove();
+					}
+				} 	
+			};
+							      
 	}});
 }
 

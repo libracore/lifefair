@@ -61,7 +61,7 @@
   padding-bottom: 0px;
   padding-right: 0px;
   margin: 5.5px;
-  margin-bottom: 50px;
+  margin-bottom: 6px;
   display: none;
   text-align: left;
   position: relative;
@@ -71,10 +71,28 @@
   display: block;
 }
 
-.dateTitle {
+.ticketsName {
+  font-size: 45px;
+  color: #009FE3;
+  padding-right: 15px !important;
+  padding-top: 80px !important;
+  text-align: start;
+}
+
+.dateName {
+  font-size: 45px;
+  color: #E94E26;
+  font-weight: lighter;
+  padding-right: 15px !important;
+  padding-top: 80px !important;
+  text-align: start;
+}
+
+.timeName {
   font-size: 45px;
   color: #003764;
-  font-weight: lighter;
+  text-align: start;
+  padding-top: 80px !important;
 }
 
 .blockContainer {
@@ -116,18 +134,34 @@
   width: 36px;
   height: 36px;
   margin-left: 4px;
-  padding-top: 6.5px;
   font-size: 8px;
-  text-align: center;
   cursor: pointer;
   text-decoration: none;
   color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cart:hover,.info:hover {
   background: #E94E26;
   text-decoration: none;
   color: white;
+  
+}
+
+.infoImg, .cartImg {
+  width: 25px;
+  height: 25px;
+  filter: invert(100%);
+}
+
+.infoImg:hover {
+  transform: scaleX(-1);
+}
+
+.cartImg:hover {
+  transform: rotate(-10deg);
 }
 
 #filterBtnContainerOne, #filterBtnContainerTwo, #filterBtnContainerThree {
@@ -136,9 +170,12 @@
   margin-left: 15px;
 }
 
+#filterBtnContainerThree {
+  margin-bottom: 0px;
+}
+
 .display {
-  margin-top: 60px;
-  margin-left: 10px;
+  margin-left: 15px;
   width: 1042px;
 }
 
