@@ -72,24 +72,25 @@
 }
 
 .ticketsName {
-  font-size: 45px;
+  font-size: 43px;
   color: #009FE3;
   padding-right: 15px !important;
   padding-top: 80px !important;
   text-align: start;
 }
 
-.dateName {
-  font-size: 45px;
+.dateName, .dateNum {
+  font-size: 43px;
   color: #E94E26;
   font-weight: lighter;
   padding-right: 15px !important;
   padding-top: 80px !important;
   text-align: start;
+  text-transform: uppercase;
 }
 
 .timeName {
-  font-size: 45px;
+  font-size: 43px;
   color: #003764;
   text-align: start;
   padding-top: 80px !important;
@@ -151,9 +152,11 @@
 }
 
 .infoImg, .cartImg {
-  width: 25px;
-  height: 25px;
-  filter: invert(100%);
+  width: 100%;
+  height: 100%;
+  padding: 2px;
+  filter: brightness(10);
+  filter: contrast(10);
 }
 
 .infoImg:hover {

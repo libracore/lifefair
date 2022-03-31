@@ -572,7 +572,7 @@ function loadBlocks(anlass) {
  	filters: [
  	    ["meeting", "=", anlass]
  	],
-        fields: ["official_title, sub_title, short_name, neues_datum, time, interest_1, interest_2, interest_3"],
+        fields: ["official_title, location, short_name, neues_datum, time, interest_1, interest_2, interest_3, website_link"],
     },
     'callback': function (response) {
             blocks = response.message;
@@ -591,16 +591,20 @@ function loadBlocks(anlass) {
 				
 				if (Date.parse(block.neues_datum) != Date.parse(currentDate) ) {
 					currentDate = block.neues_datum;
-			
+					console.log("currentDate", currentDate);
 					var dateTitle = document.createElement('div');
-					dateTitle.innerHTML += `<div style="display: none" id="vormittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'> ${block.neues_datum} </td> <td class='timeName'>VORMITTAG</td> </tr> </table></div>`;
-					dateTitle.innerHTML += `<div style="display: none" id="nachmittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'> ${block.neues_datum} </td> <td class='timeName'>NACHMITTAG</td> </tr> </table></div>`;
-					dateTitle.innerHTML += `<div style="display: none" id="abend_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'> ${block.neues_datum} </td> <td class='timeName'>ABEND</td> </tr> </table></div>`;
+					var date = block.neues_datum.split("-").reverse().join(".");
+					var day = new Date(currentDate);
+					var dayName = day.toLocaleString('de-ch', {weekday: 'long'});
+					
+					dateTitle.innerHTML += `<div style="display: none" id="vormittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td> <td class='timeName'>VORMITTAG</td> </tr> </table></div>`;
+					dateTitle.innerHTML += `<div style="display: none" id="nachmittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td>  <td class='timeName'>NACHMITTAG</td> </tr> </table></div>`;
+					dateTitle.innerHTML += `<div style="display: none" id="abend_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td>  <td class='timeName'>ABEND</td> </tr> </table></div>`;
 					textContainer.appendChild(dateTitle);
 				}
-
-				card.innerHTML += `<div class='blockContainer'> <p class='blockTime'>  ${block.short_name} &nbsp;&nbsp;&nbsp; ${block.time} </p> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  ${block.sub_title} </p><div>`;
-				card.innerHTML += `<div class='buttonsContainer'> <a href="https://sges.ch/about" target="_blank" class='info'><img class='infoImg' src="https://cdn-icons-png.flaticon.com/512/1828/1828885.png"/></a> <div class='cart' onclick="addToCart(${i})"><img class='cartImg' src="https://cdn-icons-png.flaticon.com/512/628/628543.png"/></div> </div>`;
+				
+				card.innerHTML += `<div class='blockContainer'> <p class='blockTime'>  ${block.short_name} &nbsp;&nbsp;&nbsp; ${block.time} </p> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  ${block.location} </p><div>`;
+				card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png"/></a> <div class='cart' onclick="addToCart(${i})"><img class='cartImg' src="/assets/lifefair/images/cart.png"/></div> </div>`;
 			
 				
 				if (block.time) {
