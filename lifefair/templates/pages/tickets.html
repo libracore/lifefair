@@ -1,155 +1,165 @@
 	
-	
+<div id="fullPage">
+	<div class="firtsDiv">
+		<div id="step0">
+				
+				<ul id="selectedFilters"></ul>
+				
+				<div id="filterBtnContainerOne">
+					<h2 class="filterTitle" id="ichBin">TICKET FÜR ...</h2>
+					<div class="btnOrange"  style="display: none"></div>
+					<li id="userMenu">
+						<ul id="dropdown">
+							<li><button class="btnOrange" onclick="userSelection('privatperson')">PRIVATPERSON</button></li> 
+							<li><button class="btnOrange" onclick="userSelection('student')">STUDENT</button></li>
+							<li><button class="btnOrange" onclick="userSelection('AHV/IV RENTNER')">AHV/IV RENTNER</button></li>
+							<li><button class="btnOrange" onclick="userSelection('ARBEITSSUCHEND')">ARBEITSSUCHEND</button></li>
+							<li><button class="btnOrange" onclick="userSelection('FIRMA 1 - 9 MA')">FIRMA 1 - 9 MA</button></li>
+							<li><button class="btnOrange" onclick="userSelection('FIRMA 10 - 99 MA')">FIRMA 10 - 99 MA</button></li>
+							<li><button class="btnOrange" onclick="userSelection('FIRMA 100 - 199 MA')">FIRMA 100 - 199 MA</button></li>
+							<li><button class="btnOrange" onclick="userSelection('FIRMA 199+ MA')">FIRMA 199+ MA</button></li>
+						</ul>
+					</li>
+				</div>
+					
+				<div id="filterBtnContainerTwo" class="grey">
+					 <h2 class="filterTitle">DATUM</h2>
+					 <button class="btn" onclick="filterTimeSlot('all')"> SHOW ALL</button>
+					 <button class="btn" onclick="filterTimeSlot('vormittag')">VORMITTAG</button>
+					 <button class="btn" onclick="filterTimeSlot('nachmittag')">NACHMITTAG</button>
+					 <button class="btn" onclick="filterTimeSlot('abend')">ABEND</button>
+				</div>
+
+				<div id="filterBtnContainerThree" class="grey">
+					 <h2 class="filterTitle">THEMA</h2>
+				</div>
+					
+				<div>
+					 <div class="display"></div>
+				</div>
+
+		</div>
+		<div id="step1" style="display: none">
+			<h2 class="tableTitle">CHECKOUT</h2>
+			<h5 class="tableTitleTwo">IHRE ANGABEN</h5>
+			 <table class="table"  id="clearField">
+				<tr class="tr">
+					<td class="td">	
+						<span class="tableSpan">Name</span>
+						<input class="tableInput" type="text" id="inputSurname" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
+					</td>
+					<td class="td">
+						<span class="tableSpan">Vorname</span>
+						<input class="tableInput" type="text" id="inputFirstname" placeholder="Vorname" class="input-xlarge" title="Der Vorname ist zwingend!" required/>
+					</td>
+				</tr>
+				<tr class="tr">
+					<td class="td">
+						<span class="tableSpan">Firma</span>
+						<input class="tableInput" type="text" id="inputFirma" placeholder="Firma" class="input-xlarge" title="Die Firma ist zwingend!" required>
+					</td>
+					<td class="td">
+						<span class="tableSpan">Funktion</span>
+						<input class="tableInput" type="text" id="inputFunktion" placeholder="Funktion" class="input-xlarge" title="Die Funktion ist zwingend!" pattern="[0-9]{10}" required>
+					</td>
+				</tr>
+				<tr class="tr">
+					<td class="td">
+						<span class="tableSpan">Telefonnummer</span>
+						<input class="tableInput" type="text" id="inputPhone" placeholder="Telefonnummer" class="input-xlarge" title="Die Telefonnummer ist zwingend!" required>
+					</td>
+					<td class="td">
+						<span class="tableSpan">E-mail</span>
+						<input class="tableInput" type="text" id="inputEmail" placeholder="E-mail" class="input-xlarge" title="Die E-mail zwingend!" required>
+					</td>
+				</tr>
+				<tr class="tr">
+					<td class="td">
+						<span class="tableSpan">Adresse</span>
+						<input class="tableInput" type="text" id="inputAdresse" placeholder="Adresse" class="input-xlarge" title="Der Adresse ist zwingend!" required>
+					</td>
+					<td class="td">
+						<span class="tableSpan">PLZ/Ort</span>
+						<input class="tableInput" type="text" id="inputOrt" placeholder="PLZ/Ort" class="input-xlarge" title="Der PLZ/Ort ist zwingend!" required>
+					</td>
+				</tr>
+				<tr class="tr">
+					<td class="td">
+						<span class="tableSpan">Gutschein einlösen</span>
+						<input class="tableInput" type="text" id="inputGutschein" placeholder="XSR5TI0" class="input-xlarge" >
+					</td>
+					<td class="td"></td>
+				</tr>
+				<tr class="tr">
+					<td class="td rechnung">
+						<h5>RECHNUNGSADRESSE</h5>
+						<div class="rechnungOptions" id="clearField">
+							<input class="checkInput" type="checkbox" id="gleiche" name="gleiche_adresse" value="GLEICHE">
+							<label class="checkLabel" for="gleiche">An die gleiche Lieferadresse schicken</label>
+						</div>
+					</td>
+					<td class="td"></td>
+				</tr>
+			 </table>
+			 <div id="step2" style="display: none">
+				 <table class="table "  id="clearFieldTwo">
+					<tr class="tr">
+						<td class="td">	
+							<span class="tableSpan">Name</span>
+							<input class="tableInput" type="text" id="inputSurnameTwo" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
+						</td>
+						<td class="td">
+							<span class="tableSpan">Vorname</span>
+							<input class="tableInput" type="text" id="inputFirstnameTwo" placeholder="Vorname" class="input-xlarge" title="Der Vorname ist zwingend!" required/>
+						</td>
+					</tr>
+					<tr class="tr">
+						<td class="td">
+							<span class="tableSpan">Firma</span>
+							<input class="tableInput" type="text" id="inputFirmaTwo" placeholder="Firma" class="input-xlarge" title="Die Firma ist zwingend!" required>
+						</td>
+						<td class="td">
+							<span class="tableSpan">Funktion</span>
+							<input class="tableInput" type="text" id="inputFunktionTwo" placeholder="Funktion" class="input-xlarge" title="Die Funktion ist zwingend!" pattern="[0-9]{10}" required>
+						</td>
+					</tr>
+					<tr class="tr">
+						<td class="td">
+							<span class="tableSpan">Telefonnummer</span>
+							<input class="tableInput" type="text" id="inputPhoneTwo" placeholder="Telefonnummer" class="input-xlarge" title="Die Telefonnummer ist zwingend!" required>
+						</td>
+						<td class="td">
+							<span class="tableSpan">E-mail</span>
+							<input class="tableInput" type="text" id="inputEmailTwo" placeholder="E-mail" class="input-xlarge" title="Die E-mail zwingend!" required>
+						</td>
+					</tr>
+					<tr class="tr">
+						<td class="td">
+							<span class="tableSpan">Adresse</span>
+							<input class="tableInput" type="text" id="inputAdresseTwo" placeholder="Adresse" class="input-xlarge" title="Der Adresse ist zwingend!" required>
+						</td>
+						<td class="td">
+							<span class="tableSpan">PLZ/Ort</span>
+							<input class="tableInput" type="text" id="inputOrtTwo" placeholder="PLZ/Ort" class="input-xlarge" title="Der PLZ/Ort ist zwingend!" required>
+						</td>
+					</tr>
+				 </table>
+			 </div>
+			 <button class="zuruckBtnOne" onclick="start();">ZURÜCK</button>  
+		</div>
+
+		<div id="step3" style="display: none">
+			<div class="endMsgContainer"></div>
+		</div>	
+	</div>
+	<div class="scondDiv">
 		<div id="warenkorb">
 		  <h2 class="cartTitle">WARENKORB</h2>
 		  <div class="cartElement"></div>
 		  <div class="cartTotal"></div>
 		  <button id="btnCart" class="cartBtn"> <p onclick="checkOut()" class="cartBtnText">ZUM WARENKORB</p></button>
 		</div>
-		
-<div id="step0">
-		
-		<ul id="selectedFilters"></ul>
-		
-		<div id="filterBtnContainerOne">
-			<h2 class="filterTitle" id="ichBin">TICKET FÜR ...</h2>
-			<div class="btnOrange"  style="display: none"></div>
-			<ul id="dropdown">
-				<li><button class="btnOrange" onclick="userSelection('privatperson')">PRIVATPERSON</button></li> 
-				<li><button class="btnOrange" onclick="userSelection('student')">STUDENT</button></li>
-				<li><button class="btnOrange" onclick="userSelection('AHV/IV RENTNER')">AHV/IV RENTNER</button></li>
-				<li><button class="btnOrange" onclick="userSelection('ARBEITSSUCHEND')">ARBEITSSUCHEND</button></li>
-				<li><button class="btnOrange" onclick="userSelection('FIRMA 1 - 9 MA')">FIRMA 1 - 9 MA</button></li>
-				<li><button class="btnOrange" onclick="userSelection('FIRMA 10 - 99 MA')">FIRMA 10 - 99 MA</button></li>
-				<li><button class="btnOrange" onclick="userSelection('FIRMA 100 - 199 MA')">FIRMA 100 - 199 MA</button></li>
-				<li><button class="btnOrange" onclick="userSelection('FIRMA 199+ MA')">FIRMA 199+ MA</button></li>
-			</ul>
-		</div>
-			
-		<div id="filterBtnContainerTwo" class="grey">
-			 <h2 class="filterTitle">DATUM</h2>
-			 <button class="btn" onclick="filterTimeSlot('all')"> SHOW ALL</button>
-			 <button class="btn" onclick="filterTimeSlot('vormittag')">VORMITTAG</button>
-			 <button class="btn" onclick="filterTimeSlot('nachmittag')">NACHMITTAG</button>
-			 <button class="btn" onclick="filterTimeSlot('abend')">ABEND</button>
-		</div>
-
-		<div id="filterBtnContainerThree" class="grey">
-			 <h2 class="filterTitle">THEMA</h2>
-			 <button class="btn" id="themaAll" onclick="filterSelection('all')"> SHOW ALL</button>
-		</div>
-			
-		<div>
-			 <div class="display"></div>
-		</div>
-
-</div>
-<div id="step1" style="display: none">
-	<h2 class="tableTitle">CHECKOUT</h2>
-	<h5 class="tableTitleTwo">IHRE ANGABEN</h5>
-	 <table class="table"  id="clearField">
-		<tr class="tr">
-			<td class="td">	
-                <span class="tableSpan">Name</span>
-                <input class="tableInput" type="text" id="inputSurname" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
-			</td>
-			<td class="td">
-				<span class="tableSpan">Vorname</span>
-                <input class="tableInput" type="text" id="inputFirstname" placeholder="Vorname" class="input-xlarge" title="Der Vorname ist zwingend!" required/>
-			</td>
-		</tr>
-		<tr class="tr">
-			<td class="td">
-				<span class="tableSpan">Firma</span>
-                <input class="tableInput" type="text" id="inputFirma" placeholder="Firma" class="input-xlarge" title="Die Firma ist zwingend!" required>
-			</td>
-			<td class="td">
-				<span class="tableSpan">Funktion</span>
-                <input class="tableInput" type="text" id="inputFunktion" placeholder="Funktion" class="input-xlarge" title="Die Funktion ist zwingend!" pattern="[0-9]{10}" required>
-			</td>
-		</tr>
-		<tr class="tr">
-			<td class="td">
-				<span class="tableSpan">Telefonnummer</span>
-                <input class="tableInput" type="text" id="inputPhone" placeholder="Telefonnummer" class="input-xlarge" title="Die Telefonnummer ist zwingend!" required>
-			</td>
-			<td class="td">
-				<span class="tableSpan">E-mail</span>
-                <input class="tableInput" type="text" id="inputEmail" placeholder="E-mail" class="input-xlarge" title="Die E-mail zwingend!" required>
-			</td>
-		</tr>
-		<tr class="tr">
-			<td class="td">
-				<span class="tableSpan">Adresse</span>
-                <input class="tableInput" type="text" id="inputAdresse" placeholder="Adresse" class="input-xlarge" title="Der Adresse ist zwingend!" required>
-			</td>
-			<td class="td">
-				<span class="tableSpan">PLZ/Ort</span>
-                <input class="tableInput" type="text" id="inputOrt" placeholder="PLZ/Ort" class="input-xlarge" title="Der PLZ/Ort ist zwingend!" required>
-			</td>
-		</tr>
-		<tr class="tr">
-			<td class="td rechnung">
-				<h5>RECHNUNGSADRESSE</h5>
-				<div class="rechnungOptions" id="clearField">
-					<input class="checkInput" type="checkbox" id="gleiche" name="gleiche_adresse" value="GLEICHE">
-					<label class="checkLabel" for="gleiche">An die gleiche Lieferadresse schicken</label>
-				</div>
-			</td>
-			<td class="td"></td>
-		</tr>
-	 </table>
-	 <div id="step2" style="display: none">
-		 <table class="table "  id="clearFieldTwo">
-			<tr class="tr">
-				<td class="td">	
-					<span class="tableSpan">Name</span>
-					<input class="tableInput" type="text" id="inputSurnameTwo" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
-				</td>
-				<td class="td">
-					<span class="tableSpan">Vorname</span>
-					<input class="tableInput" type="text" id="inputFirstnameTwo" placeholder="Vorname" class="input-xlarge" title="Der Vorname ist zwingend!" required/>
-				</td>
-			</tr>
-			<tr class="tr">
-				<td class="td">
-					<span class="tableSpan">Firma</span>
-					<input class="tableInput" type="text" id="inputFirmaTwo" placeholder="Firma" class="input-xlarge" title="Die Firma ist zwingend!" required>
-				</td>
-				<td class="td">
-					<span class="tableSpan">Funktion</span>
-					<input class="tableInput" type="text" id="inputFunktionTwo" placeholder="Funktion" class="input-xlarge" title="Die Funktion ist zwingend!" pattern="[0-9]{10}" required>
-				</td>
-			</tr>
-			<tr class="tr">
-				<td class="td">
-					<span class="tableSpan">Telefonnummer</span>
-					<input class="tableInput" type="text" id="inputPhoneTwo" placeholder="Telefonnummer" class="input-xlarge" title="Die Telefonnummer ist zwingend!" required>
-				</td>
-				<td class="td">
-					<span class="tableSpan">E-mail</span>
-					<input class="tableInput" type="text" id="inputEmailTwo" placeholder="E-mail" class="input-xlarge" title="Die E-mail zwingend!" required>
-				</td>
-			</tr>
-			<tr class="tr">
-				<td class="td">
-					<span class="tableSpan">Adresse</span>
-					<input class="tableInput" type="text" id="inputAdresseTwo" placeholder="Adresse" class="input-xlarge" title="Der Adresse ist zwingend!" required>
-				</td>
-				<td class="td">
-					<span class="tableSpan">PLZ/Ort</span>
-					<input class="tableInput" type="text" id="inputOrtTwo" placeholder="PLZ/Ort" class="input-xlarge" title="Der PLZ/Ort ist zwingend!" required>
-				</td>
-			</tr>
-		 </table>
-	 </div>
-	 <button class="zuruckBtnOne" onclick="start();">ZURÜCK</button>  
-</div>
-
-<div id="step3" style="display: none">
-	<div class="endMsgContainer"></div>
+	</div>
 </div>	
-
-  
   
 

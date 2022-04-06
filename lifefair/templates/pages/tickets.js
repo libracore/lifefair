@@ -22,7 +22,6 @@ updateCart();
 //console.log("in the clearFieldsTwo", clearFieldsTwo);
 //filterSelection("all");
 
-
 function userSelection(c) {
 	
 	  switch (c) {
@@ -61,13 +60,18 @@ function userSelection(c) {
 	btnContainerTwo.forEach((element) => element.classList.add("btnHover"));
 	document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
 	console.log("the user", initialState.userTypeValue);
-	/*if (initialState.userTypeValue > 0) {
-		//document.getElementById("dropdown").addEventListener("click", openDropdown);
-		btnContainerOne.forEach(btn => {
-			btn.classList.toggle("dropdownDisplay");
-		});
-	}*/
-		
+	var userMenu = document.getElementById("userMenu");
+	var userMenuDiv = document.createElement('div');
+	userMenuDiv.classList.add('userMenuDiv');
+	userMenuDiv.innerHTML = `<div class="userMenuClass" onclick="openDropdown()"><p>${c}</p> <img class='dropdownImg' src="/assets/lifefair/images/arrow.png"/></div>`;
+	userMenu.insertBefore(userMenuDiv, userMenu.firstChild)
+    document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "none");
+}
+
+//Dropdown Menu
+function openDropdown() {
+	document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "block");
+    document.querySelector(".userMenuDiv").innerHTML =  "";
 }
 
 function filterSelection(c) {
@@ -295,7 +299,6 @@ btnContainerTwo.forEach((element) => {
 	});
 });
 
-
 document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => {
 	element.addEventListener("click", function(){
 		if (initialState.userTypeValue == 0) {
@@ -342,6 +345,7 @@ function removeFilter(li, num) {
 		document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
 		document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
 		document.querySelector(".display").classList.add("grey");
+		document.querySelector(".userMenuDiv").innerHTML =  "";
 	} else if ( num == 2) {
 		btnContainerTwo.forEach(btn => btn.classList.remove("active"));
 	} else if ( num == 3) {
@@ -427,7 +431,7 @@ function updateTotal() {
 	if ( initialState.cart.length > 0) {
 		initialState.cart.forEach((item, i) => {
 			totalPrice += 20 * initialState.userTypeValue;
-			cartTotal.innerHTML = `<p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p>`;	
+			cartTotal.innerHTML = `<div class="alleArtikel">Alle Artikel entfernen</div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div> <div class="infoDiv"><div class="infoI">i</div>Networking Lunch inklusive <br> Übernachtung empfohlen.</div>`;	
 		});
 	} else { cartTotal.innerHTML = ""}
 		
