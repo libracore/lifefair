@@ -4,6 +4,61 @@
   margin-left: 118px;
 }
 
+#popUp {
+  display: none;
+  position: absolute;
+  border: solid;
+  background-color: white;
+  padding: 15px;
+  width: 200px;
+  height: 153px;
+  border: 1px solid #E94E26;
+  z-index: 1;
+}
+
+.popUpContent {
+  display: flex;
+  flex-direction: column;
+}
+
+.popUpTittle {
+  font-size: 16px;
+  color: #E94E26;
+}
+
+.popUpText {
+  font-size: 13px;
+  color: #E94E26;
+}
+
+.popUpBtnDiv {
+  display: flex;
+  
+}
+
+.popUpConfirm {
+  font-size: 12px;
+  color: #E94E26;
+  border: 1px #E94E26 solid;
+  background: white;
+  padding: 5px;
+  text-align: center;
+  margin-right: 8px; 
+  width: 96px;
+  height: 36px;
+}
+
+.popUpCancel {
+  font-size: 12px;
+  color: white;
+  border: 1px #E94E26 solid;
+  background: #E94E26;
+  padding: 5px;
+  text-align: center;
+  width: 96px;
+  height: 36px;
+}
+
 .title {
   font-size: 45px;
   color: #E94E26;
@@ -187,6 +242,18 @@
   font-size: 10px;
 }
 
+#dropdown {
+  padding-left: 0px;
+}
+
+.dropdownDisplay {
+  display: none;
+}
+
+ul {
+  list-style: none
+}
+
 .btnOrange {
   width: 200px;
   border: 1px solid #E94E26;
@@ -198,10 +265,7 @@
   cursor: pointer;
   margin: 2px;
   background: none;
-}
-
-.btnOrangeLarge {
-  width: 750px;
+  text-decoration: none;
 }
 
 .btnOrange:hover {
@@ -222,7 +286,9 @@
   outline: none;
   padding: 12px 16px;
   cursor: pointer;
-  margin: 2px; 
+  margin: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
 }
 
 .btnHover:hover {
@@ -427,10 +493,10 @@
   align-items: center;
 }
 
-.zahlungsOptions {
+/*.zahlungsOptions {
   display: flex;
   color: #003764;
-}
+}*/
 
 .checkInput {
   border: solid #003764 !important;
@@ -441,9 +507,9 @@
   margin-left: 5px;
 }
 
-.zahlungsCheckOne {
+/*.zahlungsCheckOne {
   margin-right: 85px;
-}
+}*/
 
 .endMsgContainer {
   width: 80%;

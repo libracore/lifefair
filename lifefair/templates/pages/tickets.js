@@ -1,4 +1,5 @@
 var blocks;
+var interests = [];
 var itemVal;
 var inTheChekout = false;
 var initialState = {
@@ -10,20 +11,32 @@ var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
 var selectedFilterDiv = document.getElementById("selectedFilters");
+var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button");
+var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySelectorAll("button");
 var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
+var clearFields = document.getElementById("clearField").querySelectorAll("input");
+var clearFieldsTwo = document.getElementById("clearFieldTwo").querySelectorAll("input");
 
 updateCart();
-
+//console.log("in the clearFields", clearFields);
+//console.log("in the clearFieldsTwo", clearFieldsTwo);
 //filterSelection("all");
 
 
 function userSelection(c) {
+	
 	  switch (c) {
-		case 'selbstzahlende':
-			initialState.userTypeValue = 1.50;
-			break;
 		case 'privatperson':
 			initialState.userTypeValue = 2.00;
+			break;
+		case 'student':
+			initialState.userTypeValue = 2.50;
+			break;
+		case 'AHV/IV RENTNER':
+			initialState.userTypeValue = 3.00;
+			break;
+		case 'ARBEITSSUCHEND':
+			initialState.userTypeValue = 4.25;
 			break;
 		case 'FIRMA 1 - 9 MA':	
 			initialState.userTypeValue = 5.00;
@@ -45,27 +58,38 @@ function userSelection(c) {
 	document.getElementById("filterBtnContainerTwo").classList.remove("grey");
 	document.getElementById("filterBtnContainerThree").classList.remove("grey");
 	document.querySelector(".display").classList.remove("grey");
-	document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
+	btnContainerTwo.forEach((element) => element.classList.add("btnHover"));
 	document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
 	console.log("the user", initialState.userTypeValue);
+	/*if (initialState.userTypeValue > 0) {
+		//document.getElementById("dropdown").addEventListener("click", openDropdown);
+		btnContainerOne.forEach(btn => {
+			btn.classList.toggle("dropdownDisplay");
+		});
+	}*/
+		
 }
 
 function filterSelection(c) {
+	
 	if (initialState.userTypeValue == 0) {
 		document.getElementById("ichBin").classList.add("shake");
 	} else {
-	  var x, i;
-	  x = document.getElementsByClassName("filterDiv");
-	  if (c == "all") c = "";
-	  for (i = 0; i < x.length; i++) {
-		removeClass(x[i], "show");
-		if (x[i].className.indexOf(c) > -1) addClass(x[i], "show");
-	  }
-	  titleFilter(c)
-	}
-	
+	    var newStr = c;
+	    var x, i;
+	    
+	    if (c.split(/\W+/).length > 1) {
+		  newStr =  c.split(" ")[0];
+	    }
+	    x = document.getElementsByClassName("filterDiv");
+	    if (newStr == "all") newStr = "";
+	    for (i = 0; i < x.length; i++) {
+		  removeClass(x[i], "show");
+		  if (x[i].className.indexOf(newStr) > -1) addClass(x[i], "show");
+	    }
+	    titleFilter(newStr)
+	}	
 }
-
 
 function titleFilter(c) {
 	
@@ -100,8 +124,6 @@ function titleFilter(c) {
  }
 }
 
-
-
 function filterTimeSlot(c) {
 	
 	if (initialState.userTypeValue == 0) {
@@ -113,7 +135,6 @@ function filterTimeSlot(c) {
 			btnContainerThree.forEach(btn => btn.classList.remove("active"));
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 		}
-		
 		
 		for (var i = 0; i < blocks.length; i++ ) {
 		
@@ -169,11 +190,22 @@ function filterTimeSlot(c) {
 }
 
 function addClass(element, name) {
+  var newStr;
   var i, arr1, arr2;
-  arr1 = element.className.split(" ");
-  arr2 = name.split(" ");
-  for (i = 0; i < arr2.length; i++) {
-    if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+  
+  if (name.split(/\W+/).length > 1) {
+	 newStr =  name.split(" ")[0];
+	 arr1 = element.className.split(" ");
+	 arr2 = newStr.split(" ");
+	 for (i = 0; i < arr2.length; i++) {
+		if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+     }
+  } else {
+	 arr1 = element.className.split(" ");
+	 arr2 = name.split(" ");
+	 for (i = 0; i < arr2.length; i++) {
+		if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+	 }
   }
 }
 
@@ -190,11 +222,12 @@ function removeClass(element, name) {
 }
 
 // Add active class to the current button in the respective container and highlight it the top
-var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button");
 btnContainerOne.forEach((element) => {
 	element.addEventListener("click", function(){
 		
-		btnContainerOne.forEach(btn => btn.classList.remove("active"));
+		btnContainerOne.forEach(btn => {
+			btn.classList.remove("active");
+		});
 		
 		var orange = document.querySelector(".orangeFilter");
 		var answer = selectedFilterDiv.contains(orange);
@@ -215,12 +248,12 @@ btnContainerOne.forEach((element) => {
 			selectedFilterDiv.insertBefore(orangeFilterBlock, selectedFilterDiv.firstChild);	
 		}
 		
-		this.classList.add("active");	
-		
+		this.classList.add("active");
+		//this.style.display = "block";	
 	}); 
 });
 
-var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySelectorAll("button");
+
 btnContainerTwo.forEach((element) => {
 	element.addEventListener("click", function(){
 		
@@ -263,13 +296,13 @@ btnContainerTwo.forEach((element) => {
 });
 
 
-btnContainerThree.forEach((element) => {
+document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => {
 	element.addEventListener("click", function(){
 		if (initialState.userTypeValue == 0) {
 			document.getElementById("ichBin").classList.add("shake");
 		} else {
 			document.getElementById("ichBin").classList.remove("shake");
-			btnContainerThree.forEach(btn => btn.classList.remove("active"));
+			document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 			
 			var blueThema = document.querySelector(".themaBlueFilter");
 			var answer = selectedFilterDiv.contains(blueThema);
@@ -299,10 +332,15 @@ function removeFilter(li, num) {
 	li.parentNode.parentNode.removeChild(li.parentNode);
 	
 	if (num == 1 ){
-		btnContainerOne.forEach(btn => btn.classList.remove("active"));
+		btnContainerOne.forEach(btn => {
+			btn.classList.remove("active");
+			btn.style.display = "block";
+		});
 		initialState.userTypeValue = 0;
 		document.getElementById("filterBtnContainerTwo").classList.add("grey");
 		document.getElementById("filterBtnContainerThree").classList.add("grey");
+		document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
+		document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
 		document.querySelector(".display").classList.add("grey");
 	} else if ( num == 2) {
 		btnContainerTwo.forEach(btn => btn.classList.remove("active"));
@@ -358,15 +396,23 @@ function addToCart(i) {
 		document.getElementById("ichBin").classList.add("shake");
 	} else {
 		if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
-		console.log("already there", blocks[i].short_name)
+		console.log("already there", blocks[i].short_name);
+		 } else if (initialState.cart.some((item) => item.neues_datum == blocks[i].neues_datum)) {
+			 popUp();
 		 } else {
 			initialState.cart.push({
 				 ...blocks[i], 
 			});
 		 }	
 		updateCart();
-	}
-	 
+	} 
+}
+
+function popUp() {
+	var popUp = document.getElementById("popUp");
+	popUp.innerHTML += `<div class="popUpContent"> <p class="popUpTittle">SIND SIE SICHER?</p> <p class="popUpText">Sie buchen zwei Tickets um dieselbe Uhrzeit </p> <div class="popUpBtnDiv"> <button class="popUpConfirm">BESTÄTIGEN</button> <button class="popUpCancel">UMBUCHEN</button> </div> </div>`;	
+	popUp.style.display = "block";
+	console.log("the same day is not possible" );
 }
 
 function updateCart() {
@@ -452,8 +498,22 @@ function start() {
     document.getElementById("step0").style.display = "block";
     document.getElementById("step1").style.display = "none";
     document.getElementById("step2").style.display = "none";
+    document.getElementById("step3").style.display = "none";
     // prepare topic
     cartbButton.innerHTML = `<p onclick="checkOut()" class="cartBtnText">ZUM WARENKORB</p>`
+    clearFields.forEach((element) => {
+		if (element.type == "text") {
+			element.value = "";
+		} else if (element.type == "checkbox") {
+			element.checked = false;
+		}
+	});
+	
+	clearFieldsTwo.forEach((element) => {
+		if (element.type == "text") {
+			element.value = "";
+		}
+	});
 
 }
 
@@ -464,7 +524,6 @@ function checkOut() {
 			shaketext.classList.add("shake");
 		} else {
 			inTheChekout = true;
-			document.getElementById("gleiche").checked = true;
 			document.getElementById("step0").style.display = "none";
 			document.getElementById("step1").style.display = "block"
 			cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT ZAHLEN</p>`
@@ -473,13 +532,18 @@ function checkOut() {
 
 //Watching over the checkbox in the checkout 
 var gleicheAdresse = document.getElementById("gleiche");
+gleicheAdresse.checked = false;
 gleicheAdresse.addEventListener('change', function(e){
-	if (!gleicheAdresse.checked) {
-		console.log("Not gleiche check");
+	if (gleicheAdresse.checked) {
+		console.log("Gleiche check");
+		document.getElementById("step2").style.display = "block"	
+	} else if (!gleicheAdresse.checked) {
+		console.log("not Gleiche check");
+		document.getElementById("step2").style.display = "none"
 	}
 });
 
-var kreditkarte = document.getElementById("kreditkarte");
+/*var kreditkarte = document.getElementById("kreditkarte");
 kreditkarte.addEventListener('change', function(e){
 	if (kreditkarte.checked) {
 		console.log("kreditkarte check");
@@ -491,7 +555,7 @@ rechnung.addEventListener('change', function(e){
 	if (rechnung.checked) {
 		console.log("rechnung check");
 	}
-});
+});*/
 
 //Cheking the Values after proceeding to pay
 function checkDataAndPay() {
@@ -540,22 +604,22 @@ function checkDataAndPay() {
 			<div class="endMsgButtonsContainer">
 				<button class="endMsgBtn downloadBtn">TICKET HERUNTERLADEN</button>
 				<button class="endMsgBtn nachbestellenBtn">TICKETS NACHBESTELLEN</button>   
-				<button class="endMsgBtn zuruckBtnTwo" onclick="start();">ZURÜCK ZUR STARTSEITE</button>  
+				<button class="endMsgBtn zuruckBtnTwo" onclick="start()">ZURÜCK ZUR STARTSEITE</button>  
 			</div>
 			<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
 		`;
 		
 		document.getElementById("warenkorb").style.display = "none";
 		document.getElementById("step1").style.display = "none";
-		document.getElementById("step2").style.display = "block";
-		var clearFields = document.getElementById("clearField").querySelectorAll("input");
+		document.getElementById("step3").style.display = "block";
+		
 		clearFields.forEach((element) => {
 			if (element.type == "text") {
 				element.value = "";
 			} else if (element.type == "checkbox") {
 				element.checked = false;
 				}
-			});
+		});
 			
 		initialState.cart = [];
 		cartTotal.innerHTML = "";
@@ -566,32 +630,25 @@ function checkDataAndPay() {
 
 function loadBlocks(anlass) {
 	frappe.call({
-    method:"frappe.client.get_list",
-    args:{
- 	doctype:"Block",
- 	filters: [
- 	    ["meeting", "=", anlass]
- 	],
-        fields: ["official_title, location, short_name, neues_datum, time, interest_1, interest_2, interest_3, website_link"],
-    },
-    'callback': function (response) {
+		'method': "lifefair.lifefair.tickets.get_blocks",
+		'args': {
+			meeting: anlass
+		},
+		'callback': function (response) {
             blocks = response.message;
-            
-            var sortBlocks = blocks.slice().sort((a, b) => Date.parse(a.neues_datum) - Date.parse(b.neues_datum));
-			blocks = sortBlocks;
 			console.log(blocks);
             
-            var textContainer = document.querySelector(".display");
-			textContainer.innerHTML = "";
-			var currentDate = "1600-01-01";
-			blocks.forEach(function (block, i) {
-				//globalBlocks.push(block);
+            var blocksContainer = document.querySelector(".display");
+			blocksContainer.innerHTML = "";
+			var currentDate = null;
+			blocks.forEach(function (block, x) {
+				
 				var card = document.createElement('div');
 				card.classList.add('filterDiv');
 				
-				if (Date.parse(block.neues_datum) != Date.parse(currentDate) ) {
+				if (block.neues_datum !== currentDate) {
 					currentDate = block.neues_datum;
-					console.log("currentDate", currentDate);
+				
 					var dateTitle = document.createElement('div');
 					var date = block.neues_datum.split("-").reverse().join(".");
 					var day = new Date(currentDate);
@@ -600,11 +657,12 @@ function loadBlocks(anlass) {
 					dateTitle.innerHTML += `<div style="display: none" id="vormittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td> <td class='timeName'>VORMITTAG</td> </tr> </table></div>`;
 					dateTitle.innerHTML += `<div style="display: none" id="nachmittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td>  <td class='timeName'>NACHMITTAG</td> </tr> </table></div>`;
 					dateTitle.innerHTML += `<div style="display: none" id="abend_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td>  <td class='timeName'>ABEND</td> </tr> </table></div>`;
-					textContainer.appendChild(dateTitle);
+					dateTitle.innerHTML += "<div id='popUp'></div>";
+					blocksContainer.appendChild(dateTitle);
 				}
 				
 				card.innerHTML += `<div class='blockContainer'> <p class='blockTime'>  ${block.short_name} &nbsp;&nbsp;&nbsp; ${block.time} </p> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  ${block.location} </p><div>`;
-				card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png"/></a> <div class='cart' onclick="addToCart(${i})"><img class='cartImg' src="/assets/lifefair/images/cart.png"/></div> </div>`;
+				card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png"/></a> <div class='cart' onclick="addToCart(${x})"><img class='cartImg' src="/assets/lifefair/images/cart.png"/></div> </div>`;
 			
 				
 				if (block.time) {
@@ -649,58 +707,19 @@ function loadBlocks(anlass) {
 					  
 				  }
 				
-				for (const [key, value] of Object.entries(block)) {
-					
-				  switch (value) {
-					  
-				    case 'Gesundheit':
-					  card.classList.add('gesundheit');
-					  break;
-					case 'Nahrung':
-					  card.classList.add('nahrung');
-					  break;
-					case 'Bauen':	
-					  card.classList.add('bauen');
-					  break;
-					case 'Mobilität':
-					  card.classList.add('mobilität');
-					  break;
-					case 'Investieren und Finanzieren':
-					  card.classList.add('investieren');
-					  break;
-					case 'Kommunikation':
-					  card.classList.add('kommunikation');
-					  break;
-					case 'Smart Cities':
-					  card.classList.add('smart');
-					  break;
-					case 'Energie':
-					  card.classList.add('energie');
-					  break;
-					case 'Klima':
-					  card.classList.add('klima');
-					  break;
-					case 'Ressourcen':
-					  card.classList.add('ressourcen');
-					  break;
-					case 'Kreislaufwirtschaft':
-					  card.classList.add('kreislaufwirtschaft');
-					  break;
-					case 'Kultur':
-					  card.classList.add('kultur');
-					  break;
-					case 'Aviation':
-					  card.classList.add('aviation');
-					  break;
-					case 'Entrepreneurship':
-					  card.classList.add('entrepreneurship');
-					  break;
-				    default:
-					  
-					  break;
-				  }
-				}		
+				//creating the filter thema buttons and adding the class to the card
+				var blockInterest = block.interests.split(",");
+				blockInterest.forEach(function (int) {
+					addClass(card, int);
+					if (interests.indexOf(int) == -1) { 
+						interests.push(int);
+						var themBtn = document.getElementById("filterBtnContainerThree");
+						themBtn.innerHTML += `<button class="btn" onclick="filterSelection('${int}')">${int}</button>`
+					}
+				});
+						
 			});
+			//console.log("all block interes", interests);
 			
 			for (var i = 0; i < blocks.length; i++ ) {
 				if (document.getElementById(`vormittag_${blocks[i].neues_datum}`) != null) {
@@ -722,6 +741,7 @@ function loadBlocks(anlass) {
 			};
 							      
 	}});
+	
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
