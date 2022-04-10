@@ -24,7 +24,7 @@
 					
 				<div id="filterBtnContainerTwo" class="grey">
 					 <h2 class="filterTitle">DATUM</h2>
-					 <button class="btn" onclick="filterTimeSlot('all')"> SHOW ALL</button>
+					 <button class="btn" onclick="filterTimeSlot('all')">ALLE ANZEIGEN</button>
 					 <button class="btn" onclick="filterTimeSlot('vormittag')">VORMITTAG</button>
 					 <button class="btn" onclick="filterTimeSlot('nachmittag')">NACHMITTAG</button>
 					 <button class="btn" onclick="filterTimeSlot('abend')">ABEND</button>
@@ -92,15 +92,28 @@
 				</tr>
 				<tr class="tr">
 					<td class="td rechnung">
-						<h5>RECHNUNGSADRESSE</h5>
+						<h4>RECHNUNGSADRESSE</h4>
 						<div class="rechnungOptions" id="clearField">
 							<input class="checkInput" type="checkbox" id="gleiche" name="gleiche_adresse" value="GLEICHE">
-							<label class="checkLabel" for="gleiche">An die gleiche Lieferadresse schicken</label>
+							<label class="checkLabel" for="gleiche">Abweichende Rechnungsadresse</label>
 						</div>
 					</td>
-					<td class="td"></td>
+					<td class="td rechnung">
+						<h4>ZAHLUNGSMITTEL</h4>
+						<div class="zahlungsOptions" id="clearField">
+							<div class="zahlungsCheckOne">
+								<input class="checkInput" type="checkbox" id="kreditkarte" name="kreditkarte" value="KREDITKARTE">
+								<label class="checkLabel" for="kreditkarte">Kreditkarte</label>
+							</div>
+							<div class="zahlungsCheckTwo">
+								<input class="checkInput" type="checkbox" id="rechnung" name="rechnung" value="RECHNUNG">
+								<label class="checkLabel" for="rechnung">Rechnung</label>
+							</div>
+						</div>
+					</td>
 				</tr>
 			 </table>
+			 
 			 <div id="step2" style="display: none">
 				 <table class="table "  id="clearFieldTwo">
 					<tr class="tr">
@@ -147,19 +160,17 @@
 			 </div>
 			 <button class="zuruckBtnOne" onclick="start();">ZURÜCK</button>  
 		</div>
-
-		<div id="step3" style="display: none">
-			<div class="endMsgContainer"></div>
-		</div>	
 	</div>
+	<div id="step3" style="display: none"></div>	
 	<div class="scondDiv">
-		<div id="warenkorb">
+		<div id="warenkorb" class="grey">
 		  <h2 class="cartTitle">WARENKORB</h2>
 		  <div class="cartElement"></div>
 		  <div class="cartTotal"></div>
 		  <button id="btnCart" class="cartBtn"> <p onclick="checkOut()" class="cartBtnText">ZUM WARENKORB</p></button>
 		</div>
 	</div>
+	<div id="modal"></div>
 </div>	
   
 

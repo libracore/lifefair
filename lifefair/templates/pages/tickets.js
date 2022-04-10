@@ -1,6 +1,7 @@
 var blocks;
 var interests = [];
 var itemVal;
+var currentTimeSlot = "all";
 var inTheChekout = false;
 var initialState = {
 	userTypeValue : 0,
@@ -16,6 +17,8 @@ var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySele
 var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
 var clearFields = document.getElementById("clearField").querySelectorAll("input");
 var clearFieldsTwo = document.getElementById("clearFieldTwo").querySelectorAll("input");
+var popUpDiv = document.getElementById("modal");
+
 
 updateCart();
 //console.log("in the clearFields", clearFields);
@@ -56,6 +59,7 @@ function userSelection(c) {
 	document.getElementById("ichBin").classList.remove("shake");
 	document.getElementById("filterBtnContainerTwo").classList.remove("grey");
 	document.getElementById("filterBtnContainerThree").classList.remove("grey");
+	document.getElementById("warenkorb").classList.remove("grey");
 	document.querySelector(".display").classList.remove("grey");
 	btnContainerTwo.forEach((element) => element.classList.add("btnHover"));
 	document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
@@ -299,13 +303,13 @@ btnContainerTwo.forEach((element) => {
 	});
 });
 
-document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => {
+btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
 		if (initialState.userTypeValue == 0) {
 			document.getElementById("ichBin").classList.add("shake");
 		} else {
 			document.getElementById("ichBin").classList.remove("shake");
-			document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+			btnContainerThree.forEach(btn => btn.classList.remove("active"));
 			
 			var blueThema = document.querySelector(".themaBlueFilter");
 			var answer = selectedFilterDiv.contains(blueThema);
@@ -340,6 +344,7 @@ function removeFilter(li, num) {
 			btn.style.display = "block";
 		});
 		initialState.userTypeValue = 0;
+		document.getElementById("warenkorb").classList.add("grey");
 		document.getElementById("filterBtnContainerTwo").classList.add("grey");
 		document.getElementById("filterBtnContainerThree").classList.add("grey");
 		document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
@@ -402,7 +407,7 @@ function addToCart(i) {
 		if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
 		console.log("already there", blocks[i].short_name);
 		 } else if (initialState.cart.some((item) => item.neues_datum == blocks[i].neues_datum)) {
-			 popUp();
+			 popUp(i);
 		 } else {
 			initialState.cart.push({
 				 ...blocks[i], 
@@ -412,11 +417,44 @@ function addToCart(i) {
 	} 
 }
 
-function popUp() {
-	var popUp = document.getElementById("popUp");
-	popUp.innerHTML += `<div class="popUpContent"> <p class="popUpTittle">SIND SIE SICHER?</p> <p class="popUpText">Sie buchen zwei Tickets um dieselbe Uhrzeit </p> <div class="popUpBtnDiv"> <button class="popUpConfirm">BESTÄTIGEN</button> <button class="popUpCancel">UMBUCHEN</button> </div> </div>`;	
-	popUp.style.display = "block";
+function popUp(i) {
+	var currentCartItem;
+	initialState.cart.some((item) => {
+		if (item.neues_datum == blocks[i].neues_datum) currentCartItem = item;
+	})
+	popUpDiv.innerHTML = `
+			<div class="popUp"> 
+				<div class="popUpContent"> 
+					<p class="popUpTittle">SIND SIE SICHER?</p> 
+					<p class="popUpText">Sie buchen zwei Tickets um dieselbe Uhrzeit</p> 
+					<table class="popUpTable"> 					
+						<tr><td style="width: 50%;">${currentCartItem.short_name} <br> ${currentCartItem.official_title.split(":")[0]}</td> <td style="text-align: right; padding-right: 40px">${currentCartItem.neues_datum}</td> <td class="popUpImg"><div><img src="/assets/lifefair/images/minus.png" style="width:12px; "/></div></td></tr> 				
+						<tr><td></td><td></td><td></td><td></td></tr>
+						<tr> <td style="width: 50%;">${blocks[i].short_name} <br> ${blocks[i].official_title.split(":")[0]}</td> <td style="text-align: right; padding-right: 40px">${blocks[i].neues_datum}</td> <td class="popUpImg"><div><img src="/assets/lifefair/images/plus.png" style="width:12px; " /></div></td></tr>
+					</table>
+					<div class="popUpBtnDiv"> 
+						<button class="popUpConfirm" onclick="popUpConfirm(${i})">BESTÄTIGEN</button> <button class="popUpCancel" onclick="popUpCancel()">UMBUCHEN</button> 
+					</div>
+				</div>
+			</div> `;	
+	popUpDiv.style.display = "block";
 	console.log("the same day is not possible" );
+}
+
+function popUpConfirm(i) {
+	popUpDiv.style.display = "none";
+	var index = initialState.cart.findIndex(item => item.neues_datum == blocks[i].neues_datum);
+	console.log("the indeeex of iteem", index);
+	
+	initialState.cart[index] = blocks[i];
+	updateCart();
+
+	console.log("in the popUp confirm", blocks[i]);
+}
+
+function popUpCancel() {
+	popUpDiv.style.display = "none";
+	console.log("in the popUp cancel");
 }
 
 function updateCart() {
@@ -431,7 +469,7 @@ function updateTotal() {
 	if ( initialState.cart.length > 0) {
 		initialState.cart.forEach((item, i) => {
 			totalPrice += 20 * initialState.userTypeValue;
-			cartTotal.innerHTML = `<div class="alleArtikel">Alle Artikel entfernen</div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div> <div class="infoDiv"><div class="infoI">i</div>Networking Lunch inklusive <br> Übernachtung empfohlen.</div>`;	
+			cartTotal.innerHTML = `<div class="alleArtikel">Alle Artikel entfernen</div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
 		});
 	} else { cartTotal.innerHTML = ""}
 		
@@ -523,7 +561,9 @@ function start() {
 
 function checkOut() {
 	
-	if (initialState.cart.length == 0) {
+	if (initialState.userTypeValue == 0) {
+		document.getElementById("ichBin").classList.add("shake");
+	} else if (initialState.cart.length == 0) {
 		var shaketext = document.querySelector(".cartLeer")
 			shaketext.classList.add("shake");
 		} else {
@@ -547,7 +587,7 @@ gleicheAdresse.addEventListener('change', function(e){
 	}
 });
 
-/*var kreditkarte = document.getElementById("kreditkarte");
+var kreditkarte = document.getElementById("kreditkarte");
 kreditkarte.addEventListener('change', function(e){
 	if (kreditkarte.checked) {
 		console.log("kreditkarte check");
@@ -559,7 +599,7 @@ rechnung.addEventListener('change', function(e){
 	if (rechnung.checked) {
 		console.log("rechnung check");
 	}
-});*/
+});
 
 //Cheking the Values after proceeding to pay
 function checkDataAndPay() {
@@ -601,10 +641,13 @@ function checkDataAndPay() {
         document.getElementById("inputOrt").style.border = "1px solid red;"
         document.getElementById("inputOrt").focus();
     } else {
-		var endMsgContainer = document.querySelector(".endMsgContainer");
+		openStripe();
+		
+		var endMsgContainer = document.getElementById("step3");
 		endMsgContainer.innerHTML = `
-			<h2 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h2>
+			<h1 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h1>
 			<p class="endMsgTextOne"> Herzlichen Dank Herr/Frau ${lastname} ${firstname} für Ihren Ticketkauf. Ihr Ticket Nr.XXX wird Ihnen per E-mail an ${email} zugestellt.</p>
+			<div class="infoDiv"><div class="infoI">i</div>Networking Lunch inklusive Übernachtung empfohlen.</div>
 			<div class="endMsgButtonsContainer">
 				<button class="endMsgBtn downloadBtn">TICKET HERUNTERLADEN</button>
 				<button class="endMsgBtn nachbestellenBtn">TICKETS NACHBESTELLEN</button>   
@@ -631,6 +674,10 @@ function checkDataAndPay() {
     } 
 }
     
+function openStripe(){
+	window.open("https://buy.stripe.com/test_14k6sr2yB8Dq6CkfYZ", "_self");
+}
+
 
 function loadBlocks(anlass) {
 	frappe.call({
@@ -661,11 +708,10 @@ function loadBlocks(anlass) {
 					dateTitle.innerHTML += `<div style="display: none" id="vormittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td> <td class='timeName'>VORMITTAG</td> </tr> </table></div>`;
 					dateTitle.innerHTML += `<div style="display: none" id="nachmittag_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td>  <td class='timeName'>NACHMITTAG</td> </tr> </table></div>`;
 					dateTitle.innerHTML += `<div style="display: none" id="abend_${block.neues_datum}"><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td>  <td class='timeName'>ABEND</td> </tr> </table></div>`;
-					dateTitle.innerHTML += "<div id='popUp'></div>";
 					blocksContainer.appendChild(dateTitle);
 				}
 				
-				card.innerHTML += `<div class='blockContainer'> <p class='blockTime'>  ${block.short_name} &nbsp;&nbsp;&nbsp; ${block.time} </p> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  ${block.location} </p><div>`;
+				card.innerHTML += `<div class='blockContainer'> <div class='blockTime'>  <div> ${block.short_name} </div><div> ${block.time}</div> </div> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  ${block.location} </p><div>`;
 				card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png"/></a> <div class='cart' onclick="addToCart(${x})"><img class='cartImg' src="/assets/lifefair/images/cart.png"/></div> </div>`;
 			
 				
