@@ -23,11 +23,11 @@
 				</div>
 					
 				<div id="filterBtnContainerTwo" class="grey">
-					 <h2 class="filterTitle">DATUM</h2>
-					 <button class="btn" onclick="filterTimeSlot('all')">ALLE ANZEIGEN</button>
-					 <button class="btn" onclick="filterTimeSlot('vormittag')">VORMITTAG</button>
-					 <button class="btn" onclick="filterTimeSlot('nachmittag')">NACHMITTAG</button>
-					 <button class="btn" onclick="filterTimeSlot('abend')">ABEND</button>
+					 <h2 class="filterTitle" id="datumTitlte">DATUM</h2>
+					 <button class="btn" id="all" onclick="filterTimeSlot('all')">ALLE ANZEIGEN</button>
+					 <button class="btn datumBtn" onclick="filterTimeSlot('vormittag')">VORMITTAG</button>
+					 <button class="btn datumBtn" onclick="filterTimeSlot('nachmittag')">NACHMITTAG</button>
+					 <button class="btn datumBtn" onclick="filterTimeSlot('abend')">ABEND</button>
 				</div>
 
 				<div id="filterBtnContainerThree" class="grey">
@@ -35,7 +35,8 @@
 				</div>
 					
 				<div>
-					 <div class="display"></div>
+					 <div class="display grey"></div>
+					 <div class="error"></div>
 				</div>
 
 		</div>
@@ -161,7 +162,7 @@
 			 <button class="zuruckBtnOne" onclick="start();">ZURÜCK</button>  
 		</div>
 	</div>
-	<div id="step3" style="display: none"></div>	
+	<div id="step3" style="display: none; width: 6000px;"></div>	
 	<div class="scondDiv">
 		<div id="warenkorb" class="grey">
 		  <h2 class="cartTitle">WARENKORB</h2>

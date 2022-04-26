@@ -20,6 +20,16 @@
   width: 70%;
 }
 
+.error {
+  width: 100%;
+  height: 100%;
+  margin: 100px;
+  margin-left: 450px;
+  text-transform: uppercase;
+  font-size: 20px;
+  opacity: 0.5;
+}
+
 
 #modal {
   display: none;
@@ -86,7 +96,7 @@
   
 }
 
-.popUpConfirm {
+.popUpCancel {
   font-size: 12px;
   color: #E94E26;
   border: 1px #E94E26 solid;
@@ -99,7 +109,7 @@
   text-decoration: none;
 }
 
-.popUpCancel {
+.popUpConfirm {
   font-size: 12px;
   color: white;
   border: 1px #E94E26 solid;
@@ -225,7 +235,7 @@
   justify-content: end;
   position: absolute;
   bottom: 0px;
-  padding-bottom: 18px;
+  padding-bottom: 10px;
 }
 
 .cart, .info {
@@ -366,6 +376,10 @@ ul {
 .btn.active {
   background: #003764;
   color: white;
+}
+
+.datumBtn {
+  width: 200px;
 }
 
 #warenkorb {
@@ -625,7 +639,7 @@ ul {
 }
 
 .endMsgTitle {
-  margin-bottom: 15px;
+  margin-bottom: 25px;
   margin-top: 40px;
   color: #E94E26;
   font-weight: lighter;
@@ -653,6 +667,13 @@ ul {
   padding: 13px 10px;
   cursor: pointer;
   margin: 5px;
+  text-decoration: none;
+  text-align: center;
+}
+
+.endMsgBtn:hover {
+  text-decoration: none;
+  color: white;
 }
 
 .downloadBtn {
@@ -671,6 +692,6 @@ ul {
 .endMsgTextTwo {
   color: #003764;
   font-size: 25px;
-  margin-top: 25px;
+  margin-top: 35px;
   font-weight: lighter;
 }

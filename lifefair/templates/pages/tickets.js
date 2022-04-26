@@ -2,6 +2,7 @@ var blocks;
 var interests = [];
 var itemVal;
 var currentTimeSlot = "all";
+var datumFlag = 0;
 var inTheChekout = false;
 var initialState = {
 	userTypeValue : 0,
@@ -14,16 +15,18 @@ var cartbButton = document.getElementById("btnCart");
 var selectedFilterDiv = document.getElementById("selectedFilters");
 var btnContainerOne = document.getElementById("filterBtnContainerOne").querySelectorAll("button");
 var btnContainerTwo = document.getElementById("filterBtnContainerTwo").querySelectorAll("button");
-var btnContainerThree = document.getElementById("filterBtnContainerThree").querySelectorAll("button");
+var btnContainerThree = document.getElementById("filterBtnContainerThree");
 var clearFields = document.getElementById("clearField").querySelectorAll("input");
 var clearFieldsTwo = document.getElementById("clearFieldTwo").querySelectorAll("input");
 var popUpDiv = document.getElementById("modal");
+var errorContainer = document.querySelector(".error");
 
 
 updateCart();
+//endMsg();
 //console.log("in the clearFields", clearFields);
 //console.log("in the clearFieldsTwo", clearFieldsTwo);
-//filterSelection("all");
+//filterSelection("all", undefined);
 
 function userSelection(c) {
 	
@@ -70,6 +73,12 @@ function userSelection(c) {
 	userMenuDiv.innerHTML = `<div class="userMenuClass" onclick="openDropdown()"><p>${c}</p> <img class='dropdownImg' src="/assets/lifefair/images/arrow.png"/></div>`;
 	userMenu.insertBefore(userMenuDiv, userMenu.firstChild)
     document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "none");
+    
+	if ( document.getElementById("selectedFilters").contains(document.querySelector(".grey")) == true) document.getElementById("selectedFilters").classList.remove("grey");
+	// Like this all the blocks will automatically appear 
+	filterTimeSlot("all");
+	
+
 }
 
 //Dropdown Menu
@@ -78,11 +87,11 @@ function openDropdown() {
     document.querySelector(".userMenuDiv").innerHTML =  "";
 }
 
-function filterSelection(c) {
-	
+function filterSelection(c, button) {
 	if (initialState.userTypeValue == 0) {
 		document.getElementById("ichBin").classList.add("shake");
 	} else {
+	
 	    var newStr = c;
 	    var x, i;
 	    
@@ -95,11 +104,15 @@ function filterSelection(c) {
 		  removeClass(x[i], "show");
 		  if (x[i].className.indexOf(newStr) > -1) addClass(x[i], "show");
 	    }
-	    titleFilter(newStr)
-	}	
+	    titleFilter(newStr);
+	    blueThemaActive(newStr, button);    
+	}
+	
 }
 
 function titleFilter(c) {
+	
+	var flag = 0;
 	
 	if (c) {
 	
@@ -109,7 +122,10 @@ function titleFilter(c) {
 			if (document.getElementById(`vormittag_${blocks[i].neues_datum}`).querySelector(`.${c}`) == null) {
 				document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "none";					
 			} else {
-				document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "block";
+				if (currentTimeSlot == "vormittag" || currentTimeSlot == "all") {
+					flag = 1;
+					document.getElementById(`vormittag_${blocks[i].neues_datum}`).style.display = "block";
+				}
 			}
 		}
 		if (document.getElementById(`nachmittag_${blocks[i].neues_datum}`) != null) {
@@ -117,7 +133,10 @@ function titleFilter(c) {
 				document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "none";
 					
 			} else {
-				document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "block";
+				if (currentTimeSlot == "nachmittag" || currentTimeSlot == "all") {
+					flag = 1;
+					document.getElementById(`nachmittag_${blocks[i].neues_datum}`).style.display = "block";
+				}
 			}
 		} 
 		if (document.getElementById(`abend_${blocks[i].neues_datum}`) != null) {
@@ -125,24 +144,34 @@ function titleFilter(c) {
 				document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "none";
 					
 			} else {
-				document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "block";
+				if (currentTimeSlot == "abend" || currentTimeSlot == "all") {
+					flag = 1;
+					document.getElementById(`abend_${blocks[i].neues_datum}`).style.display = "block";
+				}
 			}
 		} 	
-	};
+	}
+	
+	if ( flag == 0) {
+			errorContainer.innerHTML = "Keine Ereignisse gefunden";
+	} else {
+			errorContainer.innerHTML = "";
+	}
  }
 }
 
 function filterTimeSlot(c) {
-	
+	//datumFlag == 0;
+	currentTimeSlot = c;
 	if (initialState.userTypeValue == 0) {
 		document.getElementById("ichBin").classList.add("shake");
 	} else {
 	
 		if (selectedFilterDiv.children.length == 3) {
-			document.getElementById("themaAll").classList.add("active");
-			btnContainerThree.forEach(btn => btn.classList.remove("active"));
+			errorContainer.innerHTML = "";
+			btnContainerThree.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-		}
+		} 
 		
 		for (var i = 0; i < blocks.length; i++ ) {
 		
@@ -196,6 +225,7 @@ function filterTimeSlot(c) {
 		filterSelection("all");
 	}
 }
+
 
 function addClass(element, name) {
   var newStr;
@@ -257,14 +287,12 @@ btnContainerOne.forEach((element) => {
 		}
 		
 		this.classList.add("active");
-		//this.style.display = "block";	
 	}); 
 });
 
-
 btnContainerTwo.forEach((element) => {
 	element.addEventListener("click", function(){
-		
+		//console.log("theeeeeeeeee eleeeeeemeeeent", element)
 		if (initialState.userTypeValue == 0) {
 		document.getElementById("ichBin").classList.add("shake");
 		} else {
@@ -303,13 +331,16 @@ btnContainerTwo.forEach((element) => {
 	});
 });
 
-btnContainerThree.forEach((element) => {
-	element.addEventListener("click", function(){
-		if (initialState.userTypeValue == 0) {
+function blueThemaActive(c, button = undefined) {
+	//console.log("in the blue thema button", btnContainerThree.querySelectorAll("button"));
+	
+	if (initialState.userTypeValue == 0) {
+			//console.log("in the button thema clicked", element);
 			document.getElementById("ichBin").classList.add("shake");
-		} else {
+		} else if (c != null && c.length != 0 && button != undefined) {
 			document.getElementById("ichBin").classList.remove("shake");
-			btnContainerThree.forEach(btn => btn.classList.remove("active"));
+			btnContainerThree.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+			button.classList.add("active");
 			
 			var blueThema = document.querySelector(".themaBlueFilter");
 			var answer = selectedFilterDiv.contains(blueThema);
@@ -318,25 +349,25 @@ btnContainerThree.forEach((element) => {
 				console.log("in the blueThema true")
 				var themaChildLi = selectedFilterDiv.getElementsByTagName('li')[2];
 				blueFilterBlock = document.createElement('li');
-				blueFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 3)">X</div>`;
+				blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 3)">X</div>`;
 				blueFilterBlock.classList.add('themaBlueFilter');
 				blueFilterBlock.classList.add('filter');
 				selectedFilterDiv.replaceChild(blueFilterBlock, themaChildLi);		
 			} else {
 				blueFilterBlock = document.createElement('li');
-				blueFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 3)">X</div>`;
+				blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(this, 3)">X</div>`;
 				blueFilterBlock.classList.add('themaBlueFilter');
 				blueFilterBlock.classList.add('filter');
 				selectedFilterDiv.appendChild(blueFilterBlock);
-			}
+			}			
 			
-			this.classList.add("active");
 		}	
-	});
-});
+}
 
 function removeFilter(li, num) {
+	//console.log("li", li);
 	li.parentNode.parentNode.removeChild(li.parentNode);
+	errorContainer.innerHTML = "";
 	
 	if (num == 1 ){
 		btnContainerOne.forEach(btn => {
@@ -344,21 +375,31 @@ function removeFilter(li, num) {
 			btn.style.display = "block";
 		});
 		initialState.userTypeValue = 0;
+		document.getElementById("selectedFilters").classList.add("grey");
 		document.getElementById("warenkorb").classList.add("grey");
 		document.getElementById("filterBtnContainerTwo").classList.add("grey");
 		document.getElementById("filterBtnContainerThree").classList.add("grey");
-		document.getElementById("filterBtnContainerTwo").querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
-		document.getElementById("filterBtnContainerThree").querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
 		document.querySelector(".display").classList.add("grey");
+		
+		//btnContainerTwo.forEach(btn => btn.classList.remove("active"));
+		//btnContainerThree.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+		btnContainerTwo.forEach((element) => element.classList.remove("btnHover"));
+		btnContainerThree.querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
 		document.querySelector(".userMenuDiv").innerHTML =  "";
 	} else if ( num == 2) {
+		if (selectedFilterDiv.children.length == 2) selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 		btnContainerTwo.forEach(btn => btn.classList.remove("active"));
+		btnContainerThree.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+		//datumFlag = 1;
+		
 	} else if ( num == 3) {
-		btnContainerThree.forEach(btn => btn.classList.remove("active"));
+		btnContainerThree.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+		filterTimeSlot(selectedFilterDiv.children[1].textContent.split(" ")[0].toLowerCase());		
 	}
 	
 	if (selectedFilterDiv.children.length == 1) {
-		filterTimeSlot("all")
+		filterTimeSlot("all");
+		document.getElementById('all').click();
 	}
 }
 
@@ -406,6 +447,7 @@ function addToCart(i) {
 	} else {
 		if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
 		console.log("already there", blocks[i].short_name);
+		//document.getElementById("warenkorb").classList.add("shake");
 		 } else if (initialState.cart.some((item) => item.neues_datum == blocks[i].neues_datum)) {
 			 popUp(i);
 		 } else {
@@ -433,7 +475,7 @@ function popUp(i) {
 						<tr> <td style="width: 50%;">${blocks[i].short_name} <br> ${blocks[i].official_title.split(":")[0]}</td> <td style="text-align: right; padding-right: 40px">${blocks[i].neues_datum}</td> <td class="popUpImg"><div><img src="/assets/lifefair/images/plus.png" style="width:12px; " /></div></td></tr>
 					</table>
 					<div class="popUpBtnDiv"> 
-						<button class="popUpConfirm" onclick="popUpConfirm(${i})">BESTÄTIGEN</button> <button class="popUpCancel" onclick="popUpCancel()">UMBUCHEN</button> 
+						<button class="popUpCancel" onclick="popUpCancel()">BESTÄTIGEN</button> <button class="popUpConfirm" onclick="popUpConfirm(${i})">UMBUCHEN</button> 
 					</div>
 				</div>
 			</div> `;	
@@ -575,13 +617,13 @@ function checkOut() {
 }
 
 //Watching over the checkbox in the checkout 
-var gleicheAdresse = document.getElementById("gleiche");
-gleicheAdresse.checked = false;
-gleicheAdresse.addEventListener('change', function(e){
-	if (gleicheAdresse.checked) {
+var rechnungAdresse = document.getElementById("gleiche");
+rechnungAdresse.checked = false;
+rechnungAdresse.addEventListener('change', function(e){
+	if (rechnungAdresse.checked) {
 		console.log("Gleiche check");
 		document.getElementById("step2").style.display = "block"	
-	} else if (!gleicheAdresse.checked) {
+	} else if (!rechnungAdresse.checked) {
 		console.log("not Gleiche check");
 		document.getElementById("step2").style.display = "none"
 	}
@@ -640,46 +682,83 @@ function checkDataAndPay() {
     } else if (!plzOrt) {
         document.getElementById("inputOrt").style.border = "1px solid red;"
         document.getElementById("inputOrt").focus();
-    } else {
-		openStripe();
+    } else if (rechnungAdresse.checked) {
+		rechnungAdresseChecked();
+	} else {	
 		
-		var endMsgContainer = document.getElementById("step3");
-		endMsgContainer.innerHTML = `
-			<h1 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h1>
-			<p class="endMsgTextOne"> Herzlichen Dank Herr/Frau ${lastname} ${firstname} für Ihren Ticketkauf. Ihr Ticket Nr.XXX wird Ihnen per E-mail an ${email} zugestellt.</p>
-			<div class="infoDiv"><div class="infoI">i</div>Networking Lunch inklusive Übernachtung empfohlen.</div>
-			<div class="endMsgButtonsContainer">
-				<button class="endMsgBtn downloadBtn">TICKET HERUNTERLADEN</button>
-				<button class="endMsgBtn nachbestellenBtn">TICKETS NACHBESTELLEN</button>   
-				<button class="endMsgBtn zuruckBtnTwo" onclick="start()">ZURÜCK ZUR STARTSEITE</button>  
-			</div>
-			<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
-		`;
-		
-		document.getElementById("warenkorb").style.display = "none";
-		document.getElementById("step1").style.display = "none";
-		document.getElementById("step3").style.display = "block";
-		
-		clearFields.forEach((element) => {
-			if (element.type == "text") {
-				element.value = "";
-			} else if (element.type == "checkbox") {
-				element.checked = false;
-				}
-		});
-			
-		initialState.cart = [];
-		cartTotal.innerHTML = "";
-		cartElement.innerHTML = "<p class='cartLeer'>DEIN WARENKORB IST MOMENTAN LEER</p>";
-    } 
-}
-    
-function openStripe(){
-	window.open("https://buy.stripe.com/test_14k6sr2yB8Dq6CkfYZ", "_self");
+		frappe.call({
+        'method': 'lifefair.lifefair.tickets.create_ticket',
+        'args': {
+            'lastname': lastname, 
+            'firstname': firstname,
+            'firma': firma,
+            'funktion': funktion,
+            'phone': phone,
+            'email': email,  
+            'adresse': adresse, 
+            'plzOrt': plzOrt,
+            'warenkorb': initialState.cart 
+        },
+        'callback': function(response) {
+            var registrationen = response.message;
+            openStripe();
+            // invoice created
+            //var payment = response.message;          
+        }
+    });
+	}
 }
 
+//Cheking the Values of Rechnung Adresse if checked
+function rechnungAdresseChecked() {
+	console.log("rechnungAdresseChecked");
+	
+	var lastnameTwo = document.getElementById("inputSurnameTwo").value;
+	var firstnameTwo = document.getElementById("inputFirstnameTwo").value;
+	var firmaTwo = document.getElementById("inputFirmaTwo").value;
+	var funktionTwo = document.getElementById("inputFunktionTwo").value;
+	var phoneTwo = document.getElementById("inputPhoneTwo").value;
+    var emailTwo = document.getElementById("inputEmailTwo").value;  
+    var adresseTwo = document.getElementById("inputAdresseTwo").value;
+    var plzOrtTwo = document.getElementById("inputOrtTwo").value;
+    
+    console.log(lastnameTwo, firstnameTwo, firmaTwo, funktionTwo, phoneTwo, emailTwo, adresseTwo, plzOrtTwo);
+    
+    if (!lastnameTwo) {
+        document.getElementById("inputSurnameTwo").style.border = "1px solid red;"
+        document.getElementById("inputSurnameTwo").focus();
+    } else if (!firstnameTwo) {
+        document.getElementById("inputFirstnameTwo").style.border = "1px solid red;"
+        document.getElementById("inputFirstnameTwo").focus();
+    } else if (!firmaTwo) {
+        document.getElementById("inputFirmaTwo").style.border = "1px solid red;"
+        document.getElementById("inputFirmaTwo").focus();
+    } else if (!funktionTwo) {
+        document.getElementById("inputFunktionTwo").style.border = "1px solid red;"
+        document.getElementById("inputFunktionTwo").focus();
+    } else if (!phoneTwo) {
+        document.getElementById("inputPhoneTwo").style.border = "1px solid red;"
+        document.getElementById("inputPhoneTwo").focus();
+    } else if (!emailTwo) {
+        document.getElementById("inputEmailTwo").style.border = "1px solid red;"
+        document.getElementById("inputEmailTwo").focus();
+    } else if (!adresseTwo) {
+        document.getElementById("inputAdresseTwo").style.border = "1px solid red;"
+        document.getElementById("inputAdresseTwo").focus();
+    } else if (!plzOrtTwo) {
+        document.getElementById("inputOrtTwo").style.border = "1px solid red;"
+        document.getElementById("inputOrtTwo").focus();
+    } else {	
+		openStripe();
+	} 
+}
+   
+function openStripe(){
+	window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+}
 
 function loadBlocks(anlass) {
+	console.log(anlass);
 	frappe.call({
 		'method': "lifefair.lifefair.tickets.get_blocks",
 		'args': {
@@ -755,7 +834,7 @@ function loadBlocks(anlass) {
 							
 							}
 					  
-				  }
+				  } 
 				
 				//creating the filter thema buttons and adding the class to the card
 				var blockInterest = block.interests.split(",");
@@ -764,7 +843,7 @@ function loadBlocks(anlass) {
 					if (interests.indexOf(int) == -1) { 
 						interests.push(int);
 						var themBtn = document.getElementById("filterBtnContainerThree");
-						themBtn.innerHTML += `<button class="btn" onclick="filterSelection('${int}')">${int}</button>`
+						themBtn.innerHTML += `<button class="btn" onclick="filterSelection('${int}', this)">${int}</button>`
 					}
 				});
 						
@@ -790,8 +869,51 @@ function loadBlocks(anlass) {
 				} 	
 			};
 							      
-	}});
+		}
+	});
 	
+}
+
+function loadEndMsg() {
+	
+	document.getElementById("warenkorb").style.display = "none";
+	document.getElementById("step0").style.display = "none";
+	document.getElementById("step1").style.display = "none";
+	document.getElementById("step3").style.display = "block";
+	
+	frappe.call({
+		'method': "lifefair.lifefair.tickets.get_person",
+		'callback': function (response) {
+            person = response.message;
+			console.log('the person', person[0]);
+			
+			var endMsgContainer = document.getElementById("step3");
+			endMsgContainer.innerHTML = `
+				<h1 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h1>
+				<p class="endMsgTextOne"> Herzlichen Dank Herr/Frau ${person[0].full_name} für Ihren Ticketkauf. Ihr Ticket Nr.${person[0].name}  wird Ihnen per E-mail an ${person[0].email}  zugestellt.</p>
+				<div class="infoDiv"><div class="infoI">i</div>Networking Lunch inklusive Übernachtung empfohlen.</div>
+				<div class="endMsgButtonsContainer">
+					<a href="/assets/lifefair/images/info.png" class="endMsgBtn downloadBtn" download>TICKET HERUNTERLADEN</a>
+					<button class="endMsgBtn nachbestellenBtn">TICKETS NACHBESTELLEN</button>
+					<a href="https://sges.ch/" target="_self" class="endMsgBtn zuruckBtnTwo">ZURÜCK ZUR STARTSEITE</a>   
+					
+				</div>
+				<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
+			`;
+		}
+	});
+	
+		clearFields.forEach((element) => {
+			if (element.type == "text") {
+				element.value = "";
+			} else if (element.type == "checkbox") {
+				element.checked = false;
+				}
+		});
+			
+		initialState.cart = [];
+		cartTotal.innerHTML = "";
+		cartElement.innerHTML = "<p class='cartLeer'>DEIN WARENKORB IST MOMENTAN LEER</p>";
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {
@@ -812,9 +934,14 @@ function get_arguments() {
                 args[kv[0]] = decodeURI(kv[1]);
             }
         });
+        console.log('args', args )
         if (args['anlass']) {
-            // fetch payment status
-            loadBlocks(args['anlass']);
-        }
+			if (args['anlass'] == 'ticketkauf') {
+				loadEndMsg();
+			} else {
+				console.log('args with anlass', args['anlass'] )
+				loadBlocks(args['anlass']);
+			}
+		}
     } 
 }
