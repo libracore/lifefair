@@ -31,7 +31,7 @@ def get_blocks(meeting):
 	return data
 
 @frappe.whitelist(allow_guest=True) 
-def create_ticket(firstname, lastname, adresse, email, phone, firma, funktion, plzOrt, warenkorb):
+def create_ticket(rechAdress, herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt, warenkorb):
 	new_regs = []
 	# ticket is not in the database, create
 	# check email address to find person
@@ -54,7 +54,7 @@ def create_ticket(firstname, lastname, adresse, email, phone, firma, funktion, p
 		person.save()
 	else:
 		# person not found, create new person
-		new_person = create_person(company=firma,first_name=firstname, last_name=lastname, email=email, phone=phone, function=funktion, street=adresse, pincode=plzOrt)
+		new_person = create_person(company=firma,first_name=firstname, last_name=lastname, email=email, title=akademishTitle, salutation=herrFrau,  phone=phone, function=funktion, street=adresse, pincode=plzOrt)
 		if new_person:
 			person_name = new_person.name
 		else:
@@ -63,6 +63,9 @@ def create_ticket(firstname, lastname, adresse, email, phone, firma, funktion, p
 		basestring
 	except NameError:
 		basestring = str
+	
+	if rechAdress == "No":
+		create_invoice(company=firma,first_name=firstname, last_name=lastname, email=email, salutation=herrFrau, phone=phone, function=funktion, street=adresse, pincode=plzOrt, cart=warenkorb)
 
 	if isinstance(warenkorb, basestring):
 		warenkorb = json.loads(warenkorb)
@@ -164,6 +167,30 @@ def create_person(first_name, last_name, email, title=None, salutation=None, com
 			frappe.log_error("Import Xing Error", "Insert Person {1} {2} failed. {3}: {0}".format(e, first_name, last_name, source))      
 	#frappe.log_error(person_name)
 	return person_name
+
+@frappe.whitelist(allow_guest=True) 
+def create_invoice(first_name, last_name, email, salutation=None, company=None, function=None, phone=None,
+	street=None, pincode=None, cart=None, source="from xing"):
+	print(first_name, last_name, email)
+	#sinv = frappe.get_doc({
+	#	'doctype': "Sales Invoice",
+	#	'posting_date': today(),
+	#	'first_name': first_name,
+	#	'last_name': last_name,
+	#	'email': email,
+	#	'company': company,
+	#	"items": [
+    #            {
+    #                "item_code": 002,
+    #                "qty": 1,
+    #                "rate": 50
+    #            }
+    #        ]
+	#}).get_signature() 
+	#sinv.insert()
+	#sinv.save()
+	#sinv.submit()
+	#return sinv
 
 @frappe.whitelist(allow_guest=True) 
 def get_person():

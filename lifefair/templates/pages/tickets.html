@@ -5,7 +5,7 @@
 				
 				<ul id="selectedFilters"></ul>
 				
-				<div id="filterBtnContainerOne">
+				<div id="filterBtnContainerUSER">
 					<h2 class="filterTitle" id="ichBin">TICKET FÜR ...</h2>
 					<div class="btnOrange"  style="display: none"></div>
 					<li id="userMenu">
@@ -21,16 +21,20 @@
 						</ul>
 					</li>
 				</div>
+				
+				<div id="filterBtnContainerDATUM" class="grey">
+					 <h2 class="filterTitle" id="datum">DATUM</h2>
+				</div>
 					
-				<div id="filterBtnContainerTwo" class="grey">
-					 <h2 class="filterTitle" id="datumTitlte">DATUM</h2>
-					 <button class="btn" id="all" onclick="filterTimeSlot('all')">ALLE ANZEIGEN</button>
-					 <button class="btn datumBtn" onclick="filterTimeSlot('vormittag')">VORMITTAG</button>
-					 <button class="btn datumBtn" onclick="filterTimeSlot('nachmittag')">NACHMITTAG</button>
-					 <button class="btn datumBtn" onclick="filterTimeSlot('abend')">ABEND</button>
+				<div id="filterBtnContainerZEIT" class="grey">
+					 <h2 class="filterTitle" id="zeit">ZEIT</h2>
+					 
+					 <button class="btn widthBtn" onclick="filterTimeSlot('vormittag')">VORMITTAG</button>
+					 <button class="btn widthBtn" onclick="filterTimeSlot('nachmittag')">NACHMITTAG</button>
+					 <button class="btn widthBtn" onclick="filterTimeSlot('abend')">ABEND</button>
 				</div>
 
-				<div id="filterBtnContainerThree" class="grey">
+				<div id="filterBtnContainerTHEMA" class="grey">
 					 <h2 class="filterTitle">THEMA</h2>
 				</div>
 					
@@ -41,17 +45,27 @@
 
 		</div>
 		<div id="step1" style="display: none">
-			<h2 class="tableTitle">CHECKOUT</h2>
-			<h5 class="tableTitleTwo">IHRE ANGABEN</h5>
+			<h1 class="tableTitle">CHECKOUT</h1>
+			<h4 class="tableTitleTwo">IHRE ANGABEN</h4>
 			 <table class="table"  id="clearField">
-				<tr class="tr">
-					<td class="td">	
-						<span class="tableSpan">Name</span>
-						<input class="tableInput" type="text" id="inputSurname" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
+				 <tr class="tr">
+					<td class="td">
+						<span class="tableSpan">Herr/Frau</span>
+						<input class="tableInput" type="text" id="inputHerrFrau" placeholder="Herr/Frau" class="input-xlarge" title="Der Title ist zwingend!" required/>
 					</td>
+					<td class="td">	
+						<span class="tableSpan">Akademische Titel</span>
+						<input class="tableInput" type="text" id="inputTitle" placeholder="Akademische Titel" class="input-xlarge" title="Der Article ist zwingend!" required>      
+					</td>
+				</tr>
+				<tr class="tr">
 					<td class="td">
 						<span class="tableSpan">Vorname</span>
 						<input class="tableInput" type="text" id="inputFirstname" placeholder="Vorname" class="input-xlarge" title="Der Vorname ist zwingend!" required/>
+					</td>
+					<td class="td">	
+						<span class="tableSpan">Name</span>
+						<input class="tableInput" type="text" id="inputSurname" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
 					</td>
 				</tr>
 				<tr class="tr">
@@ -93,23 +107,23 @@
 				</tr>
 				<tr class="tr">
 					<td class="td rechnung">
-						<h4>RECHNUNGSADRESSE</h4>
-						<div class="rechnungOptions" id="clearField">
-							<input class="checkInput" type="checkbox" id="gleiche" name="gleiche_adresse" value="GLEICHE">
-							<label class="checkLabel" for="gleiche">Abweichende Rechnungsadresse</label>
-						</div>
-					</td>
-					<td class="td rechnung">
-						<h4>ZAHLUNGSMITTEL</h4>
+						<h3>ZAHLUNGSMITTEL</h3>
 						<div class="zahlungsOptions" id="clearField">
 							<div class="zahlungsCheckOne">
-								<input class="checkInput" type="checkbox" id="kreditkarte" name="kreditkarte" value="KREDITKARTE">
+								<input class="checkInput" type="radio" id="kreditkarte" name="zahlungsmittel" value="KREDITKARTE" checked>
 								<label class="checkLabel" for="kreditkarte">Kreditkarte</label>
 							</div>
 							<div class="zahlungsCheckTwo">
-								<input class="checkInput" type="checkbox" id="rechnung" name="rechnung" value="RECHNUNG">
+								<input class="checkInput" type="radio" id="rechnung" name="zahlungsmittel" value="RECHNUNG">
 								<label class="checkLabel" for="rechnung">Rechnung</label>
 							</div>
+						</div>
+					</td>
+					<td class="td rechnung">
+						<h3>RECHNUNGSADRESSE</h3>
+						<div class="rechnungOptions" id="clearField">
+							<input class="checkInput" type="checkbox" id="gleiche" name="gleiche_adresse" value="GLEICHE">
+							<label class="checkLabel" for="gleiche">Abweichende Rechnungsadresse</label>
 						</div>
 					</td>
 				</tr>
@@ -118,13 +132,21 @@
 			 <div id="step2" style="display: none">
 				 <table class="table "  id="clearFieldTwo">
 					<tr class="tr">
-						<td class="td">	
-							<span class="tableSpan">Name</span>
-							<input class="tableInput" type="text" id="inputSurnameTwo" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
+						<td class="td">
+							<span class="tableSpan">Herr/Frau</span>
+							<input class="tableInput" type="text" id="inputHerrFrauTwo" placeholder="Herr/Frau" class="input-xlarge" title="Der Title ist zwingend!" required/>
 						</td>
+						<td class="td">
+						</td>
+					</tr>
+					<tr class="tr">
 						<td class="td">
 							<span class="tableSpan">Vorname</span>
 							<input class="tableInput" type="text" id="inputFirstnameTwo" placeholder="Vorname" class="input-xlarge" title="Der Vorname ist zwingend!" required/>
+						</td>
+						<td class="td">	
+							<span class="tableSpan">Name</span>
+							<input class="tableInput" type="text" id="inputSurnameTwo" placeholder="Name" class="input-xlarge" title="Der Nachname ist zwingend!" required>      
 						</td>
 					</tr>
 					<tr class="tr">
@@ -159,7 +181,6 @@
 					</tr>
 				 </table>
 			 </div>
-			 <button class="zuruckBtnOne" onclick="start();">ZURÜCK</button>  
 		</div>
 	</div>
 	<div id="step3" style="display: none; width: 6000px;"></div>	
@@ -170,6 +191,7 @@
 		  <div class="cartTotal"></div>
 		  <button id="btnCart" class="cartBtn"> <p onclick="checkOut()" class="cartBtnText">ZUM WARENKORB</p></button>
 		</div>
+		<button class="zuruckBtnOne positionFixed" style="display: none;" onclick="start();">Zurück zur Auswahl der Programmteile</button>
 	</div>
 	<div id="modal"></div>
 </div>	
