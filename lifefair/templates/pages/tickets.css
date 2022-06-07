@@ -462,17 +462,12 @@ ul {
 
 .infoDiv {
   width: 100%;
-  display: flex;
-  font-weight: normal;
-  align-content: center;
   font-size: 13px;
-  line-height: 1.5;
 }
 
 .infoI {
   border: 2px solid #003764;
   border-radius: 100%;
-  margin-right: 15px;
   font-weight: bold;
   width: 20px;
   height: 20px;
@@ -480,7 +475,8 @@ ul {
   justify-content: center;
   align-content: center;
   font-size: 10px;
-  margin-top: 12px;
+  margin-top: 11px;
+  position: absolute;
 
 }
 
@@ -639,7 +635,7 @@ ul {
 .positionFixed {
   position: fixed;
   margin-left: 780px;
-  margin-top: 450px;
+  margin-top: 540px;
   width: 320px;
   text-transform: uppercase;
 }

@@ -6,16 +6,19 @@ var currentDatum = null;
 var currentTimeSlot = "all";
 var currentZeit = null;
 var currentThema = null;
+var rechAdd = "notDone";
 //var datumFlag = 0;
 var inTheChekout = false;
 var initialState = {
 	userTypeValue : JSON.parse(localStorage.getItem("USER")) || [],
 	cart : JSON.parse(localStorage.getItem("CART")) || [],
+	//cartTwo: JSON.parse(localStorage.getItem("CARTTWO")) || [],
 	addressOne: JSON.parse(localStorage.getItem("ADDRESSONE")) || [],
 	addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
-	cartTwo: JSON.parse(localStorage.getItem("CARTTWO")) || [],
 	info: JSON.parse(localStorage.getItem("INFO")) || [],
-	rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || [],
+	rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || "No",
+	stripe: JSON.parse(localStorage.getItem("STRIPE")) || "Yes",
+	ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
 };
 var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ];
 
@@ -978,6 +981,8 @@ rechnungAdresse.addEventListener('change', function(e){
 var kreditkarte = document.getElementById("kreditkarte");
 kreditkarte.addEventListener('change', function(e){
 	if (kreditkarte.checked) {
+		initialState.stripe = "Yes";
+		localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 		console.log("kreditkarte check");
 	}
 });
@@ -985,6 +990,8 @@ kreditkarte.addEventListener('change', function(e){
 var rechnung = document.getElementById("rechnung");
 rechnung.addEventListener('change', function(e){
 	if (rechnung.checked) {
+		initialState.stripe = "No";
+		localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 		console.log("rechnung check");
 	}
 });
@@ -993,191 +1000,302 @@ rechnung.addEventListener('change', function(e){
 function checkDataAndPay() {
 	console.log("in the pay func");
 	
-	var herrFrau = document.getElementById("inputHerrFrau").value;
-	var akademishTitle = document.getElementById("inputTitle").value;
-	var lastname = document.getElementById("inputSurname").value;
-	var firstname = document.getElementById("inputFirstname").value;
-	var firma = document.getElementById("inputFirma").value;
-	var funktion = document.getElementById("inputFunktion").value;
-	var phone = document.getElementById("inputPhone").value;
-    var email = document.getElementById("inputEmail").value;  
-    var adresse = document.getElementById("inputAdresse").value;
-    var plzOrt = document.getElementById("inputOrt").value;
+	if (initialState.rechCheck == "No") {
+		initialState.addressTwo = [];
+		localStorage.setItem("ADDRESSTWO", JSON.stringify(initialState.addressTwo));
+	}
+	
+	var herrFrau = document.getElementById("inputHerrFrau");
+	var akademishTitle = document.getElementById("inputTitle");
+	var lastname = document.getElementById("inputSurname");
+	var firstname = document.getElementById("inputFirstname");
+	var firma = document.getElementById("inputFirma");
+	var funktion = document.getElementById("inputFunktion");
+	var phone = document.getElementById("inputPhone");
+    var email = document.getElementById("inputEmail");  
+    var adresse = document.getElementById("inputAdresse");
+    var land = document.getElementById("inputLand");
+    var plzOrt = document.getElementById("inputOrt");
     
-    console.log(lastname, firstname, firma, funktion, phone, email, adresse, plzOrt);
+    //console.log(lastname, firstname, firma, funktion, phone, email, adresse, plzOrt);
+    //var inputsArr = [herrFrau, akademishTitle, lastname, firstname, funktion, phone, email, adresse, plzOrt]
     
-    if (!herrFrau) {
-        document.getElementById("inputHerrFrau").style.border = "1px solid red;"
-        document.getElementById("inputHerrFrau").focus();
-    } else if (!akademishTitle) {
-        document.getElementById("inputTitle").style.border = "1px solid red;"
-        document.getElementById("inputTitle").focus();
-    } else if (!lastname) {
-        document.getElementById("inputSurname").style.border = "1px solid red;"
-        document.getElementById("inputSurname").focus();
-    } else if (!firstname) {
-        document.getElementById("inputFirstname").style.border = "1px solid red;"
-        document.getElementById("inputFirstname").focus();
-    } else if (!firma) {
-        document.getElementById("inputFirma").style.border = "1px solid red;"
-        document.getElementById("inputFirma").focus();
-    } else if (!funktion) {
-        document.getElementById("inputFunktion").style.border = "1px solid red;"
-        document.getElementById("inputFunktion").focus();
-    } else if (!phone) {
-        document.getElementById("inputPhone").style.border = "1px solid red;"
-        document.getElementById("inputPhone").focus();
-    } else if (!email) {
-        document.getElementById("inputEmail").style.border = "1px solid red;"
-        document.getElementById("inputEmail").focus();
-    } else if (!adresse) {
-        document.getElementById("inputAdresse").style.border = "1px solid red;"
-        document.getElementById("inputAdresse").focus();
-    } else if (!plzOrt) {
-        document.getElementById("inputOrt").style.border = "1px solid red;"
-        document.getElementById("inputOrt").focus();
-    } else if (rechnungAdresse.checked) {
-		rechnungAdresseChecked(herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt);
+    //~ if (inputsArr.some((input) => !input.value)) {
+		//~ checkValueField(inputsArr)
+	//~ } 
+	
+	if (!herrFrau.value) {
+		herrFrau.style.border = "1px solid red;"
+		herrFrau.focus();
+	} else if (!lastname.value) {
+		lastname.style.border = "1px solid red;"
+		lastname.focus();
+	} else if (!firstname.value) {
+		firstname.style.border = "1px solid red;"
+		firstname.focus();
+	} else if (!funktion.value) {
+		funktion.style.border = "1px solid red;"
+		funktion.focus();
+	}  else if (!phone.value) {
+		phone.style.border = "1px solid red;"
+		phone.focus();
+	} else if (!email.value) {
+		email.style.border = "1px solid red;"
+		email.focus();
+	} else if (!adresse.value) {
+		adresse.style.border = "1px solid red;"
+		adresse.focus();
+	} else if (!land.value) {
+		land.style.border = "1px solid red;"
+		land.focus();
+	} else if (!plzOrt.value) {
+		plzOrt.style.border = "1px solid red;"
+		plzOrt.focus();
+	} else if ((rechnungAdresse.checked) && (rechAdd == "notDone")) {
+		//~ //rechnungAdresseChecked(herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt);
+		console.log("rechnungAdresseChecked");
+		
+		var herrFrauTwo = document.getElementById("inputHerrFrauTwo");
+		var lastnameTwo = document.getElementById("inputSurnameTwo");
+		var firstnameTwo = document.getElementById("inputFirstnameTwo");
+		var firmaTwo = document.getElementById("inputFirmaTwo");
+		var funktionTwo = document.getElementById("inputFunktionTwo");
+		var phoneTwo = document.getElementById("inputPhoneTwo");
+		var emailTwo = document.getElementById("inputEmailTwo");  
+		var adresseTwo = document.getElementById("inputAdresseTwo");
+		var landTwo = document.getElementById("inputLandTwo");
+		var plzOrtTwo = document.getElementById("inputOrtTwo");
+		
+		//console.log(lastnameTwo, firstnameTwo, firmaTwo, phoneTwo, emailTwo, adresseTwo, plzOrtTwo)
+		//var inputsArrTwo = [herrFrauTwo, lastnameTwo, firstnameTwo, firmaTwo, funktionTwo, phoneTwo, emailTwo, adresseTwo, plzOrtTwo];
+		
+		if (!herrFrauTwo.value) {
+			herrFrauTwo.style.border = "1px solid red;"
+			herrFrauTwo.focus();
+		} else if (!lastnameTwo.value) {
+			lastnameTwo.style.border = "1px solid red;"
+			lastnameTwo.focus();
+		} else if (!firstnameTwo.value) {
+			firstnameTwo.style.border = "1px solid red;"
+			firstnameTwo.focus();
+		} else if (!firmaTwo.value) {
+			firmaTwo.style.border = "1px solid red;"
+			firmaTwo.focus();
+		} else if (!funktionTwo.value) {
+			funktionTwo.style.border = "1px solid red;"
+			funktionTwo.focus();
+		}  else if (!phoneTwo.value) {
+			phoneTwo.style.border = "1px solid red;"
+			phoneTwo.focus();
+		} else if (!emailTwo.value) {
+			emailTwo.style.border = "1px solid red;"
+			emailTwo.focus();
+		} else if (!adresseTwo.value) {
+			adresseTwo.style.border = "1px solid red;"
+			adresseTwo.focus();
+		} else if (!landTwo.value) {
+			landTwo.style.border = "1px solid red;"
+			landTwo.focus();
+		} else if (!plzOrtTwo.value) {
+			plzOrtTwo.style.border = "1px solid red;"
+			plzOrtTwo.focus();
+		} else {
+			
+			var plzTwo = plzOrtTwo.value.split(" ")[0];
+			var ortTwo = plzOrtTwo.value.split(" ").splice(1).join(" ");
+			
+			//initialState.cartTwo = initialState.cart;
+			//localStorage.setItem("CARTTWO", JSON.stringify(initialState.cartTwo));
+			initialState.addressTwo = {
+				'herrFrau': herrFrauTwo.value, 
+				'firstname': firstnameTwo.value,
+				'lastname': lastnameTwo.value, 
+				'adresse': adresseTwo.value,
+				'email': emailTwo.value,
+				'phone': phoneTwo.value,
+				'firma': firmaTwo.value,
+				'funktion': funktionTwo.value,
+				'land': landTwo.value,
+				'plz': plzTwo,
+				'ort': ortTwo
+			}
+			localStorage.setItem("ADDRESSTWO", JSON.stringify(initialState.addressTwo));
+			rechAdd = "done";
+			checkDataAndPay();
+		}
+		
 	} else {
 		
-		initialState.cartTwo = initialState.cart;
-		localStorage.setItem("CARTTWO", JSON.stringify(initialState.cartTwo));
-		initialState.addressOne.push(herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt);
+		var plz = plzOrt.value.split(" ")[0];
+		var ort = plzOrt.value.split(" ").splice(1).join(" ");
+		//initialState.cartTwo = initialState.cart;
+		//localStorage.setItem("CARTTWO", JSON.stringify(initialState.cartTwo));
+		initialState.addressOne = {
+				'herrFrau': herrFrau.value,
+				'akademishTitle': akademishTitle.value,
+				'firstname': firstname.value,
+				'lastname': lastname.value, 
+				'adresse': adresse.value,
+				'email': email.value,
+				'phone': phone.value,
+				'firma': firma.value,
+				'funktion': funktion.value,
+				'land': land.value,
+				'plz': plz,
+				'ort': ort
+		}
 		localStorage.setItem("ADDRESSONE", JSON.stringify(initialState.addressOne));
 		
-		frappe.call({
+		//~ if (rechnung.checked) {
+			//~ console.log("in the rechnuuuung")
+		createTicket();
+		//~ } else if ( initialState.stripe == "Yes" ){ 
+			//~ console.log("in the stripeeee")
+			//~ createTicket();
+			//~ openStripe();
+		//~ }
+	}
+}
+
+function createTicket() {
+	//console.log("in the caaaaalll")
+	frappe.call({
 			'method': 'lifefair.lifefair.tickets.create_ticket',
 			'args': {
-				'rechAdress': "No",
-				'herrFrau': herrFrau,
-				'akademishTitle': akademishTitle,
-				'lastname': lastname, 
-				'firstname': firstname,
-				'firma': firma,
-				'funktion': funktion,
-				'phone': phone,
-				'email': email,  
-				'adresse': adresse, 
-				'plzOrt': plzOrt,
+				'stripe': initialState.stripe,
+				'addressOne': initialState.addressOne,
+				'addressTwo': initialState.addressTwo,
 				'warenkorb': initialState.cart 
 			},
 			'callback': function(response) {
-				var registrationen = response.message;
-				if (rechnung.checked) {
+				var res = response.message;
+				console.log("reees", res[0].ticket_number)
+				initialState.ticketNum = (res[0].ticket_number);
+				localStorage.setItem("TICKETS", JSON.stringify(initialState.ticketNum));
+				
+				if ( initialState.stripe == "No" ) {
 					window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self");
-					console.log("in the create ticket callback")
-				} else { 
+				} else {
 					openStripe();
 				}
 			}
 		});
-	}
 }
+
+//~ function checkValueField(arr) {
+	//~ arr.some((input) => {
+		//~ if (!input.value) {
+			//~ input.style.border = "1px solid red;"
+			//~ input.focus();
+		//~ }
+	//~ }) 
+//~ }
 
 //Cheking the Values of Rechnung Adresse if checked
-function rechnungAdresseChecked(herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt) {
-	console.log("rechnungAdresseChecked");
+//~ function rechnungAdresseChecked(herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt) {
+	//~ console.log("rechnungAdresseChecked");
 	
-	var herrFrauTwo = document.getElementById("inputHerrFrauTwo").value;
-	var lastnameTwo = document.getElementById("inputSurnameTwo").value;
-	var firstnameTwo = document.getElementById("inputFirstnameTwo").value;
-	var firmaTwo = document.getElementById("inputFirmaTwo").value;
-	var funktionTwo = document.getElementById("inputFunktion").value;
-	var phoneTwo = document.getElementById("inputPhoneTwo").value;
-    var emailTwo = document.getElementById("inputEmailTwo").value;  
-    var adresseTwo = document.getElementById("inputAdresseTwo").value;
-    var plzOrtTwo = document.getElementById("inputOrtTwo").value;
+	//~ var herrFrauTwo = document.getElementById("inputHerrFrauTwo").value;
+	//~ var lastnameTwo = document.getElementById("inputSurnameTwo").value;
+	//~ var firstnameTwo = document.getElementById("inputFirstnameTwo").value;
+	//~ var firmaTwo = document.getElementById("inputFirmaTwo").value;
+	//~ var funktionTwo = document.getElementById("inputFunktionTwo").value;
+	//~ var phoneTwo = document.getElementById("inputPhoneTwo").value;
+    //~ var emailTwo = document.getElementById("inputEmailTwo").value;  
+    //~ var adresseTwo = document.getElementById("inputAdresseTwo").value;
+    //~ var plzOrtTwo = document.getElementById("inputOrtTwo").value;
     
-    console.log(lastnameTwo, firstnameTwo, firmaTwo, phoneTwo, emailTwo, adresseTwo, plzOrtTwo);
+    //~ console.log(lastnameTwo, firstnameTwo, firmaTwo, phoneTwo, emailTwo, adresseTwo, plzOrtTwo);
     
-    if (!herrFrauTwo) {
-        document.getElementById("inputHerrFrauTwo").style.border = "1px solid red;"
-        document.getElementById("inputHerrFrauTwo").focus();
-    } else if (!lastnameTwo) {
-        document.getElementById("inputSurnameTwo").style.border = "1px solid red;"
-        document.getElementById("inputSurnameTwo").focus();
-    } else if (!firstnameTwo) {
-        document.getElementById("inputFirstnameTwo").style.border = "1px solid red;"
-        document.getElementById("inputFirstnameTwo").focus();
-    } else if (!firmaTwo) {
-        document.getElementById("inputFirmaTwo").style.border = "1px solid red;"
-        document.getElementById("inputFirmaTwo").focus();
-    } else if (!funktionTwo) {
-        document.getElementById("inputFunktionTwo").style.border = "1px solid red;"
-        document.getElementById("inputFunktionTwo").focus();
-    }  else if (!phoneTwo) {
-        document.getElementById("inputPhoneTwo").style.border = "1px solid red;"
-        document.getElementById("inputPhoneTwo").focus();
-    } else if (!emailTwo) {
-        document.getElementById("inputEmailTwo").style.border = "1px solid red;"
-        document.getElementById("inputEmailTwo").focus();
-    } else if (!adresseTwo) {
-        document.getElementById("inputAdresseTwo").style.border = "1px solid red;"
-        document.getElementById("inputAdresseTwo").focus();
-    } else if (!plzOrtTwo) {
-        document.getElementById("inputOrtTwo").style.border = "1px solid red;"
-        document.getElementById("inputOrtTwo").focus();
-    } else {
+    //~ if (!herrFrauTwo) {
+        //~ document.getElementById("inputHerrFrauTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputHerrFrauTwo").focus();
+    //~ } else if (!lastnameTwo) {
+        //~ document.getElementById("inputSurnameTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputSurnameTwo").focus();
+    //~ } else if (!firstnameTwo) {
+        //~ document.getElementById("inputFirstnameTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputFirstnameTwo").focus();
+    //~ } else if (!firmaTwo) {
+        //~ document.getElementById("inputFirmaTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputFirmaTwo").focus();
+    //~ } else if (!funktionTwo) {
+        //~ document.getElementById("inputFunktionTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputFunktionTwo").focus();
+    //~ }  else if (!phoneTwo) {
+        //~ document.getElementById("inputPhoneTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputPhoneTwo").focus();
+    //~ } else if (!emailTwo) {
+        //~ document.getElementById("inputEmailTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputEmailTwo").focus();
+    //~ } else if (!adresseTwo) {
+        //~ document.getElementById("inputAdresseTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputAdresseTwo").focus();
+    //~ } else if (!plzOrtTwo) {
+        //~ document.getElementById("inputOrtTwo").style.border = "1px solid red;"
+        //~ document.getElementById("inputOrtTwo").focus();
+    //~ } else {
 		
-		initialState.cartTwo = initialState.cart;
-		localStorage.setItem("CARTTWO", JSON.stringify(initialState.cartTwo));
-		initialState.addressOne.push(herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt);
-		localStorage.setItem("ADDRESSONE", JSON.stringify(initialState.addressOne));
-		initialState.addressTwo.push(herrFrauTwo, firstnameTwo, lastnameTwo, adresseTwo, emailTwo, phoneTwo, firmaTwo, funktionTwo, plzOrtTwo);
-		localStorage.setItem("ADDRESSTWO", JSON.stringify(initialState.addressTwo));
+		//~ //initialState.cartTwo = initialState.cart;
+		//~ //localStorage.setItem("CARTTWO", JSON.stringify(initialState.cartTwo));
+		//~ initialState.addressOne = [ herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt];
+		//~ localStorage.setItem("ADDRESSONE", JSON.stringify(initialState.addressOne));
+		//~ initialState.addressTwo = [herrFrauTwo, firstnameTwo, lastnameTwo, adresseTwo, emailTwo, phoneTwo, firmaTwo, funktionTwo, plzOrtTwo];
+		//~ localStorage.setItem("ADDRESSTWO", JSON.stringify(initialState.addressTwo));
 
-		frappe.call({
-			'method': 'lifefair.lifefair.tickets.create_ticket',
-			'args': {
-				'rechAdress': "Yes",
-				'herrFrau': herrFrau,
-				'akademishTitle': akademishTitle,
-				'lastname': lastname, 
-				'firstname': firstname,
-				'firma': firma,
-				'funktion': funktion,
-				'phone': phone,
-				'email': email,  
-				'adresse': adresse, 
-				'plzOrt': plzOrt,
-				'warenkorb': initialState.cart 
-			},
-			'callback': function(response) {
-				var registrationen = response.message;         
-			}
-		});
+		//~ frappe.call({
+			//~ 'method': 'lifefair.lifefair.tickets.create_ticket',
+			//~ 'args': {
+				//~ 'rechAdress': "Yes",
+				//~ 'herrFrau': herrFrau,
+				//~ 'akademishTitle': akademishTitle,
+				//~ 'lastname': lastname, 
+				//~ 'firstname': firstname,
+				//~ 'firma': firma,
+				//~ 'funktion': funktion,
+				//~ 'phone': phone,
+				//~ 'email': email,  
+				//~ 'adresse': adresse, 
+				//~ 'plzOrt': plzOrt,
+				//~ 'warenkorb': initialState.cart 
+			//~ },
+			//~ 'callback': function(response) {
+				//~ var registrationen = response.message;         
+			//~ }
+		//~ });
 		
-		frappe.call({
-			'method': 'lifefair.lifefair.tickets.create_invoice',
-			'args': {
-				'salutation': herrFrauTwo,
-				'last_name': lastnameTwo, 
-				'first_name': firstnameTwo,
-				'company': firmaTwo,
-				'function': funktionTwo,
-				'phone': phoneTwo,
-				'email': emailTwo,  
-				'street': adresseTwo, 
-				'pincode': plzOrtTwo,
-				'cart': initialState.cart 
-			},
-			'callback': function(response) {
-				var registrationen = response.message;
-				if (rechnung.checked) {
-					window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self");
-					console.log("in the invoice callback");
-				} else { 
-					openStripe();
-				}
+		//~ frappe.call({
+			//~ 'method': 'lifefair.lifefair.tickets.create_invoice',
+			//~ 'args': {
+				//~ 'salutation': herrFrauTwo,
+				//~ 'last_name': lastnameTwo, 
+				//~ 'first_name': firstnameTwo,
+				//~ 'company': firmaTwo,
+				//~ 'function': funktionTwo,
+				//~ 'phone': phoneTwo,
+				//~ 'email': emailTwo,  
+				//~ 'street': adresseTwo, 
+				//~ 'pincode': plzOrtTwo,
+				//~ 'cart': initialState.cart 
+			//~ },
+			//~ 'callback': function(response) {
+				//~ var registrationen = response.message;
+				//~ if (rechnung.checked) {
+					//~ window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self");
+					//~ console.log("in the invoice callback");
+				//~ } else { 
+					//~ openStripe();
+				//~ }
 				
-				//var payment = response.message;
-			}
-		});
-	}
-}
+				//~ //var payment = response.message;
+			//~ }
+		//~ });
+	//~ }
+//~ }
 
 function openStripe(){
 	window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+	
 }
 
 function loadBlocks(anlass) {
@@ -1320,7 +1438,10 @@ function nachbestellenBtn() {
 	
 	inTheChekout = true;
 	window.localStorage.removeItem("ADDRESSONE");
+	window.localStorage.removeItem("TICKETS");
 	initialState.addressOne = [];
+	initialState.ticketNum = null;
+	initialState.stripe = "Yes"
 	
 	document.getElementById("step1").style.display = "block";
 	document.querySelector(".positionFixed").style.display = "block";
@@ -1328,9 +1449,9 @@ function nachbestellenBtn() {
 	document.getElementById("warenkorb").classList.remove("grey");
 	cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT BESTELLEN</p>`;
 	
-	initialState.cart = initialState.cartTwo;
+	//initialState.cart = initialState.cartTwo;
 	console.log("initialState.cart", initialState.cart);
-	updateCart();
+	//updateCart();
 	
 	if ( initialState.rechCheck == "Yes" ) {
 		
@@ -1341,25 +1462,28 @@ function nachbestellenBtn() {
 		var lastnameTwo = document.getElementById("inputSurnameTwo");
 		var firstnameTwo = document.getElementById("inputFirstnameTwo");
 		var firmaTwo = document.getElementById("inputFirmaTwo");
-		var funktionTwo = document.getElementById("inputFunktion");
+		var funktionTwo = document.getElementById("inputFunktionTwo");
 		var phoneTwo = document.getElementById("inputPhoneTwo");
 		var emailTwo = document.getElementById("inputEmailTwo");  
 		var adresseTwo = document.getElementById("inputAdresseTwo");
+		var landTwo = document.getElementById("inputLandTwo");
 		var plzOrtTwo = document.getElementById("inputOrtTwo");
 		
-		for (var i = 0; i < initialState.addressTwo.length; i++ ) {
-			console.log("initialState.cart", initialState.cart);
+		//for (var i = 0; i < initialState.addressTwo.length; i++ ) {
+			console.log("initialState.addressTwo", initialState.addressTwo);
 
-			herrFrauTwo.value = initialState.addressTwo[0];
-			lastnameTwo.value = initialState.addressTwo[1];
-			firstnameTwo.value = initialState.addressTwo[2];
-			adresseTwo.value = initialState.addressTwo[3];
-			emailTwo.value = initialState.addressTwo[4];
-			phoneTwo.value = initialState.addressTwo[5];
-			firmaTwo.value = initialState.addressTwo[6];
-			funktionTwo.value = initialState.addressTwo[7];
-			plzOrtTwo.value = initialState.addressTwo[8];
-		}
+			herrFrauTwo.value = initialState.addressTwo.herrFrau;
+			firstnameTwo.value = initialState.addressTwo.firstname;
+			lastnameTwo.value = initialState.addressTwo.lastname;
+			adresseTwo.value = initialState.addressTwo.adresse;
+			emailTwo.value = initialState.addressTwo.email;
+			phoneTwo.value = initialState.addressTwo.phone;
+			firmaTwo.value = initialState.addressTwo.firma;
+			funktionTwo.value = initialState.addressTwo.funktion;
+			plzOrtTwo.value = initialState.addressTwo.plz + " " + initialState.addressTwo.ort;
+			landTwo.value = initialState.addressTwo.land;
+			
+		//}
 	}
 	
 }
@@ -1370,7 +1494,7 @@ function zuruckZurSeite() {
 }
 
 function loadEndMsg() {
-	
+
 	document.getElementById("step0").style.display = "none";
 	document.getElementById("warenkorb").style.display = "none";
 	document.getElementById("step1").style.display = "none";
@@ -1378,64 +1502,68 @@ function loadEndMsg() {
 	document.getElementById("step3").style.display = "block";
 	
 	frappe.call({
-		'method': "lifefair.lifefair.tickets.get_person",
-		'callback': function (response) {
-			person = response.message;
-			console.log('the person', person[0]);
+			'method': 'lifefair.lifefair.tickets.get_invoice',
+			'args': {
+				'addressOne': initialState.addressOne,
+			},
+			'callback': function(response) {
+			var sinv = response.message;
+			console.log("sinv responseee", sinv)
 			
 			var endMsgContainer = document.getElementById("step3");
 			
-			for (var i = 0; i < initialState.addressOne.length; i++ ) { 
+			//for (var i = 0; i < initialState.ticketNum.length; i++ ) { 
 
-				//console.log("items in local adress one storage", initialState.addressOne[i], i);
-				endMsgContainer.innerHTML = `
-						<h1 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h1>
-						<p class="endMsgTextOne"> Herzlichen Dank ${initialState.addressOne[0]} ${initialState.addressOne[1]} ${initialState.addressOne[2]} ${initialState.addressOne[3]} für Ihren Ticketkauf. Ihr Ticket Nr.${person[0].name}  wird Ihnen per E-mail an ${initialState.addressOne[5]} zugestellt.</p>
-						<div class="infoDiv"><div class="infoI">i</div> <table><tr><td class="innerInfoDiv">Übernachtung empfohlen</td></tr> <tr><td class="innerInfoDiv"> <a href="https://www.hyatt.com/en-US/hotel/switzerland/park-hyatt-zurich/zurph?src=corp_lclb_gmb_seo_zurph" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></td></tr></table></div>
-					`;
-			}
-			// To know the day and time of the blocks and with this if the Lunch or Aperol is included
-			for (var x = 0; x < initialState.cartTwo.length; x++ ) {
+			//console.log("items in local adress one storage", initialState.addressOne);
+			endMsgContainer.innerHTML = `
+					<h1 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h1>
+					<p class="endMsgTextOne"> Herzlichen Dank ${initialState.addressOne.herrFrau} ${initialState.addressOne.akademishTitle} ${initialState.addressOne.lastname} ${initialState.addressOne.firstname} für Ihren Ticketkauf. Ihr Ticket Nr.${initialState.ticketNum}  wird Ihnen per E-mail an ${initialState.addressOne.email} zugestellt.</p>
+					<div class="infoI">i</div> 
+				`;
+			//}
+			// To know the day and time of the blocks and with this if the Lunch or Apero is included
+			for (var x = 0; x < initialState.cart.sort((a, b) => a.neues_datum > b.neues_datum).length; x++ ) {
 				var infoDayName = null;
-				var daytConvert = new Date(initialState.cartTwo[x].neues_datum);
+				var daytConvert = new Date(initialState.cart[x].neues_datum);
 				var infoDayFlag = daytConvert.toLocaleString('de-ch', {weekday: 'long'});
 				if ( infoDayName != infoDayFlag ) {
 					infoDayName = infoDayFlag;
 				}
 				
-				var twoTimeRange = initialState.cartTwo[x].time.split("und");
+				var twoTimeRange = initialState.cart[x].time.split("und");
 				if (twoTimeRange.length > 1) {
 					for (var i = 0; i < twoTimeRange.length; i++ ) {
 						var OnetimeRange = twoTimeRange[i].split("-");
 						var timeFilter = checkTime(OnetimeRange);
 						if (timeFilter[0] == 1) {
-							initialState.info.push("Networking-Lunch und Aperol inklusiv am " + infoDayName);
+							initialState.info.push("Networking-Lunch und Apéro inklusiv am " + infoDayName);
 						} else if ( timeFilter[1] == 2){
-								initialState.info.push("Networking-Lunch und Aperol inklusiv am " + infoDayName);
+								initialState.info.push("Networking-Lunch und Apéro inklusiv am " + infoDayName);
 						} else {
 							initialState.info.push(" ");
 						}
 					}
 				} else {
-					var OnetimeRange = initialState.cartTwo[x].time.split("-");
+					var OnetimeRange = initialState.cart[x].time.split("-");
 					var timeFilter = checkTime(OnetimeRange);
-					console.log("timeFilter 2", timeFilter)
+					//console.log("timeFilter 2", timeFilter)
 					if (timeFilter[0] == 1) {
 						initialState.info.push("Networking-Lunch inklusiv am " + infoDayName);
 					} else if ( timeFilter[0] == 2){
-						initialState.info.push("Networking-Aperol inklusiv am " + infoDayName);
+						initialState.info.push("Networking-Apéro inklusiv am " + infoDayName);
 					} else {
 						initialState.info.push(" ");
 					}
 				} 
 					if (initialState.info[x] != " ") {
-						endMsgContainer.innerHTML += `<div class="infoDiv"> <div class="innerInfoDiv" > <div class="infoDetails" >${initialState.info[x]} </div> </div></div>`;
+						endMsgContainer.innerHTML += `<div class="infoDiv innerInfoDiv infoDetails"> ${initialState.info[x]} </div>`;
 				}
 			}
 
 			endMsgContainer.innerHTML += `
+				<div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://www.hyatt.com/en-US/hotel/switzerland/park-hyatt-zurich/zurph?src=corp_lclb_gmb_seo_zurph" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
 				<div class="endMsgButtonsContainer">
-					<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Person&name=${person[0].name}&format=Standard&no_letterhead=0&_lang=en" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
+					<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${sinv}&format=Standard&no_letterhead=0&_lang=en" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
 					<button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
 					<button class="endMsgBtn zuruckBtnTwo" onclick="zuruckZurSeite()">ZURÜCK ZUR STARTSEITE</button>   
 				</div>
@@ -1444,17 +1572,17 @@ function loadEndMsg() {
 		} 
 	});
 
-		clearFields.forEach((element) => {
-			if (element.type == "text") {
-				element.value = "";
-			} else if (element.type == "checkbox") {
-				element.checked = false;
-				}
-		});
+		//~ clearFields.forEach((element) => {
+			//~ if (element.type == "text") {
+				//~ element.value = "";
+			//~ } else if (element.type == "checkbox") {
+				//~ element.checked = false;
+				//~ }
+		//~ });
 			
-		initialState.cart = [];
-		cartTotal.innerHTML = "";
-		cartElement.innerHTML = "<p class='cartLeer'>IHR WARENKORB IST MOMENTAN LEER</p>";
+		//initialState.cart = [];
+		//cartTotal.innerHTML = "";
+		//cartElement.innerHTML = "<p class='cartLeer'>IHR WARENKORB IST MOMENTAN LEER</p>";
 }
 
 document.addEventListener("DOMContentLoaded", function(event) {

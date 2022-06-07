@@ -61,6 +61,7 @@
   "linkedin_id",
   "homepage",
   "personal_postal_code",
+  "customer",
   "section_salutation",
   "salutation",
   "title",
@@ -509,10 +510,16 @@
    "fieldname": "ausland",
    "fieldtype": "Check",
    "label": "Ausland"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer",
+   "options": "Customer"
   }
  ],
  "image_field": "image",
- "modified": "2021-03-22 10:28:40.866562",
+ "modified": "2022-05-30 14:01:56.286601",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",
