@@ -449,7 +449,13 @@ ul {
 .alleArtikel {
   font-size: 12px;
   font-weight: normal;
-  margin-bottom: 16px;
+  display: flex;
+  justify-content: space-between;
+  padding-left: 2px;
+}
+
+.discount {
+  text-align: end;
 }
 
 .totalDisplay {

@@ -1,0 +1,58 @@
+{
+ "creation": "2022-06-07 14:36:21.386116",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "visitor_type",
+  "blocks",
+  "rate"
+ ],
+ "fields": [
+  {
+   "fieldname": "visitor_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Visitor Type",
+   "options": "Privatperson\nStudent\nAHV/IV Rentner\nArbeitssuchend\nFirma 1 - 9 MA\nFirma 10 - 99 MA\nFirma 100 - 199 MA\nFirma 199+ MA",
+   "reqd": 1
+  },
+  {
+   "fieldname": "blocks",
+   "fieldtype": "Table",
+   "label": "Blocks",
+   "options": "Block Price Block",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate",
+   "reqd": 1
+  }
+ ],
+ "modified": "2022-06-07 15:06:19.547608",
+ "modified_by": "Administrator",
+ "module": "Lifefair",
+ "name": "Block Price",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

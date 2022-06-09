@@ -68,6 +68,12 @@ def get_data():
                        "color": "#f88c00",
                        "icon": "octicon octicon-clippy",
                        "description": _("Exhibitor")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Block Price",
+                       "label": _("Block Price"),
+                       "description": _("Block Price")
                    }
             ]
         },

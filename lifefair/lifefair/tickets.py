@@ -11,7 +11,7 @@ from frappe.utils.data import today
 from random import randint
 
 @frappe.whitelist(allow_guest=True) 
-def get_blocks(meeting):
+def get_blocks(meeting, usertype):
 	sql_query = """
 		SELECT
 			`official_title`,
@@ -19,16 +19,20 @@ def get_blocks(meeting):
 			`short_name`,
 			`neues_datum`,
 			`time`,
+			`tabBlock Price`.`rate` AS `rate`,
 			GROUP_CONCAT(`tabBlock Interest`.`interest`) AS `interests`,
 			`website_link`,
 			`tabBlock`.`name`,
 			`meeting`
 		FROM `tabBlock`
 		LEFT JOIN `tabBlock Interest` ON `tabBlock Interest`.`parent` = `tabBlock`.`name`
+		LEFT JOIN `tabBlock Price Block` ON `tabBlock Price Block`.`block` = `tabBlock`.`name`
+		LEFT JOIN `tabBlock Price` ON `tabBlock Price`.`name` = `tabBlock Price Block`.`parent`
 		WHERE `meeting` = '{meeting}'
+		AND `tabBlock Price`.`visitor_type` = '{usertype}'
 		GROUP BY `tabBlock`.`name`
 		ORDER BY `tabBlock`.`neues_datum` ASC;
-	""".format(meeting=meeting)
+	""".format(meeting=meeting, usertype=usertype)
 	data = frappe.db.sql(sql_query, as_dict = True)
 	return data
 
@@ -69,8 +73,15 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb):
 		# ~ basestring = str
 		
 	sinv_name = create_invoice(addressOne, addressTwo, warenkorb, person=person_name)
-	
 	ticket_number = get_ticket_code()
+	
+	if addressOne['giftcode'] != " ":
+		db_giftc = frappe.get_all("Ticket Voucher", filters={'name': addressOne['giftcode']}, fields=['name'])
+		giftc = frappe.get_doc("Ticket Voucher", db_giftc[0]['name'])
+		giftc.used_by = person_name
+		giftc.save()
+	else:
+		frappe.log_error("no giftc")
 
 	frappe.log_error("ticket and sinv done")
 	if stripe == "Yes":
@@ -318,3 +329,21 @@ def get_invoice(addressOne):
 		frappe.log_error("in the get sinv else")
 		frappe.log_error(db_sinv)
 	return sinv_name.name
+
+@frappe.whitelist(allow_guest=True) 
+def check_giftcode(firstname, lastname, giftcode):
+	db_giftc = frappe.get_all("Ticket Voucher", filters={'name': giftcode}, fields=['name'])
+	if not db_giftc:
+		frappe.log_error("in the gift if not, giftc doesnt exist")
+		giftcRate = -1
+	else:
+		frappe.log_error("in the gift else, giftc  exist")
+		giftc = frappe.get_doc("Ticket Voucher", db_giftc[0]['name'])
+		if not giftc.used_by:
+			frappe.log_error("is not beign use")
+			giftcRate = giftc.discount
+		else:
+			frappe.log_error("is being use")
+			giftcRate = -1
+	
+	return giftcRate

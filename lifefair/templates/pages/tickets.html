@@ -10,14 +10,14 @@
 					<div class="btnOrange"  style="display: none"></div>
 					<li id="userMenu">
 						<ul id="dropdown">
-							<li><button class="btnOrange" onclick="userSelection('privatperson')">PRIVATPERSON</button></li> 
-							<li><button class="btnOrange" onclick="userSelection('student')">STUDENT</button></li>
-							<li><button class="btnOrange" onclick="userSelection('AHV/IV RENTNER')">AHV/IV RENTNER</button></li>
-							<li><button class="btnOrange" onclick="userSelection('ARBEITSSUCHEND')">ARBEITSSUCHEND</button></li>
-							<li><button class="btnOrange" onclick="userSelection('FIRMA 1 - 9 MA')">FIRMA 1 - 9 MA</button></li>
-							<li><button class="btnOrange" onclick="userSelection('FIRMA 10 - 99 MA')">FIRMA 10 - 99 MA</button></li>
-							<li><button class="btnOrange" onclick="userSelection('FIRMA 100 - 199 MA')">FIRMA 100 - 199 MA</button></li>
-							<li><button class="btnOrange" onclick="userSelection('FIRMA 199+ MA')">FIRMA 199+ MA</button></li>
+							<li><button class="btnOrange" onclick="userSelection('Privatperson')">PRIVATPERSON</button></li> 
+							<li><button class="btnOrange" onclick="userSelection('Student')">STUDENT</button></li>
+							<li><button class="btnOrange" onclick="userSelection('AHV/IV Rentner')">AHV/IV RENTNER</button></li>
+							<li><button class="btnOrange" onclick="userSelection('Arbeitssuchend')">ARBEITSSUCHEND</button></li>
+							<li><button class="btnOrange" onclick="userSelection('Firma 1 - 9 MA')">FIRMA 1 - 9 MA</button></li>
+							<li><button class="btnOrange" onclick="userSelection('Firma 10 - 99 MA')">FIRMA 10 - 99 MA</button></li>
+							<li><button class="btnOrange" onclick="userSelection('Firma 100 - 199 MA')">FIRMA 100 - 199 MA</button></li>
+							<li><button class="btnOrange" onclick="userSelection('Firma 199+ MA')">FIRMA 199+ MA</button></li>
 						</ul>
 					</li>
 				</div>
@@ -105,7 +105,7 @@
 					</td>
 					<td class="td">
 						<span class="tableSpan">Gutschein einlösen</span>
-						<input class="tableInput" type="text" id="inputGutschein" placeholder="XSR5TI0" class="input-xlarge" >
+						<input class="tableInput" type="text" id="inputGutschein" placeholder="XSR5TI0" class="input-xlarge" onfocusout="checkGiftCard()">
 					</td>
 				</tr>
 				<tr class="tr">

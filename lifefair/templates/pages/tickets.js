@@ -1,3 +1,4 @@
+var anlass;
 var blocks;
 var interests = [];
 var itemVal;
@@ -10,8 +11,9 @@ var rechAdd = "notDone";
 //var datumFlag = 0;
 var inTheChekout = false;
 var initialState = {
-	userTypeValue : JSON.parse(localStorage.getItem("USER")) || [],
+	userTypeValue : JSON.parse(localStorage.getItem("USER")) || "Student",
 	cart : JSON.parse(localStorage.getItem("CART")) || [],
+	total: JSON.parse(localStorage.getItem("TOTAL")) || 0,
 	//cartTwo: JSON.parse(localStorage.getItem("CARTTWO")) || [],
 	addressOne: JSON.parse(localStorage.getItem("ADDRESSONE")) || [],
 	addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
@@ -21,7 +23,7 @@ var initialState = {
 	ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
 };
 var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ];
-
+var datumBtn = document.getElementById("filterBtnContainerDATUM");
 var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
@@ -43,36 +45,20 @@ updateCart();
 //filterSelection("all");
 
 function userSelection(c) {
-	
-	  switch (c) {
-		case 'privatperson':
-			initialState.userTypeValue = 2.00;
-			break;
-		case 'student':
-			initialState.userTypeValue = 2.50;
-			break;
-		case 'AHV/IV RENTNER':
-			initialState.userTypeValue = 3.00;
-			break;
-		case 'ARBEITSSUCHEND':
-			initialState.userTypeValue = 4.25;
-			break;
-		case 'FIRMA 1 - 9 MA':	
-			initialState.userTypeValue = 5.00;
-			break;
-		case 'FIRMA 10 - 99 MA':
-			initialState.userTypeValue = 6.00;
-			break;
-		case 'FIRMA 100 - 199 MA':
-			initialState.userTypeValue = 7.70;
-			break;
-		case 'FIRMA 199+ MA':
-			initialState.userTypeValue = 10.00;
-			break;
-		default:
-			break;
-	}
+		
+	var currentUser;
+	initialState.userTypeValue = c;
 	localStorage.setItem("USER", JSON.stringify(initialState.userTypeValue));
+	
+	if ( currentUser != initialState.userTypeValue ) {
+		currentUSer = initialState.userTypeValue;
+		//get_arguments()
+		loadBlocks(anlass)
+		datumBtn.innerHTML = `<h2 class="filterTitle" id="datum">DATUM</h2>`;
+		selectedFilterDiv.innerHTML = '';
+		initialState.cart = [];
+		localStorage.setItem("CART", JSON.stringify(initialState.cart));
+	}
 	
 	document.getElementById("ichBin").classList.remove("shake");
 	document.getElementById("filterBtnContainerDATUM").classList.remove("grey");
@@ -83,6 +69,12 @@ function userSelection(c) {
 	btnContainerTwo.querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
 	btnContainerThree.forEach((element) => element.classList.add("btnHover"));
 	btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
+	btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+	btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+	btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
+	btnContainerThree.forEach(btn => btn.classList.remove("active"));
+	btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+	btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
 	console.log("the user", initialState.userTypeValue);
 	var userMenu = document.getElementById("userMenu");
 	var userMenuDiv = document.createElement('div');
@@ -92,8 +84,9 @@ function userSelection(c) {
     document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "none");
     
 	if ( document.getElementById("selectedFilters").contains(document.querySelector(".grey")) == true) document.getElementById("selectedFilters").classList.remove("grey");
-	// Like this all the blocks will automatically appear 
-	titleShowAll();
+	//Like this all the blocks will automatically appear 
+	//titleShowAll();
+	updateCart();
 }
 
 //Dropdown Menu
@@ -170,6 +163,7 @@ function filterSelection(c, button) {
 }
 
 function titleShowAll() {
+	//console.log("in the tittle fuuunc")
 	var localTitle;
 	currentTimeSlot = "all";
 	
@@ -436,7 +430,7 @@ function filterTimeSlot(c) {
 					}
 					flag = 1;
 					break;
-			}	 		 	
+			}
 		}
 		
 		if ( flag == 0) {
@@ -631,27 +625,27 @@ function toggleAction(button, num) {
 			//console.log('trueeee', button, num);
 			//button.classList.remove("active");
 			if (num == 2) {
-				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
 				btnContainerTwo.querySelectorAll("button")  .forEach(btn => btn.classList.remove("active"));
 			} else if (num == 3) {
 				btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
 				btnContainerThree.forEach(btn => btn.classList.remove("active"));
 			} else if (num == 4) {
-				btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-				btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+				btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
+				btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 			}
 			removeFilter(num);
 		} else {
 			//console.log('neeein', button, num);
 			if (num == 2) {
-				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
+				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 			} else if (num == 3) {
 				btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
 				btnContainerThree.forEach(btn => btn.classList.remove("active"));
 			} else if (num == 4) {
-				btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-				btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+				btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
+				btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 			}
 			button.classList.add("toggleFilter");
 			button.classList.add("active");
@@ -727,6 +721,13 @@ function removeFilter(num) {
 		//datumFlag = 1;
 		
 	} else if ( num == 4) {
+		selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
+		//selectedFilterDiv.children[3].remove();
+		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+		filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
+		selectedFilterDiv.innerHTML.reload();
+	} else if ( num == 5) {
 		selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
 		//selectedFilterDiv.children[3].remove();
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
@@ -851,11 +852,16 @@ function updateTotal() {
 	var totalPrice = 0;
 	if ( initialState.cart.length > 0) {
 		initialState.cart.forEach((item, i) => {
-			totalPrice += 20 * initialState.userTypeValue;
-			cartTotal.innerHTML = `<div class="alleArtikel">Alle Artikel entfernen</div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
+			totalPrice += item.rate ;
+			cartTotal.innerHTML = `<div class="alleArtikel"><p>Alle Artikel entfernen</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
+			initialState.total = totalPrice;
+			localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
 		});
-	} else { cartTotal.innerHTML = ""}
-		
+	} else { 
+		cartTotal.innerHTML = "" 
+		initialState.total = 0;
+		localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
+	}
 }
 
 function updateItems() {
@@ -863,7 +869,7 @@ function updateItems() {
 		cartElement.innerHTML = ""; //Clearing the cart to avoid duplication
 		initialState.cart.forEach((item, i) => {
 			var cardText = item.official_title.split(":");
-			itemVal = 20.00 * initialState.userTypeValue;
+			itemVal = item.rate;
 			cartElement.innerHTML += `
 				<div class="cartItems"> 
 					<div class="cartInfo"> 
@@ -996,6 +1002,42 @@ rechnung.addEventListener('change', function(e){
 	}
 });
 
+//Checking the GiftCard Code
+
+//~ giftCard.addEventListener('change', function(e){
+	//~ console.log("in the giiiftcard", e)
+//~ });
+
+function checkGiftCard(){
+	var giftCard = document.getElementById("inputGutschein");
+	var lastname = document.getElementById("inputSurname").value;
+	var firstname = document.getElementById("inputFirstname").value;
+	console.log("in the giftcaaard", giftCard.value, firstname, lastname)
+	frappe.call({
+		'method': 'lifefair.lifefair.tickets.check_giftcode',
+		'args': {
+			'firstname': firstname,
+			'lastname': lastname,
+			'giftcode': giftCard.value
+		},
+		'callback': function(response) {
+			var res = response.message;
+			console.log("reees", res);
+			
+			if (res == -1) {
+				giftCard.value = " ";
+				giftCard.placeholder = "Not Valid"; 
+				console.log("doesnt exist");
+			} else {
+				var discount = (res/100) * initialState.total;
+				var newTotal = initialState.total - discount;
+				cartTotal.innerHTML = `<div class="alleArtikel"><p>Alle Artikel entfernen</p>  <p class="discount">${res}% Discount Added.</p> </div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
+			}
+		}
+	});
+}
+
+
 //Cheking the Values after proceeding to pay
 function checkDataAndPay() {
 	console.log("in the pay func");
@@ -1016,6 +1058,7 @@ function checkDataAndPay() {
     var adresse = document.getElementById("inputAdresse");
     var land = document.getElementById("inputLand");
     var plzOrt = document.getElementById("inputOrt");
+    var giftCard = document.getElementById("inputGutschein");
     
     //console.log(lastname, firstname, firma, funktion, phone, email, adresse, plzOrt);
     //var inputsArr = [herrFrau, akademishTitle, lastname, firstname, funktion, phone, email, adresse, plzOrt]
@@ -1142,20 +1185,30 @@ function checkDataAndPay() {
 				'funktion': funktion.value,
 				'land': land.value,
 				'plz': plz,
-				'ort': ort
+				'ort': ort,
+				'giftcode': giftCard.value
 		}
 		localStorage.setItem("ADDRESSONE", JSON.stringify(initialState.addressOne));
 		
+		createTicket()
+		
 		//~ if (rechnung.checked) {
 			//~ console.log("in the rechnuuuung")
-		createTicket();
+			//~ createTicket().then(res => window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self"));
 		//~ } else if ( initialState.stripe == "Yes" ){ 
 			//~ console.log("in the stripeeee")
-			//~ createTicket();
-			//~ openStripe();
+			//~ createTicket().then(res => openStripe());
 		//~ }
 	}
 }
+
+//~ function stripeFunc = async() => {
+	//~ const paid = openStripe();
+	//~ const ticket = createTicket();
+	//~ const res = await Promise.all([paid, ticket]);
+	
+	//~ return res;
+//~ }
 
 function createTicket() {
 	//console.log("in the caaaaalll")
@@ -1165,7 +1218,7 @@ function createTicket() {
 				'stripe': initialState.stripe,
 				'addressOne': initialState.addressOne,
 				'addressTwo': initialState.addressTwo,
-				'warenkorb': initialState.cart 
+				'warenkorb': initialState.cart
 			},
 			'callback': function(response) {
 				var res = response.message;
@@ -1174,7 +1227,7 @@ function createTicket() {
 				localStorage.setItem("TICKETS", JSON.stringify(initialState.ticketNum));
 				
 				if ( initialState.stripe == "No" ) {
-					window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self");
+					window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self"); 
 				} else {
 					openStripe();
 				}
@@ -1191,107 +1244,6 @@ function createTicket() {
 	//~ }) 
 //~ }
 
-//Cheking the Values of Rechnung Adresse if checked
-//~ function rechnungAdresseChecked(herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt) {
-	//~ console.log("rechnungAdresseChecked");
-	
-	//~ var herrFrauTwo = document.getElementById("inputHerrFrauTwo").value;
-	//~ var lastnameTwo = document.getElementById("inputSurnameTwo").value;
-	//~ var firstnameTwo = document.getElementById("inputFirstnameTwo").value;
-	//~ var firmaTwo = document.getElementById("inputFirmaTwo").value;
-	//~ var funktionTwo = document.getElementById("inputFunktionTwo").value;
-	//~ var phoneTwo = document.getElementById("inputPhoneTwo").value;
-    //~ var emailTwo = document.getElementById("inputEmailTwo").value;  
-    //~ var adresseTwo = document.getElementById("inputAdresseTwo").value;
-    //~ var plzOrtTwo = document.getElementById("inputOrtTwo").value;
-    
-    //~ console.log(lastnameTwo, firstnameTwo, firmaTwo, phoneTwo, emailTwo, adresseTwo, plzOrtTwo);
-    
-    //~ if (!herrFrauTwo) {
-        //~ document.getElementById("inputHerrFrauTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputHerrFrauTwo").focus();
-    //~ } else if (!lastnameTwo) {
-        //~ document.getElementById("inputSurnameTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputSurnameTwo").focus();
-    //~ } else if (!firstnameTwo) {
-        //~ document.getElementById("inputFirstnameTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputFirstnameTwo").focus();
-    //~ } else if (!firmaTwo) {
-        //~ document.getElementById("inputFirmaTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputFirmaTwo").focus();
-    //~ } else if (!funktionTwo) {
-        //~ document.getElementById("inputFunktionTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputFunktionTwo").focus();
-    //~ }  else if (!phoneTwo) {
-        //~ document.getElementById("inputPhoneTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputPhoneTwo").focus();
-    //~ } else if (!emailTwo) {
-        //~ document.getElementById("inputEmailTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputEmailTwo").focus();
-    //~ } else if (!adresseTwo) {
-        //~ document.getElementById("inputAdresseTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputAdresseTwo").focus();
-    //~ } else if (!plzOrtTwo) {
-        //~ document.getElementById("inputOrtTwo").style.border = "1px solid red;"
-        //~ document.getElementById("inputOrtTwo").focus();
-    //~ } else {
-		
-		//~ //initialState.cartTwo = initialState.cart;
-		//~ //localStorage.setItem("CARTTWO", JSON.stringify(initialState.cartTwo));
-		//~ initialState.addressOne = [ herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt];
-		//~ localStorage.setItem("ADDRESSONE", JSON.stringify(initialState.addressOne));
-		//~ initialState.addressTwo = [herrFrauTwo, firstnameTwo, lastnameTwo, adresseTwo, emailTwo, phoneTwo, firmaTwo, funktionTwo, plzOrtTwo];
-		//~ localStorage.setItem("ADDRESSTWO", JSON.stringify(initialState.addressTwo));
-
-		//~ frappe.call({
-			//~ 'method': 'lifefair.lifefair.tickets.create_ticket',
-			//~ 'args': {
-				//~ 'rechAdress': "Yes",
-				//~ 'herrFrau': herrFrau,
-				//~ 'akademishTitle': akademishTitle,
-				//~ 'lastname': lastname, 
-				//~ 'firstname': firstname,
-				//~ 'firma': firma,
-				//~ 'funktion': funktion,
-				//~ 'phone': phone,
-				//~ 'email': email,  
-				//~ 'adresse': adresse, 
-				//~ 'plzOrt': plzOrt,
-				//~ 'warenkorb': initialState.cart 
-			//~ },
-			//~ 'callback': function(response) {
-				//~ var registrationen = response.message;         
-			//~ }
-		//~ });
-		
-		//~ frappe.call({
-			//~ 'method': 'lifefair.lifefair.tickets.create_invoice',
-			//~ 'args': {
-				//~ 'salutation': herrFrauTwo,
-				//~ 'last_name': lastnameTwo, 
-				//~ 'first_name': firstnameTwo,
-				//~ 'company': firmaTwo,
-				//~ 'function': funktionTwo,
-				//~ 'phone': phoneTwo,
-				//~ 'email': emailTwo,  
-				//~ 'street': adresseTwo, 
-				//~ 'pincode': plzOrtTwo,
-				//~ 'cart': initialState.cart 
-			//~ },
-			//~ 'callback': function(response) {
-				//~ var registrationen = response.message;
-				//~ if (rechnung.checked) {
-					//~ window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self");
-					//~ console.log("in the invoice callback");
-				//~ } else { 
-					//~ openStripe();
-				//~ }
-				
-				//~ //var payment = response.message;
-			//~ }
-		//~ });
-	//~ }
-//~ }
 
 function openStripe(){
 	window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
@@ -1303,7 +1255,8 @@ function loadBlocks(anlass) {
 	frappe.call({
 		'method': "lifefair.lifefair.tickets.get_blocks",
 		'args': {
-			meeting: anlass
+			meeting: anlass,
+			usertype: initialState.userTypeValue
 		},
 		'callback': function (response) {
             blocks = response.message;
@@ -1332,7 +1285,6 @@ function loadBlocks(anlass) {
 					dateTitle.innerHTML += `<div style="display: none" id="abend_${block.neues_datum}_${dayName}" class='localTitle_abend'><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td>  <td class='timeName'>ABEND</td> </tr> </table></div>`;
 					blocksContainer.appendChild(dateTitle);
 					
-					var datumBtn = document.getElementById("filterBtnContainerDATUM");
 					datumBtn.innerHTML += `<button class="btn widthBtn" onclick="filterDatum('${dayName}', this)">${dayName}</button>`
 					
 				}
@@ -1427,9 +1379,12 @@ function loadBlocks(anlass) {
 					}
 				}
 			};
+			
+			// Like this all the blocks will automatically appear 
+			titleShowAll(); 
 		}
+		
 	});
-	
 }
 
 function nachbestellenBtn() {
@@ -1442,6 +1397,7 @@ function nachbestellenBtn() {
 	initialState.addressOne = [];
 	initialState.ticketNum = null;
 	initialState.stripe = "Yes"
+	localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 	
 	document.getElementById("step1").style.display = "block";
 	document.querySelector(".positionFixed").style.display = "block";
@@ -1494,7 +1450,7 @@ function zuruckZurSeite() {
 }
 
 function loadEndMsg() {
-
+	console.log("in the loadENDMsg")
 	document.getElementById("step0").style.display = "none";
 	document.getElementById("warenkorb").style.display = "none";
 	document.getElementById("step1").style.display = "none";
@@ -1502,15 +1458,34 @@ function loadEndMsg() {
 	document.getElementById("step3").style.display = "block";
 	
 	frappe.call({
-			'method': 'lifefair.lifefair.tickets.get_invoice',
-			'args': {
-				'addressOne': initialState.addressOne,
-			},
-			'callback': function(response) {
-			var sinv = response.message;
-			console.log("sinv responseee", sinv)
+		'method': 'lifefair.lifefair.tickets.get_invoice',
+		'args': {
+			'addressOne': initialState.addressOne,
+		},
+		'callback': function(response) {
+		var sinv = response.message;
+		console.log("sinv responseee", sinv)
+		
+		setTimeout(endMessage(sinv), 5000);
+		}
+	});
+
+		//~ clearFields.forEach((element) => {
+			//~ if (element.type == "text") {
+				//~ element.value = "";
+			//~ } else if (element.type == "checkbox") {
+				//~ element.checked = false;
+				//~ }
+		//~ });
 			
-			var endMsgContainer = document.getElementById("step3");
+		//initialState.cart = [];
+		//cartTotal.innerHTML = "";
+		//cartElement.innerHTML = "<p class='cartLeer'>IHR WARENKORB IST MOMENTAN LEER</p>";
+}
+
+function endMessage(sinv){
+	
+	var endMsgContainer = document.getElementById("step3");
 			
 			//for (var i = 0; i < initialState.ticketNum.length; i++ ) { 
 
@@ -1569,21 +1544,8 @@ function loadEndMsg() {
 				</div>
 				<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
 				`
-		} 
-	});
-
-		//~ clearFields.forEach((element) => {
-			//~ if (element.type == "text") {
-				//~ element.value = "";
-			//~ } else if (element.type == "checkbox") {
-				//~ element.checked = false;
-				//~ }
-		//~ });
-			
-		//initialState.cart = [];
-		//cartTotal.innerHTML = "";
-		//cartElement.innerHTML = "<p class='cartLeer'>IHR WARENKORB IST MOMENTAN LEER</p>";
 }
+
 
 document.addEventListener("DOMContentLoaded", function(event) {
     // add change triggers here
@@ -1610,8 +1572,9 @@ function get_arguments() {
 				loadEndMsg();
 			} else {
 				//console.log('args with anlass', args['anlass'] )
+				anlass = args['anlass'];
 				loadBlocks(args['anlass']);
 			}
 		}
-    } 
+    }
 }
