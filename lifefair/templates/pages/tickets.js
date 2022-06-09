@@ -19,7 +19,7 @@ var initialState = {
 	addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
 	info: JSON.parse(localStorage.getItem("INFO")) || [],
 	rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || "No",
-	stripe: JSON.parse(localStorage.getItem("STRIPE")) || "Yes",
+	stripe: JSON.parse(localStorage.getItem("STRIPE")) || "No",
 	ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
 };
 var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ];
@@ -987,8 +987,8 @@ rechnungAdresse.addEventListener('change', function(e){
 var kreditkarte = document.getElementById("kreditkarte");
 kreditkarte.addEventListener('change', function(e){
 	if (kreditkarte.checked) {
-		initialState.stripe = "Yes";
-		localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
+		//~ initialState.stripe = "Yes";
+		//~ localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 		console.log("kreditkarte check");
 	}
 });
@@ -996,8 +996,8 @@ kreditkarte.addEventListener('change', function(e){
 var rechnung = document.getElementById("rechnung");
 rechnung.addEventListener('change', function(e){
 	if (rechnung.checked) {
-		initialState.stripe = "No";
-		localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
+		//~ initialState.stripe = "No";
+		//~ localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 		console.log("rechnung check");
 	}
 });
@@ -1025,7 +1025,7 @@ function checkGiftCard(){
 			console.log("reees", res);
 			
 			if (res == -1) {
-				giftCard.value = " ";
+				giftCard.value = "";
 				giftCard.placeholder = "Not Valid"; 
 				console.log("doesnt exist");
 			} else {
@@ -1190,25 +1190,18 @@ function checkDataAndPay() {
 		}
 		localStorage.setItem("ADDRESSONE", JSON.stringify(initialState.addressOne));
 		
-		createTicket()
+		//~ createTicket();
 		
-		//~ if (rechnung.checked) {
-			//~ console.log("in the rechnuuuung")
-			//~ createTicket().then(res => window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self"));
-		//~ } else if ( initialState.stripe == "Yes" ){ 
-			//~ console.log("in the stripeeee")
-			//~ createTicket().then(res => openStripe());
-		//~ }
+		if (rechnung.checked) {
+			console.log("in the rechnuuuung");
+			createTicket();
+		} else { 
+			console.log("in the stripeeee");
+			window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+			//~ openStripe();
+		}
 	}
 }
-
-//~ function stripeFunc = async() => {
-	//~ const paid = openStripe();
-	//~ const ticket = createTicket();
-	//~ const res = await Promise.all([paid, ticket]);
-	
-	//~ return res;
-//~ }
 
 function createTicket() {
 	//console.log("in the caaaaalll")
@@ -1225,12 +1218,8 @@ function createTicket() {
 				console.log("reees", res[0].ticket_number)
 				initialState.ticketNum = (res[0].ticket_number);
 				localStorage.setItem("TICKETS", JSON.stringify(initialState.ticketNum));
-				
-				if ( initialState.stripe == "No" ) {
-					window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self"); 
-				} else {
-					openStripe();
-				}
+
+				window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self"); 
 			}
 		});
 }
@@ -1244,11 +1233,10 @@ function createTicket() {
 	//~ }) 
 //~ }
 
-
-function openStripe(){
-	window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-	
-}
+//~ function openStripe(){
+	//~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+	//~ createTicket();
+//~ }
 
 function loadBlocks(anlass) {
 	console.log(anlass);
@@ -1354,9 +1342,7 @@ function loadBlocks(anlass) {
 											  document.getElementById(`abend_${block.neues_datum}_${dayName}`).appendChild(cloneCard);
 											  }
 								  }
-							
 							}
-					  
 				  } 
 			});
 			//console.log("all block interes", interests);
@@ -1396,7 +1382,7 @@ function nachbestellenBtn() {
 	window.localStorage.removeItem("TICKETS");
 	initialState.addressOne = [];
 	initialState.ticketNum = null;
-	initialState.stripe = "Yes"
+	initialState.stripe = "No"
 	localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 	
 	document.getElementById("step1").style.display = "block";
@@ -1441,12 +1427,23 @@ function nachbestellenBtn() {
 			
 		//}
 	}
-	
 }
 
 function zuruckZurSeite() {
 	window.localStorage.clear();
 	window.open("https://sges.ch/", "_self");
+}
+
+function successPayment() {
+	document.getElementById("step0").style.display = "none";
+	document.getElementById("warenkorb").style.display = "none";
+	document.getElementById("step1").style.display = "none";
+	document.querySelector(".positionFixed").style.display = "none";
+	document.getElementById("step3").style.display = "block";
+	
+	initialState.stripe = "Yes"
+	localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
+	createTicket()
 }
 
 function loadEndMsg() {
@@ -1465,8 +1462,7 @@ function loadEndMsg() {
 		'callback': function(response) {
 		var sinv = response.message;
 		console.log("sinv responseee", sinv)
-		
-		setTimeout(endMessage(sinv), 5000);
+		setTimeout(endMessage(sinv), 10000);
 		}
 	});
 
@@ -1568,7 +1564,9 @@ function get_arguments() {
         
         if (args['anlass']) {
 			// When the payment goes through with Stripe, it calls this endpoint
-			if (args['anlass'] == 'ticketkauf') {
+			if (args['anlass'] == 'success') {
+				successPayment();
+			} else if (args['anlass'] == 'ticketkauf') {
 				loadEndMsg();
 			} else {
 				//console.log('args with anlass', args['anlass'] )

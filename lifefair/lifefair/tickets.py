@@ -75,7 +75,7 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb):
 	sinv_name = create_invoice(addressOne, addressTwo, warenkorb, person=person_name)
 	ticket_number = get_ticket_code()
 	
-	if addressOne['giftcode'] != " ":
+	if addressOne['giftcode'] != "":
 		db_giftc = frappe.get_all("Ticket Voucher", filters={'name': addressOne['giftcode']}, fields=['name'])
 		giftc = frappe.get_doc("Ticket Voucher", db_giftc[0]['name'])
 		giftc.used_by = person_name
