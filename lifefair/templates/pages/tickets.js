@@ -10,6 +10,7 @@ var currentThema = null;
 var rechAdd = "notDone";
 //var datumFlag = 0;
 var inTheChekout = false;
+var userDefined = "No"
 var initialState = {
 	userTypeValue : JSON.parse(localStorage.getItem("USER")) || "Student",
 	cart : JSON.parse(localStorage.getItem("CART")) || [],
@@ -45,7 +46,7 @@ updateCart();
 //filterSelection("all");
 
 function userSelection(c) {
-		
+	userDefined = "Yes";
 	var currentUser;
 	initialState.userTypeValue = c;
 	localStorage.setItem("USER", JSON.stringify(initialState.userTypeValue));
@@ -101,7 +102,7 @@ function filterDatum(c, button) {
 	titleFilter(dayName);
 	dayName = c;
 
-	if (initialState.userTypeValue == 0) {
+	if (userDefined == "No") {
 		document.getElementById("ichBin").classList.toggle("shake");
 	} else {
 		currentDatum = c;
@@ -136,7 +137,7 @@ function filterDatum(c, button) {
 }
 
 function filterSelection(c, button) {
-	if (initialState.userTypeValue == 0) {
+	if (userDefined == "No") {
 		document.getElementById("ichBin").classList.toggle("shake");
 	} else if (currentDatum == null) {
 		document.getElementById("datum").classList.toggle("shake");
@@ -202,76 +203,79 @@ function titleFilter(c) {
 	//console.log("c in title", c);
 	var flag = 0;
 	var localTitle;
-	
-	if (dayName == "iAmNull" ) {
-		localTitle = document.querySelectorAll('.localTitle_vormittag');
-		//console.log('localTitle', localTitle);
-		for ( var j = 0; j < localTitle.length; j++ ) {
-			localTitle[j].style.display = "none";
-			}
-		localTitle = document.querySelectorAll('.localTitle_nachmittag');
-		
-		for ( var j = 0; j < localTitle.length; j++ ) {
-			localTitle[j].style.display = "none";
-			}
-		localTitle = document.querySelectorAll('.localTitle_abend');
-		
-		for ( var j = 0; j < localTitle.length; j++ ) {
-			localTitle[j].style.display = "none";
-			}
-		//Show all cards
-		localTitle = document.querySelectorAll('.filterDiv');
-		for ( var j = 0; j < localTitle.length; j++ ) {
-			localTitle[j].style.display = "block";
-			}
-	}
-	
-	if (c != "" && c != null) {
+	if (userDefined == "Yes") {
 
-	for (var i = 0; i < blocks.length; i++ ) {
-		
-		if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null) {
-			if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
-				document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
-				//console.log("in the if 1 on the title filter", c)
-			} else {
-				if (currentTimeSlot == "vormittag" || currentTimeSlot == "all") {
-					flag = 1;
-					document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
-					//console.log('i the if 2 document', document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`))
-					//console.log("in the if 2 on the title filter", c)
+		if (dayName == "iAmNull" ) {
+			localTitle = document.querySelectorAll('.localTitle_vormittag');
+			//console.log('localTitle', localTitle);
+			for ( var j = 0; j < localTitle.length; j++ ) {
+				localTitle[j].style.display = "none";
 				}
-			}
+			localTitle = document.querySelectorAll('.localTitle_nachmittag');
+			
+			for ( var j = 0; j < localTitle.length; j++ ) {
+				localTitle[j].style.display = "none";
+				}
+			localTitle = document.querySelectorAll('.localTitle_abend');
+			
+			for ( var j = 0; j < localTitle.length; j++ ) {
+				localTitle[j].style.display = "none";
+				}
+			//Show all cards
+			localTitle = document.querySelectorAll('.filterDiv');
+			for ( var j = 0; j < localTitle.length; j++ ) {
+				localTitle[j].style.display = "block";
+				}
 		}
-		if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`) != null) {
-			if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
-				document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
-					
-			} else {
-				if (currentTimeSlot == "nachmittag" || currentTimeSlot == "all") {
-					flag = 1;
-					document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+		
+		if (c != "" && c != null) {
+
+		for (var i = 0; i < blocks.length; i++ ) {
+			
+			if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null) {
+				if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
+					document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
+					//console.log("in the if 1 on the title filter", c)
+				} else {
+					if (currentTimeSlot == "vormittag" || currentTimeSlot == "all") {
+						flag = 1;
+						document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+						//console.log('i the if 2 document', document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`))
+						//console.log("in the if 2 on the title filter", c)
+					}
 				}
 			}
-		} 
-		if (document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`) != null) {
-			if (document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
-				document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
-					
-			} else {
-				if (currentTimeSlot == "abend" || currentTimeSlot == "all") {
-					flag = 1;
-					document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+			if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`) != null) {
+				if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
+					document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
+						
+				} else {
+					if (currentTimeSlot == "nachmittag" || currentTimeSlot == "all") {
+						flag = 1;
+						document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+					}
 				}
-			}
-		} 	
-	}
-	
-	if ( flag == 0) {
-			errorContainer.innerHTML = "Keine Ereignisse gefunden";
-	} else {
-			errorContainer.innerHTML = "";
-	}
+			} 
+			if (document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`) != null) {
+				if (document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
+					document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
+						
+				} else {
+					if (currentTimeSlot == "abend" || currentTimeSlot == "all") {
+						flag = 1;
+						document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+					}
+				}
+			} 	
+		}
+		
+		if ( flag == 0) {
+				errorContainer.innerHTML = "Keine Ereignisse gefunden";
+		} else {
+				errorContainer.innerHTML = "";
+		}
+	 }
+ 
  }
  
 }
@@ -356,7 +360,7 @@ function filterTimeSlot(c) {
 	var flag = 0;
 	//datumFlag == 0;
 	currentTimeSlot = c;
-	if (initialState.userTypeValue == 0) {
+	if (userDefined == "No") {
 		document.getElementById("ichBin").classList.toggle("shake");
 	} else if (currentDatum == null) {
 		document.getElementById("datum").classList.toggle("shake");
@@ -508,7 +512,7 @@ btnContainerOne.forEach((element) => {
 btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
 		//console.log("theeeeeeeeee eleeeeeemeeeent", element)
-		if (initialState.userTypeValue == 0) {
+		if (userDefined == "No") {
 			console.log("user missing");
 		} else if (currentDatum == null) {
 			console.log("datum missing");
@@ -552,7 +556,7 @@ function blueThemaActive(c, button = undefined) {
 	//console.log("in the blue thema button", button);
 	//console.log("in the blue thema c", c);
 	
-	if (initialState.userTypeValue == 0) {
+	if (userDefined == "No") {
 			//console.log("in the button thema clicked", element);
 			document.getElementById("ichBin").classList.toggle("shake");
 		} else if (c != null && c.length != 0 && button != undefined) {
@@ -664,7 +668,7 @@ function removeFilter(num) {
 			btn.classList.remove("active");
 			btn.style.display = "block";
 		});
-		initialState.userTypeValue = 0;
+		userDefined = "No";
 		
 		document.getElementById("selectedFilters").classList.add("grey");
 		document.getElementById("warenkorb").classList.add("grey");
@@ -781,7 +785,7 @@ function timeOfDay(timeRange) {
 }
 
 function addToCart(i) {
-	if (initialState.userTypeValue == 0) {
+	if (userDefined == "No") {
 		document.getElementById("ichBin").classList.toggle("shake");
 	} else {
 		if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
@@ -953,7 +957,7 @@ function start() {
 
 function checkOut() {
 	
-	if (initialState.userTypeValue == 0) {
+	if (userDefined == "No") {
 		document.getElementById("ichBin").classList.toggle("shake");
 	} else if (initialState.cart.length == 0) {
 		var shaketext = document.querySelector(".cartLeer")

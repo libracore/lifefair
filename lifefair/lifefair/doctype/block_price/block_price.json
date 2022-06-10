@@ -5,8 +5,11 @@
  "engine": "InnoDB",
  "field_order": [
   "visitor_type",
-  "blocks",
-  "rate"
+  "rate",
+  "col_main",
+  "meeting",
+  "sec_blocks",
+  "blocks"
  ],
  "fields": [
   {
@@ -30,9 +33,26 @@
    "in_list_view": 1,
    "label": "Rate",
    "reqd": 1
+  },
+  {
+   "fieldname": "col_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "meeting",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Meeting",
+   "options": "Meeting",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sec_blocks",
+   "fieldtype": "Section Break",
+   "label": "Blocks"
   }
  ],
- "modified": "2022-06-07 15:06:19.547608",
+ "modified": "2022-06-10 11:01:48.784760",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block Price",
@@ -51,8 +71,8 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
  "sort_field": "modified",
  "sort_order": "DESC",
+ "title_field": "visitor_type",
  "track_changes": 1
 }

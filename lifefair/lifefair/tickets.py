@@ -23,12 +23,12 @@ def get_blocks(meeting, usertype):
 			GROUP_CONCAT(`tabBlock Interest`.`interest`) AS `interests`,
 			`website_link`,
 			`tabBlock`.`name`,
-			`meeting`
+			`tabBlock`.`meeting`
 		FROM `tabBlock`
 		LEFT JOIN `tabBlock Interest` ON `tabBlock Interest`.`parent` = `tabBlock`.`name`
 		LEFT JOIN `tabBlock Price Block` ON `tabBlock Price Block`.`block` = `tabBlock`.`name`
 		LEFT JOIN `tabBlock Price` ON `tabBlock Price`.`name` = `tabBlock Price Block`.`parent`
-		WHERE `meeting` = '{meeting}'
+		WHERE `tabBlock`.`meeting` = '{meeting}'
 		AND `tabBlock Price`.`visitor_type` = '{usertype}'
 		GROUP BY `tabBlock`.`name`
 		ORDER BY `tabBlock`.`neues_datum` ASC;
