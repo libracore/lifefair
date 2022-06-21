@@ -8,7 +8,7 @@ import frappe
 from frappe import throw, _
 import json
 from frappe.utils.data import today
-from random import randint
+from lifefair.lifefair.doctype.registration.registration import get_ticket_code
 
 @frappe.whitelist(allow_guest=True) 
 def get_visitor_type():
@@ -154,36 +154,7 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
 			frappe.log_error("{0}\n\n{1}".format(e, entry), "val")
 	return new_regs
 
-def get_barcode(l):
-    # generate random barcode
-    barcode = ''
-    for i in range(l):
-        barcode += str(randint(0,9))
-    # check if this is already in the database
-    db = frappe.get_all("Registration", filters={'barcode': barcode}, fields=['name'])
-    if len(db) > 0:
-        # it's in the database, retry
-        barcode = get_barcode(l)
-    return barcode
-
-def get_ticket_code():
-    # generate random ticket code
-    ticket_code = ''
-    for i in range(14):
-        ticket_code += str(randint(0,9))
-    ticket_code = list(ticket_code)
-    ticket_code[4] = "/"
-    ticket_code[9] = "/"
-    ticket_code = "".join(ticket_code)
-    # check if this is already in the database
-    db = frappe.get_all("Registration", filters={'ticket_number': ticket_code}, fields=['name'])
-    if len(db) > 0:
-        # it's in the database, retry
-        ticket_code = get_ticket_code()
-    #frappe.log_error(ticket_code)
-    return ticket_code
-
-def create_person(addressOne, source="from xing"):
+def create_person(addressOne, source="from ticketing"):
 	# check if the person is already in the database (by email)
 	sql_query = """SELECT `name` 
 				   FROM `tabPerson`
@@ -252,11 +223,11 @@ def create_person(addressOne, source="from xing"):
 			person_name = person.name
 			frappe.db.commit()            
 		except Exception as e:
-			frappe.log_error("Import Xing Error", "Insert Person {1} {2} failed. {3}: {0}".format(e, addressOne['firstname'], addressOne['lastname'], source))      
+			frappe.log_error("Import Ticketing Error", "Insert Person {1} {2} failed. {3}: {0}".format(e, addressOne['firstname'], addressOne['lastname'], source))      
 	#frappe.log_error(person_name)
 	return person_name
 
-def create_contact(addressOne, customer_address, full_name, source="from xing"):
+def create_contact(addressOne, customer_address, full_name, source="from ticketing"):
 	if addressOne['herrFrau'] == "Herr":
 		gender = "Männlich"
 	elif addressOne['herrFrau'] == "Frau":
@@ -309,11 +280,11 @@ def create_contact(addressOne, customer_address, full_name, source="from xing"):
 			contact_name = contact.name
 			frappe.db.commit()
 		except Exception as e:
-			frappe.log_error("Import Xing Error", "Insert Contact {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))
+			frappe.log_error("Import Ticketing Error", "Insert Contact {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))
 	#frappe.log_error("in the create contact")   
 	return contact_name
 
-def create_address(check, info, person, full_name, source="from xing"):
+def create_address(check, info, person, full_name, source="from ticketing"):
 	if check == "Yes":
 		person = info["firma"]
 	address = frappe.get_doc({
@@ -344,11 +315,11 @@ def create_address(check, info, person, full_name, source="from xing"):
 				contact.save(ignore_permissions=True)
 		frappe.db.commit()
 	except Exception as e:
-		frappe.log_error("Import Xing Error", "Insert Address {1} {2} failed. {3}: {0}".format(e, person, info["lastname"], source))
+		frappe.log_error("Import Ticketing Error", "Insert Address {1} {2} failed. {3}: {0}".format(e, person, info["lastname"], source))
 	return address_name
 
 @frappe.whitelist(allow_guest=True) 
-def create_invoice(addressOne, addressTwo, warenkorb, total, ticket_number, barcode, addresse, person, source="from xing"):
+def create_invoice(addressOne, addressTwo, warenkorb, total, ticket_number, barcode, addresse, person, source="from ticketing"):
 	frappe.log_error("on the create sinv")
 	person = frappe.get_doc("Person", person)
 	addresse_name = frappe.get_doc("Address", addresse).name
@@ -390,11 +361,11 @@ def create_invoice(addressOne, addressTwo, warenkorb, total, ticket_number, barc
 		sinv_name = sinv.name
 		frappe.db.commit()
 	except Exception as e:
-		frappe.log_error("Import Xing Error", "Insert Invoice {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))      
+		frappe.log_error("Import Ticketing Error", "Insert Invoice {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))      
 	frappe.log_error(sinv_name)
 	return sinv_name
 
-def create_customer(addressOne, person, source="from xing"):
+def create_customer(addressOne, person, source="from ticketing"):
 	full_name = "{0} {1}".format(addressOne["firstname"], addressOne["lastname"])
 	firma = addressOne["firma"];
 	if firma == "":
@@ -413,7 +384,7 @@ def create_customer(addressOne, person, source="from xing"):
 		customer_name = customer.name
 		frappe.db.commit()
 	except Exception as e:
-		frappe.log_error("Import Xing Error", "Insert Customer {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))      
+		frappe.log_error("Import Ticketing Error", "Insert Customer {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))      
 	
 	frappe.log_error("in the create customer")
 	return customer_name
