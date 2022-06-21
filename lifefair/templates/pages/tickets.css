@@ -365,6 +365,7 @@ ul {
   background: none;
   text-decoration: none;
   text-align: center;
+  text-transform: uppercase;
 }
 
 .userMenuClass  {

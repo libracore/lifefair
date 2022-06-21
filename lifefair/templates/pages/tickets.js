@@ -1134,8 +1134,24 @@ function createTicket() {
 	//~ createTicket();
 //~ }
 
+function loadVisitorTypes() {
+	frappe.call({
+		'method': "lifefair.lifefair.tickets.get_visitor_type",
+		'callback': function (response) {
+			visitor_types = response.message;
+			
+			var visitorDropdown = document.getElementById("dropdown");
+			for (var i = 0; i < visitor_types.length; i++ ) {
+				var visitor_li = document.createElement('li');
+				visitor_li.innerHTML =`<button class="btnOrange" onclick="userSelection('${visitor_types[i]}')">${visitor_types[i]}</button>`;
+				visitorDropdown.appendChild(visitor_li);
+			}
+		}
+	})
+}
+
 function loadBlocks(anlass) {
-	console.log(anlass);
+
 	frappe.call({
 		'method': "lifefair.lifefair.tickets.get_blocks",
 		'args': {
@@ -1144,7 +1160,6 @@ function loadBlocks(anlass) {
 		},
 		'callback': function (response) {
             blocks = response.message;
-			console.log(blocks);
             
             var blocksContainer = document.querySelector(".display");
 			blocksContainer.innerHTML = "";
@@ -1449,6 +1464,7 @@ function get_arguments() {
 			} else {
 				//console.log('args with anlass', args['anlass'] )
 				anlass = args['anlass'];
+				loadVisitorTypes();
 				loadBlocks(args['anlass']);
 			}
 		}

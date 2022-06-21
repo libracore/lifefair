@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2019, libracore and contributors
+# Copyright (c) 2017-2022, libracore and contributors
 # License: AGPL v3. See LICENCE
 
 # import definitions
@@ -9,6 +9,20 @@ from frappe import throw, _
 import json
 from frappe.utils.data import today
 from random import randint
+
+@frappe.whitelist(allow_guest=True) 
+def get_visitor_type():
+	sql_query = """
+		SELECT 
+			`tabVisitor Type`.`name`
+		FROM `tabVisitor Type`
+		ORDER BY `tabVisitor Type`.`priority` ASC
+	"""
+	data = frappe.db.sql(sql_query, as_dict = True)
+	visitor_types = []
+	for d in data:
+		visitor_types.append(d['name'])
+	return visitor_types
 
 @frappe.whitelist(allow_guest=True) 
 def get_blocks(meeting, usertype):

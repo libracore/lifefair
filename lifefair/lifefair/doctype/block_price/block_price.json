@@ -14,10 +14,10 @@
  "fields": [
   {
    "fieldname": "visitor_type",
-   "fieldtype": "Select",
+   "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Visitor Type",
-   "options": "Privatperson\nStudent\nAHV/IV Rentner\nArbeitssuchend\nFirma 1 - 9 MA\nFirma 10 - 99 MA\nFirma 100 - 199 MA\nFirma 199+ MA",
+   "options": "Visitor Type",
    "reqd": 1
   },
   {
@@ -52,7 +52,7 @@
    "label": "Blocks"
   }
  ],
- "modified": "2022-06-21 13:42:55.271562",
+ "modified": "2022-06-21 15:36:47.692483",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block Price",
