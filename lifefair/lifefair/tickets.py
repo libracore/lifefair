@@ -37,8 +37,9 @@ def get_blocks(meeting, usertype):
 	return data
 
 @frappe.whitelist(allow_guest=True) 
-def create_ticket(stripe, addressOne, addressTwo, warenkorb):
+def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
 	new_regs = []
+	
 	if isinstance(addressOne, str):
 		addressOne = json.loads(addressOne)
 	# ticket is not in the database, create
@@ -54,15 +55,44 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb):
 		person_name = db_person[0]['name']
 		# get person, check website_description and update if empty
 		person = frappe.get_doc("Person", db_person[0]['name'])
+		done_data = "No"
+		#check if the data provided is different from the one found and create a contatc record for it
+		if addressOne['herrFrau'] != person.gender or addressOne['akademishTitle'] != person.title or addressOne['firstname'] != person.first_name or addressOne['lastname'] != person.last_name or addressOne['phone'] != person.company_phone:
+			create_contact(addressOne, customer_address=person.customer_address, full_name=person.full_name)
+			frappe.log_error("info changed")
+			if done_data == "No":
+				create_data_changes(addressOne, person)
+				done_data = "Yes"
+		# ~ elif person.organisations[0].organisation or person.organisations[0].function and addressOne['firma'] != person.organisations[0].organisation or addressOne['funktion'] != person.organisations[0].function:
+			# ~ frappe.log_error("no the same org or funk")
+			# ~ create_contact(addressOne, customer_address=person.customer_address, full_name=person.full_name)
+			# ~ if done_data == "No":
+				# ~ create_data_changes(addressOne, person)
+				# ~ done_data = "Yes"
 		if not person.website_description:
 			person.website_description = "{0}, {1}".format(addressOne['funktion'], addressOne['firma'])
 		# update phone number if missing
 		if not person.company_phone:
 			person.company_phone = addressOne['phone']
-		person.save()
+		# update if address is missing
+		if not person.customer_address:
+			person.customer_address = create_address(check="No", info=addressOne, person=person.name, full_name=person.full_name)
+			current_address = person.customer_address
+		else:
+			# create an Address record to avoid replacing the current address
+			address_name = frappe.get_doc("Address", person.customer_address)
+			current_address = person.customer_address
+			if addressOne['adresse'] != address_name.address_line1 or addressOne['ort'] != address_name.city or addressOne['plz'] != address_name.pincode or addressOne['land'] != address_name.country:
+				current_address = create_address(check="No", info=addressOne, person=person.name, full_name=person.full_name)
+				frappe.log_error("address changed")
+				if done_data == "No":
+					create_data_changes(addressOne, person)
+					done_data = "Yes"
+		person.save(ignore_permissions=True)
 	else:
 		# person not found, create new person
 		person_name = create_person(addressOne)
+		current_address = frappe.get_doc("Person", person_name).customer_address
 		# ~ if new_person:
 			# ~ person_name = new_person['name']
 		# ~ else:
@@ -71,19 +101,21 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb):
 		# ~ basestring
 	# ~ except NameError:
 		# ~ basestring = str
-		
-	sinv_name = create_invoice(addressOne, addressTwo, warenkorb, person=person_name)
+
+	barcode = get_barcode(18)
 	ticket_number = get_ticket_code()
+	sinv_name = create_invoice(addressOne, addressTwo, warenkorb, total, ticket_number, barcode, addresse=current_address, person=person_name)
 	
 	if addressOne['giftcode'] != "":
 		db_giftc = frappe.get_all("Ticket Voucher", filters={'name': addressOne['giftcode']}, fields=['name'])
 		giftc = frappe.get_doc("Ticket Voucher", db_giftc[0]['name'])
 		giftc.used_by = person_name
-		giftc.save()
+		giftc.save(ignore_permissions=True)
 	else:
 		frappe.log_error("no giftc")
 
 	frappe.log_error("ticket and sinv done")
+	
 	if stripe == "Yes":
 		create_payment_entry(sinv_name)
 	
@@ -100,13 +132,25 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb):
 				'phone': addressOne['phone'],
 				'ticket_number': ticket_number
 			})
-			registration = registration.insert()
+			registration = registration.insert(ignore_permissions=True)
 			#reg_name = registration.name
 			frappe.db.commit()
 			new_regs.append(registration)
 		except Exception as e:
-			frappe.log_error("{0}\n\n{1}".format(e, entry), "val")   
+			frappe.log_error("{0}\n\n{1}".format(e, entry), "val")
 	return new_regs
+
+def get_barcode(l):
+    # generate random barcode
+    barcode = ''
+    for i in range(l):
+        barcode += str(randint(0,9))
+    # check if this is already in the database
+    db = frappe.get_all("Registration", filters={'barcode': barcode}, fields=['name'])
+    if len(db) > 0:
+        # it's in the database, retry
+        barcode = get_barcode(l)
+    return barcode
 
 def get_ticket_code():
     # generate random ticket code
@@ -139,16 +183,6 @@ def create_person(addressOne, source="from xing"):
 		company_matches = None
 		if addressOne['firma']:
 			company_matches = frappe.get_all("Organisation", filters={'official_name': addressOne['firma']}, fields=['name'])
-		# do not insert companies, too many typo issues
-		# ~ if not company_matches and company and company != "":
-			# ~ company = frappe.get_doc({
-				# ~ 'doctype': "Organisation",
-				# ~ 'official_name': company
-			# ~ })
-			# ~ try:
-				# ~ company.insert()
-			# ~ except Exception as e:
-				# ~ frappe.log_error("Insert company {0} failed {1}".format(company, e))
 		full_name = "{0} {1}".format(addressOne['firstname'], addressOne['lastname'])
 		if addressOne['akademishTitle']:
 			long_name = "{0} {1} {2}".format(addressOne['akademishTitle'], addressOne['firstname'], addressOne['lastname'])
@@ -186,7 +220,10 @@ def create_person(addressOne, source="from xing"):
 				addressOne['adresse'], addressOne['plz'], addressOne['ort'], addressOne['land'] )
 		})
 		try:
-			person = person.insert()
+			person = person.insert(ignore_permissions=True)
+			person.customer_link = create_customer(addressOne, person)
+			person.customer_address = create_address(check="No", info=addressOne, person=person.name, full_name=full_name)
+			create_contact(addressOne, customer_address=person.customer_address, full_name=full_name)
 			# only insert company reference if provided (and matched)
 			if company_matches and addressOne['firma'] and addressOne['firma'] != "":
 				if addressOne['funktion'] and addressOne['funktion'] != "":
@@ -197,7 +234,7 @@ def create_person(addressOne, source="from xing"):
 					organisation.notes = source
 					person.primary_organisation = addressOne['firma']
 					person.primary_function = addressOne['funktion']
-					person.save()
+			person.save(ignore_permissions=True)
 			person_name = person.name
 			frappe.db.commit()            
 		except Exception as e:
@@ -205,44 +242,142 @@ def create_person(addressOne, source="from xing"):
 	#frappe.log_error(person_name)
 	return person_name
 
+def create_contact(addressOne, customer_address, full_name, source="from xing"):
+	if addressOne['herrFrau'] == "Herr":
+		gender = "Männlich"
+	elif addressOne['herrFrau'] == "Frau":
+		gender = "Weiblich"
+	else:
+		gender = "Sonstige(s)"
+	if customer_address:
+		address = customer_address
+	person_contact = frappe.get_all("Contact", filters={'email_id': addressOne["email"]}, fields=['name'])
+	if person_contact:
+		contact = frappe.get_doc("Contact", person_contact[0]['name'])
+		contact.first_name = addressOne["firstname"]
+		contact.last_name = addressOne["lastname"]
+		contact.email_id = addressOne['email']
+		contact.gender = gender
+		contact.company_name = addressOne["firma"]
+		contact.function = addressOne["funktion"]
+		contact.address = address
+		if contact.phone != addressOne['phone']:
+			phone_no = contact.append('phone_nos', {})
+			phone_no.phone = addressOne["phone"]
+			phone_no.is_primary_phone = 0
+		contact.phone = addressOne['phone']
+		contact_name = contact.name
+		contact.save(ignore_permissions=True)
+		frappe.db.commit()
+	else:
+		contact = frappe.get_doc({
+			'doctype': "Contact",
+			'first_name': addressOne["firstname"],
+			'last_name': addressOne["lastname"],
+			'gender': gender,
+			'company_name': addressOne["firma"],
+			'function': addressOne["funktion"],
+			'address': address
+		})
+		try:
+			contact = contact.insert(ignore_permissions=True)
+			email = contact.append('email_ids', {})
+			email.email_id = addressOne["email"]
+			email.is_primary = 1
+			phone_no = contact.append('phone_nos', {})
+			phone_no.phone = addressOne["phone"]
+			phone_no.is_primary_phone = 1
+			link = contact.append('links', {})
+			link.link_doctype = "Customer"
+			link.link_name = full_name
+			link.link_title = full_name
+			contact.save(ignore_permissions=True)
+			contact_name = contact.name
+			frappe.db.commit()
+		except Exception as e:
+			frappe.log_error("Import Xing Error", "Insert Contact {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))
+	#frappe.log_error("in the create contact")   
+	return contact_name
+
+def create_address(check, info, person, full_name, source="from xing"):
+	if check == "Yes":
+		person = info["firma"]
+	address = frappe.get_doc({
+		'doctype': "Address",
+		'address_title': person,
+		'address_type': "Billing",
+		'address_line1': info["adresse"],
+		'pincode': info["plz"],
+		'city': info["ort"],
+		'country': info["land"],
+		'email_id': info["email"],
+		'phone': info["phone"]
+	})
+	try:
+		address = address.insert(ignore_permissions=True)
+		address_name = address.name
+		frappe.log_error("in the create address")  
+		frappe.log_error(address_name)    
+		link = address.append('links', {})
+		link.link_doctype = "Customer"
+		link.link_name = full_name
+		address.save(ignore_permissions=True)
+		if check != "Yes":
+			person_contact = frappe.get_all("Contact", filters={'email_id': info["email"]}, fields=['name'])
+			if person_contact:
+				contact = frappe.get_doc("Contact", person_contact[0]['name'])
+				contact.address = address_name
+				contact.save(ignore_permissions=True)
+		frappe.db.commit()
+	except Exception as e:
+		frappe.log_error("Import Xing Error", "Insert Address {1} {2} failed. {3}: {0}".format(e, person, info["lastname"], source))
+	return address_name
+
 @frappe.whitelist(allow_guest=True) 
-def create_invoice(addressOne, addressTwo, warenkorb, person, source="from xing"):
+def create_invoice(addressOne, addressTwo, warenkorb, total, ticket_number, barcode, addresse, person, source="from xing"):
 	frappe.log_error("on the create sinv")
-	sinv_address = addressOne
+	person = frappe.get_doc("Person", person)
+	addresse_name = frappe.get_doc("Address", addresse).name
+	frappe.log_error(addresse_name)
+	sinv_address = addresse_name
 	if isinstance(addressTwo, str):
 		addressTwo = json.loads(addressTwo)
 	if len(addressTwo) > 0:
-		sinv_address = addressTwo
+		sinv_address = create_address(check="Yes", info=addressTwo, person=person.name, full_name=person.full_name)
 	
-	customer = frappe.get_doc("Person", person).customer_link
-	
+	taxes_and_charges = frappe.get_value("Ticketing Settings", "Ticketing Settings", "sales_taxes")
+	taxes_and_charges_template = frappe.get_doc("Sales Taxes and Charges Template", taxes_and_charges)
+	customer = person.customer_link
 	if not customer: 
 		customer = create_customer(addressOne, person)
-	# ~ else:
-		# ~ frappe.log_error(person)
 	sinv = frappe.get_doc({
 		'doctype': "Sales Invoice",
 		'posting_date': today(),
-		'posting_time': "00:00:00",
 		'customer': customer,
-		'company': "Lifefair",
-		"items": [
+		'customer_address': sinv_address,
+		'contact_person': person.full_name,
+		'shipping_address_name': addresse_name,
+		'ticket_number': ticket_number,
+		'scan_barcode': barcode,
+		'taxes_and_charges': taxes_and_charges,
+        'taxes': taxes_and_charges_template.taxes,
+		'items': [
 				{
-					"item_code": "001",
+					"item_code": frappe.get_value("Ticketing Settings", "Ticketing Settings", "ticket_item"),
 					"qty": 1,
-					"rate": 50
+					"rate": total
 				}
 			]
 	})
 	try: 
-		sinv.insert()
+		sinv.insert(ignore_permissions=True)
 		signature = sinv.get_signature()
 		sinv.submit()
 		sinv_name = sinv.name
 		frappe.db.commit()
 	except Exception as e:
 		frappe.log_error("Import Xing Error", "Insert Invoice {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))      
-	#frappe.log_error(sinv_name)
+	frappe.log_error(sinv_name)
 	return sinv_name
 
 def create_customer(addressOne, person, source="from xing"):
@@ -255,21 +390,18 @@ def create_customer(addressOne, person, source="from xing"):
 	customer = frappe.get_doc({
 		'doctype': "Customer",
 		'customer_name': full_name,
-		'customer_group': "Alle Kundengruppen",
+		'customer_group': frappe.get_value("Selling Settings", "Selling Settings", "customer_group"),
+		'territory': frappe.get_value("Selling Settings", "Selling Settings", "territory"),
 		'customer_type': customer_type
 	})
 	try:
-		customer = customer.insert()
+		customer = customer.insert(ignore_permissions=True)
 		customer_name = customer.name
 		frappe.db.commit()
 	except Exception as e:
 		frappe.log_error("Import Xing Error", "Insert Customer {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))      
-	#frappe.log_error("in the else customer_name {1}".format(customer_name))
-	#Update the customer field in person doctype
-	person = frappe.get_doc("Person", person)
-	person.customer_link = customer_name
-	person.save()
-	#frappe.log_error(customer_name)
+	
+	frappe.log_error("in the create customer")
 	return customer_name
 
 @frappe.whitelist(allow_guest=True) 
@@ -281,8 +413,8 @@ def create_payment_entry(sinv_name):
 		'payment_type': "Receive",
 		'party_type': "Customer",
 		'party': sinv.customer,
-		'paid_from': 'Schuldner - L',
-		'paid_to': 'Stripe-Stripe - L',
+		'paid_from': frappe.get_value("Company", frappe.defaults.get_global_default("Company"), "default_receivable_accoutn"),
+		'paid_to': frappe.get_value("Ticketing Settings", "Ticketing Settings", "stripe"),
 		'paid_amount': sinv.outstanding_amount,
 		'received_amount': sinv.outstanding_amount,
 		'references': [
@@ -296,32 +428,31 @@ def create_payment_entry(sinv_name):
 		'reference_date': today(),
 		'remarks': 'Auto Payment for {sinv}'.format(sinv=sinv.name)
 	})
-	pe.insert()
+	pe.insert(ignore_permissions=True)
 	pe.submit()
 	frappe.db.commit()
 	#frappe.log_error(pe.name)
 	return pe
-	# ~ except Exception as err:
-        # ~ return err
 
-# ~ @frappe.whitelist(allow_guest=True) 
-# ~ def get_person():
-	# ~ sql_query = """
-		# ~ SELECT 
-			# ~ `tabPerson`.`email` AS `email`,
-			# ~ `tabPerson`.`name` AS `name`,
-			# ~ `tabPerson`.`full_name` AS `full_name`
-		# ~ FROM `tabPerson`
-		# ~ ORDER BY `tabPerson`.`modified` DESC;
-	# ~ """
-	# ~ data = frappe.db.sql(sql_query, as_dict = True)
-	# ~ return data
-	
 @frappe.whitelist(allow_guest=True) 
-def get_invoice(addressOne):
-	if isinstance(addressOne, str):
-		addressOne = json.loads(addressOne)
-	full_name = "{0} {1}".format(addressOne["firstname"], addressOne["lastname"])
+def create_data_changes(addressOne, person):
+	try:
+		data_changes = frappe.get_doc({
+			'doctype': "Contact Data Change",
+			'person': person.name,
+			'form_data': "<strong>Herr/Frau:</strong> {0}, <br> <strong>Akademische Titel:</strong>  {1},<br> <strong>Vorname:</strong>  {2},<br> <strong>Name:</strong>  {3},<br> <strong>Firma:</strong> {4},<br> <strong>Funktion:</strong>  {5},<br> <strong>Telefonnummer:</strong> {6},<br> <strong>E-mail:</strong>  {7},<br> <strong>Adresse:</strong>  {8},<br> <strong>PLZ und Ort:</strong>  {9} {10},<br> <strong>Land:</strong> {11}.".format(addressOne['herrFrau'], addressOne["akademishTitle"], addressOne["lastname"], addressOne["firstname"], addressOne["firma"], addressOne["funktion"], addressOne["phone"], addressOne["email"], addressOne["adresse"], addressOne["plz"], addressOne["ort"], addressOne["land"])
+		})
+		data_changes.save(ignore_permissions=True)
+		data_changes_name = data_changes.name
+		frappe.db.commit()
+	except Exception as e:
+		frappe.log_error("Import Xing Error", "Insert Data Changes {1} {2} failed. {0}".format(e, addressOne["firstname"], addressOne["lastname"]))      
+	return data_changes_name
+
+@frappe.whitelist(allow_guest=True) 
+def get_invoice(person):
+	person = frappe.get_doc("Person", person)
+	full_name = "{0} {1}".format(person.first_name, person.last_name)
 	db_sinv = frappe.get_all("Sales Invoice", filters={'title': full_name}, fields=['name'])
 	if db_sinv:
 		sinv_name = frappe.get_doc("Sales Invoice", db_sinv[0]['name'])

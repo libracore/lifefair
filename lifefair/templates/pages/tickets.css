@@ -7,26 +7,41 @@
   font-family: "lifefair";
 }
 
-.container {
+
+.container-fluid {
+  padding-left: 40px;
+  /*border: solid yellow;
   margin: 0px;
   margin-left: 118px;
   width: 100% !important;
-}
+  width: 100% !important;
+  padding-right: 15px !important;
+  padding-left: 15px !important;
+  margin-right: auto !important;
+  margin-left: auto !important;*/
+} /**/
 
+/*
 #fullPage {
   display: flex;
   width: 100%;
   justify-content: start;
   width: 100% !important;
-}
+} /**/
 
 .firtsDiv {
-  width: 30%;
-  z-index: 1;
+  /*border: solid red;*/
+  width: 100%;
+  padding-top: 40px;
+  padding-bottom: 40px;
+  /*z-index: 1;*/
 }
 
 .scondDiv {
-  width: 70%;
+  /*border: solid blue;*/
+  width: 100%;/**/
+  min-height: 250px !important;
+  padding-left: 30px;
 }
 
 .error {
@@ -138,7 +153,7 @@
 }
 
 #selectedFilters {
-  width: 1052px;
+  max-width: 1052px;
   border-bottom: 1px solid #E8E8E8;
   margin-left: 15px;
   margin-bottom: 20px;
@@ -292,7 +307,7 @@
 
 #filterBtnContainerUSER, #filterBtnContainerDATUM, #filterBtnContainerZEIT, #filterBtnContainerTHEMA {
   margin-bottom: 25px;
-  width: 1012px;
+  max-width: 1032px;
   margin-left: 15px;
 }
 
@@ -302,7 +317,7 @@
 
 .display {
   margin-left: 15px;
-  width: 1042px;
+  max-width: 1042px;
 }
 
 .filterTitle {
@@ -394,16 +409,19 @@ ul {
 }
 
 #warenkorb {
-  width: 320px;
   border: 1px solid #E94E26;
   color: #E94E26;
   font-size: 12px;
   outline: none;
   padding: 12px 14px;
   cursor: pointer;
+  margin-top: 33px;
+  margin-bottom: 30px;
   position: fixed;
-  margin-left: 780px;
-  margin-top: 10px;
+  min-width: 320px;
+  max-width: 320px;
+  /*margin-left: 780px;
+  margin-top: 10px;*/
 }
 
 .cartTitle {
@@ -440,7 +458,7 @@ ul {
 .cartTotal {
   color: #003764;
   font-weight: bold;
-  margin-right: 33px;
+  margin-right: 24px;
   margin-left: 3px;
   display: flex;
   flex-direction: column;
@@ -455,7 +473,11 @@ ul {
 }
 
 .discount {
+  width: 30%;
+  font-weight: bold;
+  font-size: 15px;
   text-align: end;
+  padding-right: 5px;
 }
 
 .totalDisplay {
@@ -555,7 +577,7 @@ ul {
   width: 100%;
   font-weight: bold;
   font-size: 15px;
-  text-align: center;
+  text-align: end;
   padding-bottom: 0px;
 }
 
@@ -588,12 +610,13 @@ ul {
 }
 
 .table {
-  width: 80%;
-  margin: 15px;
+  width: auto;
+  margin-left: 15px;
 }
 
 .tr {
   display: flex;
+  flex-wrap: wrap;
   width: 100%;
 }
 
@@ -601,7 +624,6 @@ ul {
   border: none !important;
   padding: 0px !important;
   padding-bottom: 8px !important;
-  width: 50%;
   display: flex;
   flex-direction: column;
   margin: 0px;
@@ -609,11 +631,15 @@ ul {
 }
 
 .tableInput {
-  width: 525px;
+  min-width: 525px;
   height: 50px;
   border: 1.5px solid #ebecf1;
   padding: 20px;
   font-size: 23px;
+}
+
+#step3 {
+  max-width: 1200px;
 }
 
 .tableSpan {
@@ -638,10 +664,11 @@ ul {
   background: none;
 }
 
+
 .positionFixed {
   position: fixed;
-  margin-left: 780px;
-  margin-top: 540px;
+  margin-left: 0px;
+  margin-top: 450px;
   width: 320px;
   text-transform: uppercase;
 }
@@ -649,6 +676,7 @@ ul {
 .rechnung, .zahlungs {
   margin-top: 30px;
   color: #009FE3;
+  margin-right: 216px;
 }
 
 .rechnungOptions {
@@ -693,6 +721,7 @@ ul {
   font-size:  25px;
   font-weight: lighter;
   margin-bottom: 1.8rem;
+  max-width: 1200px;
 }
 
 .endMsgButtonsContainer {
@@ -711,9 +740,11 @@ ul {
   outline: none;
   padding: 13px 10px;
   cursor: pointer;
-  margin: 5px;
   text-decoration: none;
   text-align: center;
+  margin: 5px;
+  margin-left: 0px;
+  margin-right: 10px;
 }
 
 .endMsgBtn:hover {
@@ -739,4 +770,54 @@ ul {
   font-size: 25px;
   margin-top: 65px;
   font-weight: lighter;
+  margin-left: 3px;
+}
+
+@media all and (max-width: 1300px) {  
+  .ticketsName, .dateName, .dateNum, .timeName  {
+    font-size: 31px;
+  }
+}
+
+@media all and (max-width: 1107px) {
+  .ticketsName, .dateName, .dateNum, .timeName  {
+    font-size: 27px;
+  }
+}
+
+@media all and (max-width: 990px) {
+  #warenkorb {
+    /*column-count: 1 !important;*/
+    position: static !important;
+  }
+  .positionFixed  {
+    position: static !important;
+    margin-top: 0px;
+  }
+  .display  {
+    width: 874px;
+  }
+}
+
+@media all and (max-width: 746px) {
+  .display  {
+    width: auto;
+  }
+  .ticketsName, .dateName, .dateNum, .timeName  {
+    font-size: 23px;
+  }
+}
+
+@media all and (max-width: 602px) {
+  .ticketsName, .dateName, .dateNum, .timeName  {
+    font-size: 20px;
+  }
+}
+
+@media all and (max-width: 538px) {
+  .ticketsName, .dateName, .dateNum, .timeName  {
+    font-size: 15px;
+  }
+  .container-fluid {padding: 0px !important;}
+
 }

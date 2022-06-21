@@ -22,6 +22,7 @@ var initialState = {
 	rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || "No",
 	stripe: JSON.parse(localStorage.getItem("STRIPE")) || "No",
 	ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
+	person: JSON.parse(localStorage.getItem("PERSON")) || null,
 };
 var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ];
 var datumBtn = document.getElementById("filterBtnContainerDATUM");
@@ -40,10 +41,6 @@ var errorContainer = document.querySelector(".error");
 var active = document.querySelector(".active");
 
 updateCart();
-//endMsg();
-//console.log("in the clearFields", clearFields);
-//console.log("in the clearFieldsTwo", clearFieldsTwo);
-//filterSelection("all");
 
 function userSelection(c) {
 	userDefined = "Yes";
@@ -53,7 +50,7 @@ function userSelection(c) {
 	
 	if ( currentUser != initialState.userTypeValue ) {
 		currentUSer = initialState.userTypeValue;
-		//get_arguments()
+
 		loadBlocks(anlass)
 		datumBtn.innerHTML = `<h2 class="filterTitle" id="datum">DATUM</h2>`;
 		selectedFilterDiv.innerHTML = '';
@@ -85,8 +82,6 @@ function userSelection(c) {
     document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "none");
     
 	if ( document.getElementById("selectedFilters").contains(document.querySelector(".grey")) == true) document.getElementById("selectedFilters").classList.remove("grey");
-	//Like this all the blocks will automatically appear 
-	//titleShowAll();
 	updateCart();
 }
 
@@ -169,7 +164,6 @@ function titleShowAll() {
 	currentTimeSlot = "all";
 	
 	localTitle = document.querySelectorAll('.localTitle_vormittag');
-	//console.log('localTitle', localTitle);
 	for ( var j = 0; j < localTitle.length; j++ ) {
 		if (localTitle[j].children.length > 1) {
 			localTitle[j].style.display = "block";
@@ -207,20 +201,20 @@ function titleFilter(c) {
 
 		if (dayName == "iAmNull" ) {
 			localTitle = document.querySelectorAll('.localTitle_vormittag');
-			//console.log('localTitle', localTitle);
 			for ( var j = 0; j < localTitle.length; j++ ) {
 				localTitle[j].style.display = "none";
 				}
+				
 			localTitle = document.querySelectorAll('.localTitle_nachmittag');
-			
 			for ( var j = 0; j < localTitle.length; j++ ) {
 				localTitle[j].style.display = "none";
 				}
+				
 			localTitle = document.querySelectorAll('.localTitle_abend');
-			
 			for ( var j = 0; j < localTitle.length; j++ ) {
 				localTitle[j].style.display = "none";
 				}
+
 			//Show all cards
 			localTitle = document.querySelectorAll('.filterDiv');
 			for ( var j = 0; j < localTitle.length; j++ ) {
@@ -235,13 +229,10 @@ function titleFilter(c) {
 			if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null) {
 				if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
 					document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
-					//console.log("in the if 1 on the title filter", c)
 				} else {
 					if (currentTimeSlot == "vormittag" || currentTimeSlot == "all") {
 						flag = 1;
 						document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
-						//console.log('i the if 2 document', document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`))
-						//console.log("in the if 2 on the title filter", c)
 					}
 				}
 			}
@@ -266,7 +257,7 @@ function titleFilter(c) {
 						document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
 					}
 				}
-			} 	
+			} 
 		}
 		
 		if ( flag == 0) {
@@ -275,9 +266,7 @@ function titleFilter(c) {
 				errorContainer.innerHTML = "";
 		}
 	 }
- 
- }
- 
+	}
 }
 
 function cardFilter(c) {
@@ -285,9 +274,7 @@ function cardFilter(c) {
 	//Show all cards
 	var localTitle = document.querySelectorAll('.filterDiv');
 	for ( var j = 0; j < localTitle.length; j++ ) {
-		//if (localTitle[j].children.length > 1) {
-			localTitle[j].style.display = "none";
-		//}
+		localTitle[j].style.display = "none";
 	}
 	if (c != "" && c != null) {
 		console.log("c and currentTimeSlot", c, currentTimeSlot, dayName)
@@ -297,14 +284,10 @@ function cardFilter(c) {
 			for (var i = 0; i < vormittagCards.length - 1; i++ ) {
 				
 				if ( vormittagCards[i].classList.contains(`${dayName}`) == false || vormittagCards[i].classList.contains(`${c}`) == false || vormittagCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
-					//console.log("in the vormittagCards with i", vormittagCards[i].classList.contains(`${c}`))
 					vormittagCards[i].style.display = "none";
-					//console.log("in the if 1 on the card filter vormittag", c)
 				} else {
-					//console.log("in the vormittagCards with i", vormittagCards[i])
 						flag = 1;
 						vormittagCards[i].style.display = "block";
-						//console.log("in the if 2 on the card filter vormittag", c)
 						titleFilter(dayName)
 				}
 			}
@@ -314,11 +297,8 @@ function cardFilter(c) {
 			for (var i = 0; i < nachmittagCards.length - 1; i++ ) {
 				
 				if ( nachmittagCards[i].classList.contains(`${dayName}`) == false || nachmittagCards[i].classList.contains(`${c}`) == false || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
-					//console.log("in the nachmittagCards with i", nachmittagCards[i].classList.contains(`${c}`))
 					nachmittagCards[i].style.display = "none";
-					//console.log("in the if 1 on the card filter nachmittag", c)
 				} else {
-					//console.log("in the if 2 on the card filter nachmittag", c)
 						flag = 1;
 						nachmittagCards[i].style.display = "block";
 						console.log("in the nachmittagCards 2 with i", nachmittagCards[i])
@@ -331,14 +311,10 @@ function cardFilter(c) {
 			for (var i = 0; i < abendCards.length - 1; i++ ) {
 				
 				if ( abendCards[i].classList.contains(`${dayName}`) == false || abendCards[i].classList.contains(`${c}`) == false || abendCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
-					//console.log("in the abendCards with i", abendCards[i].classList.contains(`${c}`))
 					abendCards[i].style.display = "none";
-					//console.log("in the if 1 on the card filter abend", c)
 				} else {
-					//console.log("in the abendCards with i", abendCards[i])
 						flag = 1;
 						abendCards[i].style.display = "block";
-						//console.log("in the if 2 on the card filter abend", c)
 						titleFilter(dayName)
 				}
 			}
@@ -358,7 +334,6 @@ function cardFilter(c) {
 function filterTimeSlot(c) {
 	//console.log("c in time filter", c);
 	var flag = 0;
-	//datumFlag == 0;
 	currentTimeSlot = c;
 	if (userDefined == "No") {
 		document.getElementById("ichBin").classList.toggle("shake");
@@ -377,9 +352,7 @@ function filterTimeSlot(c) {
 		//Show all cards
 		localTitle = document.querySelectorAll('.filterDiv');
 		for ( var j = 0; j < localTitle.length; j++ ) {
-			//if (localTitle[j].children.length > 1) {
-				localTitle[j].style.display = "block";
-			//}
+			localTitle[j].style.display = "block";
 		}
 		
 		for (var i = 0; i < blocks.length; i++ ) {
@@ -440,7 +413,7 @@ function filterTimeSlot(c) {
 		if ( flag == 0) {
 			errorContainer.innerHTML = "Keine Ereignisse gefunden";
 		} else {
-				errorContainer.innerHTML = "";
+			errorContainer.innerHTML = "";
 		}
 		//filterSelection("all");
 	}
@@ -511,15 +484,12 @@ btnContainerOne.forEach((element) => {
 
 btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
-		//console.log("theeeeeeeeee eleeeeeemeeeent", element)
 		if (userDefined == "No") {
 			console.log("user missing");
 		} else if (currentDatum == null) {
 			console.log("datum missing");
 		} else {
 			document.getElementById("ichBin").classList.remove("shake");
-			//btnContainerThree.forEach(btn => btn.classList.remove("active"));
-			//btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
 			
 			var blueZeit = document.querySelector(".zeitBlueFilter");
 			var answer = selectedFilterDiv.contains(blueZeit); 
@@ -536,98 +506,70 @@ btnContainerThree.forEach((element) => {
 				blueFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(3)">X</div>`;
 				blueFilterBlock.classList.add('zeitBlueFilter');
 				blueFilterBlock.classList.add('filter');
-				//if (selectedFilterDiv.children.length == 3) {
-				//	console.log("in the first if", selectedFilterDiv.children.length)
-				//	selectedFilterDiv.insertBefore(blueFilterBlock, selectedFilterDiv.lastElementChild);
-				//} else {
-				//	console.log("in the second if blue zeit", selectedFilterDiv.children.length)
 				selectedFilterDiv.appendChild(blueFilterBlock);
-				//}
-				
 			} 
 			
 			this.addEventListener("click", toggleAction(this, 3))
-			//this.classList.add("active");
 		}
 	});
 });
 
 function blueThemaActive(c, button = undefined) {
-	//console.log("in the blue thema button", button);
 	//console.log("in the blue thema c", c);
 	
 	if (userDefined == "No") {
-			//console.log("in the button thema clicked", element);
-			document.getElementById("ichBin").classList.toggle("shake");
-		} else if (c != null && c.length != 0 && button != undefined) {
+		document.getElementById("ichBin").classList.toggle("shake");
+	} else if (c != null && c.length != 0 && button != undefined) {
+
+		if (tags.some((tag) => tag == c)) {
+			document.getElementById("ichBin").classList.remove("shake");
+			button.addEventListener("click", toggleAction(button, 2))
 			
-			if (tags.some((tag) => tag == c)) {
-				document.getElementById("ichBin").classList.remove("shake");
-				//btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-				//button.classList.add("active");
-				//console.log('thiiiiiiiiiiiiiis', this);
-				//console.log('buttoooooooon', button);
-				button.addEventListener("click", toggleAction(button, 2))
-				
-				var blueDatum = document.querySelector(".datumBlueFilter");
-				var answer = selectedFilterDiv.contains(blueDatum); 
-				var blueFilterBlock;
-				if (answer == true) {
-					var datumChildLi = selectedFilterDiv.getElementsByTagName('li')[1];
-					blueFilterBlock = document.createElement('li');
-					blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(2)">X</div>`;
-					blueFilterBlock.classList.add('datumBlueFilter');
-					blueFilterBlock.classList.add('filter');
-					selectedFilterDiv.replaceChild(blueFilterBlock, datumChildLi);
-				} else {
-					blueFilterBlock = document.createElement('li');
-					blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(2)">X</div>`;
-					blueFilterBlock.classList.add('datumBlueFilter');
-					blueFilterBlock.classList.add('filter');
-					//if (selectedFilterDiv.children.length == 2) {
-					//	console.log('the if length 2 in the blue active datum');
-					//	console.log("in the first if", selectedFilterDiv.children.length)
-					//	selectedFilterDiv.insertBefore(blueFilterBlock, selectedFilterDiv.lastElementChild);
-					//} else {
-					//	console.log('the else in the blue active datum');
-					//	console.log("in the second if", selectedFilterDiv.children.length)
-						selectedFilterDiv.appendChild(blueFilterBlock);
-					//}
-					
-				} 
+			var blueDatum = document.querySelector(".datumBlueFilter");
+			var answer = selectedFilterDiv.contains(blueDatum); 
+			var blueFilterBlock;
+			if (answer == true) {
+				var datumChildLi = selectedFilterDiv.getElementsByTagName('li')[1];
+				blueFilterBlock = document.createElement('li');
+				blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(2)">X</div>`;
+				blueFilterBlock.classList.add('datumBlueFilter');
+				blueFilterBlock.classList.add('filter');
+				selectedFilterDiv.replaceChild(blueFilterBlock, datumChildLi);
 			} else {
-				document.getElementById("ichBin").classList.remove("shake");
-				//btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-				//button.classList.add("active");
-				button.addEventListener("click", toggleAction(button, 4))
-				
-				var blueThema = document.querySelector(".themaBlueFilter");
-				var answer = selectedFilterDiv.contains(blueThema);
-				var blueFilterBlock;
-				if (answer == true) {
-					//console.log("in the blueThema true")
-					var themaChildLi = selectedFilterDiv.getElementsByTagName('li')[3];
-					blueFilterBlock = document.createElement('li');
-					blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(4)">X</div>`;
-					blueFilterBlock.classList.add('themaBlueFilter');
-					blueFilterBlock.classList.add('filter');
-					selectedFilterDiv.replaceChild(blueFilterBlock, themaChildLi);
-				} else {
-					blueFilterBlock = document.createElement('li');
-					blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(4)">X</div>`;
-					blueFilterBlock.classList.add('themaBlueFilter');
-					blueFilterBlock.classList.add('filter');
-					selectedFilterDiv.appendChild(blueFilterBlock);
-				}
-				
+				blueFilterBlock = document.createElement('li');
+				blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(2)">X</div>`;
+				blueFilterBlock.classList.add('datumBlueFilter');
+				blueFilterBlock.classList.add('filter');
+				selectedFilterDiv.appendChild(blueFilterBlock);
+			} 
+		} else {
+			document.getElementById("ichBin").classList.remove("shake");
+			button.addEventListener("click", toggleAction(button, 4))
+			
+			var blueThema = document.querySelector(".themaBlueFilter");
+			var answer = selectedFilterDiv.contains(blueThema);
+			var blueFilterBlock;
+			if (answer == true) {
+				var themaChildLi = selectedFilterDiv.getElementsByTagName('li')[3];
+				blueFilterBlock = document.createElement('li');
+				blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(4)">X</div>`;
+				blueFilterBlock.classList.add('themaBlueFilter');
+				blueFilterBlock.classList.add('filter');
+				selectedFilterDiv.replaceChild(blueFilterBlock, themaChildLi);
+			} else {
+				blueFilterBlock = document.createElement('li');
+				blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(4)">X</div>`;
+				blueFilterBlock.classList.add('themaBlueFilter');
+				blueFilterBlock.classList.add('filter');
+				selectedFilterDiv.appendChild(blueFilterBlock);
 			}
+			
 		}
+	}
 }
 
 function toggleAction(button, num) {
 	if (button.classList.contains("toggleFilter")) {
-			//console.log('trueeee', button, num);
-			//button.classList.remove("active");
 			if (num == 2) {
 				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
 				btnContainerTwo.querySelectorAll("button")  .forEach(btn => btn.classList.remove("active"));
@@ -640,7 +582,6 @@ function toggleAction(button, num) {
 			}
 			removeFilter(num);
 		} else {
-			//console.log('neeein', button, num);
 			if (num == 2) {
 				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
 				btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
@@ -676,9 +617,6 @@ function removeFilter(num) {
 		document.getElementById("filterBtnContainerZEIT").classList.add("grey");
 		document.getElementById("filterBtnContainerTHEMA").classList.add("grey");
 		document.querySelector(".display").classList.add("grey");
-		
-		//btnContainerThree.forEach(btn => btn.classList.remove("active"));
-		//btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 		btnContainerTwo.querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
 		btnContainerThree.forEach((element) => element.classList.remove("btnHover"));
 		btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
@@ -686,15 +624,10 @@ function removeFilter(num) {
 	} else if ( num == 2) {
 		currentDatum = null;
 		currentZeit = null;
-		console.log('in the if 2')
-		//selectedFilterDiv.children[1].remove();
 		console.log(document.querySelector(".datumBlueFilter"));
 		
 		if (selectedFilterDiv.children.length == 2) {
-			console.log('in the if num 2');
-			console.log(selectedFilterDiv.children.length);
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-			//document.getElementById("selectedFilters").removeChild(document.getElementById("selectedFilters").lastElementChild);
 			console.log(selectedFilterDiv.children.length);
 		} else if (selectedFilterDiv.children.length == 3) {
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
@@ -709,10 +642,7 @@ function removeFilter(num) {
 		document.getElementById("selectedFilters").querySelectorAll("li").forEach(li => console.log("li", li));
 		titleShowAll();
 		selectedFilterDiv.innerHTML.reload();
-		//selectedFilterDiv.innerHTML = "hola";
-		//selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
-		//datumFlag = 1;
-		
+
 	} else if ( num == 3) {
 		currentZeit = null;
 		//selectedFilterDiv.children[2].remove();
@@ -722,7 +652,6 @@ function removeFilter(num) {
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
 		filterDatum(dayName);
-		//datumFlag = 1;
 		
 	} else if ( num == 4) {
 		selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
@@ -742,7 +671,6 @@ function removeFilter(num) {
 	
 	if (selectedFilterDiv.children.length == 1) {
 		titleShowAll();
-		//document.getElementById('all').click();
 	} 
 }
 
@@ -770,18 +698,18 @@ function timeOfDay(timeRange) {
 		if (parseInt(timeRange[0]) == 13 && parseInt(timeRange[1]) > 0) {
 			return 2
 		} else {
-			return 1		
-		}	
-	} 	
+			return 1
+		}
+	} 
 	else if ( parseInt(timeRange[0]) >= 18) {
 		if (parseInt(timeRange[0]) == 18 && parseInt(timeRange[1]) == 0) {
-			return 2	
+			return 2
 		} else {
-			return 3				
+			return 3
 		}
 	} else {
 		return 2
-	}	
+	}
 }
 
 function addToCart(i) {
@@ -799,7 +727,6 @@ function addToCart(i) {
 				 ...blocks[i], 
 			});
 		 }
-
 		updateCart();
 	} 
 }
@@ -832,12 +759,8 @@ function popUp(i) {
 function popUpConfirm(i) {
 	popUpDiv.style.display = "none";
 	var index = initialState.cart.findIndex(item => item.neues_datum == blocks[i].neues_datum);
-	//console.log("the indeeex of iteem", index);
-	
 	initialState.cart[index] = blocks[i];
 	updateCart();
-
-	//console.log("in the popUp confirm", blocks[i]);
 }
 
 function popUpCancel() {
@@ -848,7 +771,6 @@ function popUpCancel() {
 function updateCart() {
 	updateItems();
 	updateTotal();
-
 	localStorage.setItem("CART", JSON.stringify(initialState.cart));
 }
 
@@ -857,7 +779,7 @@ function updateTotal() {
 	if ( initialState.cart.length > 0) {
 		initialState.cart.forEach((item, i) => {
 			totalPrice += item.rate ;
-			cartTotal.innerHTML = `<div class="alleArtikel"><p>Alle Artikel entfernen</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
+			cartTotal.innerHTML = `<div class="alleArtikel"><p></p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
 			initialState.total = totalPrice;
 			localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
 		});
@@ -916,7 +838,9 @@ function updateItems() {
 
 function removeCartItem(i) {
 	//console.log('removing', i, initialState.cart[i]);
-	if (inTheChekout == true) {
+	if (userDefined == "No") {
+		document.getElementById("ichBin").classList.toggle("shake");
+	} else if (inTheChekout == true) {
 		if (initialState.cart.length > 1) {
 			initialState.cart = initialState.cart.filter((item)=> item.short_name != initialState.cart[i].short_name);
 			updateCart();
@@ -930,29 +854,6 @@ function removeCartItem(i) {
 function start() {
 	inTheChekout = false;
 	window.open("http://localhost:8000/tickets?anlass=SGES 2021", "_self");
-/*
-	document.getElementById("warenkorb").style.display = "block";
-    document.getElementById("step0").style.display = "block";
-    document.getElementById("step1").style.display = "none";
-    document.getElementById("step2").style.display = "none";
-    document.getElementById("step3").style.display = "none";
-    // prepare topic
-    cartbButton.innerHTML = `<p onclick="checkOut()" class="cartBtnText">ZUM WARENKORB</p>`
-    clearFields.forEach((element) => {
-		if (element.type == "text") {
-			element.value = "";
-		} else if (element.type == "checkbox") {
-			element.checked = false;
-		}
-	});
-	
-	clearFieldsTwo.forEach((element) => {
-		if (element.type == "text") {
-			element.value = "";
-		}
-	});
-	*/
-
 }
 
 function checkOut() {
@@ -991,8 +892,6 @@ rechnungAdresse.addEventListener('change', function(e){
 var kreditkarte = document.getElementById("kreditkarte");
 kreditkarte.addEventListener('change', function(e){
 	if (kreditkarte.checked) {
-		//~ initialState.stripe = "Yes";
-		//~ localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 		console.log("kreditkarte check");
 	}
 });
@@ -1000,18 +899,11 @@ kreditkarte.addEventListener('change', function(e){
 var rechnung = document.getElementById("rechnung");
 rechnung.addEventListener('change', function(e){
 	if (rechnung.checked) {
-		//~ initialState.stripe = "No";
-		//~ localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 		console.log("rechnung check");
 	}
 });
 
 //Checking the GiftCard Code
-
-//~ giftCard.addEventListener('change', function(e){
-	//~ console.log("in the giiiftcard", e)
-//~ });
-
 function checkGiftCard(){
 	var giftCard = document.getElementById("inputGutschein");
 	var lastname = document.getElementById("inputSurname").value;
@@ -1030,12 +922,14 @@ function checkGiftCard(){
 			
 			if (res == -1) {
 				giftCard.value = "";
-				giftCard.placeholder = "Not Valid"; 
+				giftCard.placeholder = "Ungültiger Code"; 
 				console.log("doesnt exist");
 			} else {
 				var discount = (res/100) * initialState.total;
 				var newTotal = initialState.total - discount;
-				cartTotal.innerHTML = `<div class="alleArtikel"><p>Alle Artikel entfernen</p>  <p class="discount">${res}% Discount Added.</p> </div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
+				initialState.total = newTotal;
+				localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
+				cartTotal.innerHTML = `<div class="alleArtikel"><p>${res}% Ermässigung.</p><p class="discount">-${discount}</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
 			}
 		}
 	});
@@ -1099,7 +993,6 @@ function checkDataAndPay() {
 		plzOrt.style.border = "1px solid red;"
 		plzOrt.focus();
 	} else if ((rechnungAdresse.checked) && (rechAdd == "notDone")) {
-		//~ //rechnungAdresseChecked(herrFrau, akademishTitle, firstname, lastname, adresse, email, phone, firma, funktion, plzOrt);
 		console.log("rechnungAdresseChecked");
 		
 		var herrFrauTwo = document.getElementById("inputHerrFrauTwo");
@@ -1151,8 +1044,6 @@ function checkDataAndPay() {
 			var plzTwo = plzOrtTwo.value.split(" ")[0];
 			var ortTwo = plzOrtTwo.value.split(" ").splice(1).join(" ");
 			
-			//initialState.cartTwo = initialState.cart;
-			//localStorage.setItem("CARTTWO", JSON.stringify(initialState.cartTwo));
 			initialState.addressTwo = {
 				'herrFrau': herrFrauTwo.value, 
 				'firstname': firstnameTwo.value,
@@ -1175,8 +1066,7 @@ function checkDataAndPay() {
 		
 		var plz = plzOrt.value.split(" ")[0];
 		var ort = plzOrt.value.split(" ").splice(1).join(" ");
-		//initialState.cartTwo = initialState.cart;
-		//localStorage.setItem("CARTTWO", JSON.stringify(initialState.cartTwo));
+
 		initialState.addressOne = {
 				'herrFrau': herrFrau.value,
 				'akademishTitle': akademishTitle.value,
@@ -1193,9 +1083,7 @@ function checkDataAndPay() {
 				'giftcode': giftCard.value
 		}
 		localStorage.setItem("ADDRESSONE", JSON.stringify(initialState.addressOne));
-		
-		//~ createTicket();
-		
+
 		if (rechnung.checked) {
 			console.log("in the rechnuuuung");
 			createTicket();
@@ -1215,13 +1103,17 @@ function createTicket() {
 				'stripe': initialState.stripe,
 				'addressOne': initialState.addressOne,
 				'addressTwo': initialState.addressTwo,
-				'warenkorb': initialState.cart
+				'warenkorb': initialState.cart,
+				'total': initialState.total
 			},
 			'callback': function(response) {
 				var res = response.message;
-				console.log("reees", res[0].ticket_number)
+				console.log("reees", res)
 				initialState.ticketNum = (res[0].ticket_number);
 				localStorage.setItem("TICKETS", JSON.stringify(initialState.ticketNum));
+				
+				initialState.person = (res[0].person);
+				localStorage.setItem("PERSON", JSON.stringify(initialState.person));
 
 				window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self"); 
 			}
@@ -1308,19 +1200,14 @@ function loadBlocks(anlass) {
 							  for (var j = 0; j < timeFilter.length; j++ ) {
 								  if (timeFilter[j] == 1) {
 									  card.classList.add('vormittag');
-									  //console.log('card 1', card)
 										document.getElementById(`vormittag_${block.neues_datum}_${dayName}`).appendChild(card);
-										//console.log('card vomittag', document.getElementById(`vormittag_${block.neues_datum}_${dayName}`))
 									  } else if ( timeFilter[j] == 2){
 										  card.classList.add('nachmittag');
-										  //console.log('card 2', card)
 										  var cloneCard = card.cloneNode(true);
 										  document.getElementById(`nachmittag_${block.neues_datum}_${dayName}`).appendChild(cloneCard);
-										  //console.log('card nachmittag', document.getElementById(`nachmittag_${block.neues_datum}_${dayName}`))
 										  } else {
 											  card.classList.add('abend');
 											  var cloneCard = card.cloneNode(true);
-											  //cloneCard.classList.add(...`${card.className}`)
 											  document.getElementById(`abend_${block.neues_datum}_${dayName}`).appendChild(cloneCard);
 											  }
 								  }
@@ -1329,27 +1216,23 @@ function loadBlocks(anlass) {
 							
 							var OnetimeRange = block.time.split("-");
 							var timeFilter = checkTime(OnetimeRange);
-							//console.log('OnetimeRange 2', OnetimeRange)
-							  for (var i = 0; i < timeFilter.length; i++ ) {
-								  if (timeFilter[i] == 1) {
-									  card.classList.add('vormittag');
-									  document.getElementById(`vormittag_${block.neues_datum}_${dayName}`).appendChild(card);
-									  } else if ( timeFilter[i] == 2){
-										  card.classList.add('nachmittag');
-										  var cloneCard = card.cloneNode(true);
-										  //cloneCard.classList.add(...`${card.className}`)
-										  document.getElementById(`nachmittag_${block.neues_datum}_${dayName}`).appendChild(cloneCard);
-										  } else {
-											  card.classList.add('abend');
-											  var cloneCard = card.cloneNode(true);
-											  //cloneCard.classList.add(...`${card.className}`)
-											  document.getElementById(`abend_${block.neues_datum}_${dayName}`).appendChild(cloneCard);
-											  }
-								  }
+							for (var i = 0; i < timeFilter.length; i++ ) {
+								if (timeFilter[i] == 1) {
+									card.classList.add('vormittag');
+									document.getElementById(`vormittag_${block.neues_datum}_${dayName}`).appendChild(card);
+								} else if ( timeFilter[i] == 2){
+									card.classList.add('nachmittag');
+									var cloneCard = card.cloneNode(true);
+									document.getElementById(`nachmittag_${block.neues_datum}_${dayName}`).appendChild(cloneCard);
+								} else {
+									card.classList.add('abend');
+									var cloneCard = card.cloneNode(true);
+									document.getElementById(`abend_${block.neues_datum}_${dayName}`).appendChild(cloneCard);
+								}
 							}
+						}
 				  } 
 			});
-			//console.log("all block interes", interests);
 			
 			for (var i = 0; i < blocks.length; i++ ) {
 				if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null) {
@@ -1381,12 +1264,13 @@ function nachbestellenBtn() {
 	document.getElementById("step3").style.display = "none";
 	document.getElementById("step0").style.display = "none";
 	
+	userDefined = "Yes"
 	inTheChekout = true;
 	window.localStorage.removeItem("ADDRESSONE");
 	window.localStorage.removeItem("TICKETS");
 	initialState.addressOne = [];
 	initialState.ticketNum = null;
-	initialState.stripe = "No"
+	initialState.stripe = "No";
 	localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 	
 	document.getElementById("step1").style.display = "block";
@@ -1395,9 +1279,7 @@ function nachbestellenBtn() {
 	document.getElementById("warenkorb").classList.remove("grey");
 	cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT BESTELLEN</p>`;
 	
-	//initialState.cart = initialState.cartTwo;
 	console.log("initialState.cart", initialState.cart);
-	//updateCart();
 	
 	if ( initialState.rechCheck == "Yes" ) {
 		
@@ -1415,21 +1297,18 @@ function nachbestellenBtn() {
 		var landTwo = document.getElementById("inputLandTwo");
 		var plzOrtTwo = document.getElementById("inputOrtTwo");
 		
-		//for (var i = 0; i < initialState.addressTwo.length; i++ ) {
-			console.log("initialState.addressTwo", initialState.addressTwo);
+		//console.log("initialState.addressTwo", initialState.addressTwo);
 
-			herrFrauTwo.value = initialState.addressTwo.herrFrau;
-			firstnameTwo.value = initialState.addressTwo.firstname;
-			lastnameTwo.value = initialState.addressTwo.lastname;
-			adresseTwo.value = initialState.addressTwo.adresse;
-			emailTwo.value = initialState.addressTwo.email;
-			phoneTwo.value = initialState.addressTwo.phone;
-			firmaTwo.value = initialState.addressTwo.firma;
-			funktionTwo.value = initialState.addressTwo.funktion;
-			plzOrtTwo.value = initialState.addressTwo.plz + " " + initialState.addressTwo.ort;
-			landTwo.value = initialState.addressTwo.land;
-			
-		//}
+		herrFrauTwo.value = initialState.addressTwo.herrFrau;
+		firstnameTwo.value = initialState.addressTwo.firstname;
+		lastnameTwo.value = initialState.addressTwo.lastname;
+		adresseTwo.value = initialState.addressTwo.adresse;
+		emailTwo.value = initialState.addressTwo.email;
+		phoneTwo.value = initialState.addressTwo.phone;
+		firmaTwo.value = initialState.addressTwo.firma;
+		funktionTwo.value = initialState.addressTwo.funktion;
+		plzOrtTwo.value = initialState.addressTwo.plz + " " + initialState.addressTwo.ort;
+		landTwo.value = initialState.addressTwo.land;
 	}
 }
 
@@ -1461,7 +1340,7 @@ function loadEndMsg() {
 	frappe.call({
 		'method': 'lifefair.lifefair.tickets.get_invoice',
 		'args': {
-			'addressOne': initialState.addressOne,
+			'person': initialState.person,
 		},
 		'callback': function(response) {
 		var sinv = response.message;
@@ -1470,88 +1349,83 @@ function loadEndMsg() {
 		}
 	});
 
-		//~ clearFields.forEach((element) => {
-			//~ if (element.type == "text") {
-				//~ element.value = "";
-			//~ } else if (element.type == "checkbox") {
-				//~ element.checked = false;
-				//~ }
-		//~ });
-			
-		//initialState.cart = [];
-		//cartTotal.innerHTML = "";
-		//cartElement.innerHTML = "<p class='cartLeer'>IHR WARENKORB IST MOMENTAN LEER</p>";
+	//~ clearFields.forEach((element) => {
+		//~ if (element.type == "text") {
+			//~ element.value = "";
+		//~ } else if (element.type == "checkbox") {
+			//~ element.checked = false;
+			//~ }
+	//~ });
 }
 
 function endMessage(sinv){
 	
 	var endMsgContainer = document.getElementById("step3");
-			
-			//for (var i = 0; i < initialState.ticketNum.length; i++ ) { 
 
-			//console.log("items in local adress one storage", initialState.addressOne);
-			endMsgContainer.innerHTML = `
-					<h1 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h1>
-					<p class="endMsgTextOne"> Herzlichen Dank ${initialState.addressOne.herrFrau} ${initialState.addressOne.akademishTitle} ${initialState.addressOne.lastname} ${initialState.addressOne.firstname} für Ihren Ticketkauf. Ihr Ticket Nr.${initialState.ticketNum}  wird Ihnen per E-mail an ${initialState.addressOne.email} zugestellt.</p>
-					<div class="infoI">i</div> 
-				`;
-			//}
-			// To know the day and time of the blocks and with this if the Lunch or Apero is included
-			for (var x = 0; x < initialState.cart.sort((a, b) => a.neues_datum > b.neues_datum).length; x++ ) {
-				var infoDayName = null;
-				var daytConvert = new Date(initialState.cart[x].neues_datum);
-				var infoDayFlag = daytConvert.toLocaleString('de-ch', {weekday: 'long'});
-				if ( infoDayName != infoDayFlag ) {
-					infoDayName = infoDayFlag;
-				}
-				
-				var twoTimeRange = initialState.cart[x].time.split("und");
-				if (twoTimeRange.length > 1) {
-					for (var i = 0; i < twoTimeRange.length; i++ ) {
-						var OnetimeRange = twoTimeRange[i].split("-");
-						var timeFilter = checkTime(OnetimeRange);
-						if (timeFilter[0] == 1) {
-							initialState.info.push("Networking-Lunch und Apéro inklusiv am " + infoDayName);
-						} else if ( timeFilter[1] == 2){
-								initialState.info.push("Networking-Lunch und Apéro inklusiv am " + infoDayName);
-						} else {
-							initialState.info.push(" ");
-						}
-					}
+	endMsgContainer.innerHTML = `
+		<h1 class="endMsgTitle">TICKETKAUF ERFOLGREICH</h1>
+		<p class="endMsgTextOne"> Herzlichen Dank ${initialState.addressOne.herrFrau} ${initialState.addressOne.akademishTitle} ${initialState.addressOne.lastname} ${initialState.addressOne.firstname} für Ihren Ticketkauf. Ihr Ticket Nr.${initialState.ticketNum}  wird Ihnen per E-mail an ${initialState.addressOne.email} zugestellt.</p>
+		<div class="infoI">i</div> 
+	`;
+	
+	// To know the day and time of the blocks and with this if the Lunch or Apero is included
+	for (var x = 0; x < initialState.cart.sort((a, b) => a.neues_datum > b.neues_datum).length; x++ ) {
+		var infoDayName = null;
+		var daytConvert = new Date(initialState.cart[x].neues_datum);
+		var infoDayFlag = daytConvert.toLocaleString('de-ch', {weekday: 'long'});
+		if ( infoDayName != infoDayFlag ) {
+			infoDayName = infoDayFlag;
+		}
+	
+		var twoTimeRange = initialState.cart[x].time.split("und");
+		if (twoTimeRange.length > 1) {
+			for (var i = 0; i < twoTimeRange.length; i++ ) {
+				var OnetimeRange = twoTimeRange[i].split("-");
+				var timeFilter = checkTime(OnetimeRange);
+				if (timeFilter[0] == 1) {
+					initialState.info.push("Networking-Lunch und Apéro inklusiv am " + infoDayName);
+				} else if ( timeFilter[1] == 2){
+					initialState.info.push("Networking-Lunch und Apéro inklusiv am " + infoDayName);
 				} else {
-					var OnetimeRange = initialState.cart[x].time.split("-");
-					var timeFilter = checkTime(OnetimeRange);
-					//console.log("timeFilter 2", timeFilter)
-					if (timeFilter[0] == 1) {
-						initialState.info.push("Networking-Lunch inklusiv am " + infoDayName);
-					} else if ( timeFilter[0] == 2){
-						initialState.info.push("Networking-Apéro inklusiv am " + infoDayName);
-					} else {
-						initialState.info.push(" ");
-					}
-				} 
-					if (initialState.info[x] != " ") {
-						endMsgContainer.innerHTML += `<div class="infoDiv innerInfoDiv infoDetails"> ${initialState.info[x]} </div>`;
+					initialState.info.push(" ");
 				}
 			}
+		} else {
+			var OnetimeRange = initialState.cart[x].time.split("-");
+			var timeFilter = checkTime(OnetimeRange);
+			if (timeFilter[0] == 1) {
+				initialState.info.push("Networking-Lunch inklusiv am " + infoDayName);
+			} else if ( timeFilter[0] == 2){
+				initialState.info.push("Networking-Apéro inklusiv am " + infoDayName);
+			} else {
+				initialState.info.push(" ");
+			}
+		} 
+		if (initialState.info[x] != " ") {
+			endMsgContainer.innerHTML += `<div class="infoDiv innerInfoDiv infoDetails"> ${initialState.info[x]} </div>`;
+		}
+	}
 
-			endMsgContainer.innerHTML += `
-				<div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://www.hyatt.com/en-US/hotel/switzerland/park-hyatt-zurich/zurph?src=corp_lclb_gmb_seo_zurph" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
-				<div class="endMsgButtonsContainer">
-					<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${sinv}&format=Standard&no_letterhead=0&_lang=en" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
-					<button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
-					<button class="endMsgBtn zuruckBtnTwo" onclick="zuruckZurSeite()">ZURÜCK ZUR STARTSEITE</button>   
-				</div>
-				<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
-				`
+	endMsgContainer.innerHTML += `
+		<div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://sges.ch/official-congress-hotel-2022/" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
+		<div class="endMsgButtonsContainer">
+		<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${sinv}&format=Standard&no_letterhead=0&_lang=en" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
+		<button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
+		<button class="endMsgBtn zuruckBtnTwo" onclick="zuruckZurSeite()">ZURÜCK ZUR STARTSEITE</button>   
+		</div>
+		<p class="endMsgTextTwo"> Wir freuen uns, Sie bald am Swiss Green Economy Symposium begrüssen zu dürfen.</p>
+	`
 }
 
 
 document.addEventListener("DOMContentLoaded", function(event) {
     // add change triggers here
-    
     // process command line arguments
     get_arguments();
+    
+    var container = document.querySelector(".my-5");
+    container.classList.remove("container");
+    container.classList.add("container-fluid");
 });
 
 function get_arguments() {

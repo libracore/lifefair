@@ -196,6 +196,12 @@ def get_data():
                        "name": "SDG Goal",
                        "label": _("SDG Goal"),
                        "description": _("SDG Goal")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Ticketing Settings",
+                       "label": _("Ticketing Settings"),
+                       "description": _("Ticketing Settings")
                    }
             ]
         }
