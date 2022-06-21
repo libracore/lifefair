@@ -131,6 +131,18 @@ def get_data():
                        "description": _("Testimonials"),
                         "is_query_report": True
                    },
+                   {
+                       "type": "doctype",
+                       "name": "Contact Data Change",
+                       "label": _("Contact Data Change"),
+                       "description": _("Contact Data Change")
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Ticket Voucher",
+                       "label": _("Ticket Voucher"),
+                       "description": _("Ticket Voucher")
+                   },
             ]
         },
         {
@@ -202,7 +214,14 @@ def get_data():
                        "name": "Ticketing Settings",
                        "label": _("Ticketing Settings"),
                        "description": _("Ticketing Settings")
-                   }
+                   },
+                   {
+                       "type": "doctype",
+                       "name": "Visitor Type",
+                       "label": _("Visitor Type"),
+                       "description": _("Visitor Type")
+                   },
+                   
             ]
         }
     ]
