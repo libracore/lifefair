@@ -22,7 +22,7 @@ var initialState = {
 	rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || "No",
 	stripe: JSON.parse(localStorage.getItem("STRIPE")) || "No",
 	ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
-	person: JSON.parse(localStorage.getItem("PERSON")) || null,
+	sinv: JSON.parse(localStorage.getItem("SINV")) || null,
 };
 var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ];
 var datumBtn = document.getElementById("filterBtnContainerDATUM");
@@ -73,7 +73,7 @@ function userSelection(c) {
 	btnContainerThree.forEach(btn => btn.classList.remove("active"));
 	btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
 	btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-	console.log("the user", initialState.userTypeValue);
+
 	var userMenu = document.getElementById("userMenu");
 	var userMenuDiv = document.createElement('div');
 	userMenuDiv.classList.add('userMenuDiv');
@@ -277,7 +277,6 @@ function cardFilter(c) {
 		localTitle[j].style.display = "none";
 	}
 	if (c != "" && c != null) {
-		console.log("c and currentTimeSlot", c, currentTimeSlot, dayName)
 		
 		if ( currentTimeSlot == "vormittag" ) {
 			var vormittagCards = document.querySelectorAll('.filterDiv');
@@ -301,7 +300,6 @@ function cardFilter(c) {
 				} else {
 						flag = 1;
 						nachmittagCards[i].style.display = "block";
-						console.log("in the nachmittagCards 2 with i", nachmittagCards[i])
 						titleFilter(dayName)
 				}
 			}
@@ -598,9 +596,7 @@ function toggleAction(button, num) {
 } 
 
 function removeFilter(num) {
-	console.log('in the remove', num)
-	console.log(selectedFilterDiv.children.length)
-	console.log('childreeen', selectedFilterDiv)
+	//console.log('in the remove', num);
 	errorContainer.innerHTML = "";
 	
 	if (num == 1 ){
@@ -624,11 +620,9 @@ function removeFilter(num) {
 	} else if ( num == 2) {
 		currentDatum = null;
 		currentZeit = null;
-		console.log(document.querySelector(".datumBlueFilter"));
 		
 		if (selectedFilterDiv.children.length == 2) {
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-			console.log(selectedFilterDiv.children.length);
 		} else if (selectedFilterDiv.children.length == 3) {
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
@@ -753,7 +747,6 @@ function popUp(i) {
 				</div>
 			</div> `;	
 	popUpDiv.style.display = "block";
-	console.log("the same day is not possible" );
 }
 
 function popUpConfirm(i) {
@@ -765,7 +758,6 @@ function popUpConfirm(i) {
 
 function popUpCancel() {
 	popUpDiv.style.display = "none";
-	console.log("in the popUp cancel");
 }
 
 function updateCart() {
@@ -853,7 +845,7 @@ function removeCartItem(i) {
 
 function start() {
 	inTheChekout = false;
-	window.open("http://localhost:8000/tickets?anlass=SGES 2021", "_self");
+	window.open(`/tickets?anlass=${anlass}`, "_self");
 }
 
 function checkOut() {
@@ -877,12 +869,10 @@ var rechnungAdresse = document.getElementById("gleiche");
 rechnungAdresse.checked = false;
 rechnungAdresse.addEventListener('change', function(e){
 	if (rechnungAdresse.checked) {
-		console.log("Gleiche check");
 		document.getElementById("step2").style.display = "block";
 		initialState.rechCheck = "Yes";
 		localStorage.setItem("RECHCHECK", JSON.stringify(initialState.rechCheck));
 	} else if (!rechnungAdresse.checked) {
-		console.log("not Gleiche check");
 		document.getElementById("step2").style.display = "none";
 		initialState.rechCheck = "No";
 		localStorage.setItem("RECHCHECK", JSON.stringify(initialState.rechCheck));
@@ -906,24 +896,17 @@ rechnung.addEventListener('change', function(e){
 //Checking the GiftCard Code
 function checkGiftCard(){
 	var giftCard = document.getElementById("inputGutschein");
-	var lastname = document.getElementById("inputSurname").value;
-	var firstname = document.getElementById("inputFirstname").value;
-	console.log("in the giftcaaard", giftCard.value, firstname, lastname)
 	frappe.call({
 		'method': 'lifefair.lifefair.tickets.check_giftcode',
 		'args': {
-			'firstname': firstname,
-			'lastname': lastname,
 			'giftcode': giftCard.value
 		},
 		'callback': function(response) {
 			var res = response.message;
-			console.log("reees", res);
 			
 			if (res == -1) {
 				giftCard.value = "";
 				giftCard.placeholder = "Ungültiger Code"; 
-				console.log("doesnt exist");
 			} else {
 				var discount = (res/100) * initialState.total;
 				var newTotal = initialState.total - discount;
@@ -935,10 +918,9 @@ function checkGiftCard(){
 	});
 }
 
-
 //Cheking the Values after proceeding to pay
 function checkDataAndPay() {
-	console.log("in the pay func");
+	//console.log("in the pay func");
 	
 	if (initialState.rechCheck == "No") {
 		initialState.addressTwo = [];
@@ -993,7 +975,6 @@ function checkDataAndPay() {
 		plzOrt.style.border = "1px solid red;"
 		plzOrt.focus();
 	} else if ((rechnungAdresse.checked) && (rechAdd == "notDone")) {
-		console.log("rechnungAdresseChecked");
 		
 		var herrFrauTwo = document.getElementById("inputHerrFrauTwo");
 		var lastnameTwo = document.getElementById("inputSurnameTwo");
@@ -1085,10 +1066,8 @@ function checkDataAndPay() {
 		localStorage.setItem("ADDRESSONE", JSON.stringify(initialState.addressOne));
 
 		if (rechnung.checked) {
-			console.log("in the rechnuuuung");
 			createTicket();
 		} else { 
-			console.log("in the stripeeee");
 			window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
 			//~ openStripe();
 		}
@@ -1108,14 +1087,14 @@ function createTicket() {
 			},
 			'callback': function(response) {
 				var res = response.message;
-				console.log("reees", res)
-				initialState.ticketNum = (res[0].ticket_number);
+
+				initialState.ticketNum = (res.ticket_number);
 				localStorage.setItem("TICKETS", JSON.stringify(initialState.ticketNum));
 				
-				initialState.person = (res[0].person);
-				localStorage.setItem("PERSON", JSON.stringify(initialState.person));
-
-				window.open("http://localhost:8000/tickets?anlass=ticketkauf", "_self"); 
+				initialState.sinv = (res.sinv_name);
+				localStorage.setItem("SINV", JSON.stringify(initialState.sinv));
+				anlass = "ticketkauf"
+				window.open(`/tickets?anlass=${anlass}`, "_self"); 
 			}
 		});
 }
@@ -1294,8 +1273,6 @@ function nachbestellenBtn() {
 	document.getElementById("warenkorb").classList.remove("grey");
 	cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT BESTELLEN</p>`;
 	
-	console.log("initialState.cart", initialState.cart);
-	
 	if ( initialState.rechCheck == "Yes" ) {
 		
 		document.getElementById("gleiche").checked = true;
@@ -1345,24 +1322,14 @@ function successPayment() {
 }
 
 function loadEndMsg() {
-	console.log("in the loadENDMsg")
 	document.getElementById("step0").style.display = "none";
 	document.getElementById("warenkorb").style.display = "none";
 	document.getElementById("step1").style.display = "none";
 	document.querySelector(".positionFixed").style.display = "none";
 	document.getElementById("step3").style.display = "block";
 	
-	frappe.call({
-		'method': 'lifefair.lifefair.tickets.get_invoice',
-		'args': {
-			'person': initialState.person,
-		},
-		'callback': function(response) {
-		var sinv = response.message;
-		console.log("sinv responseee", sinv)
-		setTimeout(endMessage(sinv), 10000);
-		}
-	});
+
+		setTimeout(endMessage(), 10000);
 
 	//~ clearFields.forEach((element) => {
 		//~ if (element.type == "text") {
@@ -1373,7 +1340,7 @@ function loadEndMsg() {
 	//~ });
 }
 
-function endMessage(sinv){
+function endMessage(){
 	
 	var endMsgContainer = document.getElementById("step3");
 
@@ -1424,7 +1391,7 @@ function endMessage(sinv){
 	endMsgContainer.innerHTML += `
 		<div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://sges.ch/official-congress-hotel-2022/" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
 		<div class="endMsgButtonsContainer">
-		<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${sinv}&format=Standard&no_letterhead=0&_lang=en" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
+		<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${initialState.sinv}&format=Standard&no_letterhead=0&_lang=en" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
 		<button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
 		<button class="endMsgBtn zuruckBtnTwo" onclick="zuruckZurSeite()">ZURÜCK ZUR STARTSEITE</button>   
 		</div>
@@ -1456,13 +1423,13 @@ function get_arguments() {
         });
         
         if (args['anlass']) {
+			anlass = args['anlass']
 			// When the payment goes through with Stripe, it calls this endpoint
 			if (args['anlass'] == 'success') {
 				successPayment();
 			} else if (args['anlass'] == 'ticketkauf') {
 				loadEndMsg();
 			} else {
-				//console.log('args with anlass', args['anlass'] )
 				anlass = args['anlass'];
 				loadVisitorTypes();
 				loadBlocks(args['anlass']);
