@@ -33,7 +33,7 @@
    "options": "Person"
   }
  ],
- "modified": "2022-06-08 18:03:39.719042",
+ "modified": "2022-06-21 16:17:51.666534",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Ticket Voucher",
@@ -48,6 +48,29 @@
    "read": 1,
    "report": 1,
    "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Lifefair User",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Lifefair Manager",
    "share": 1,
    "write": 1
   }
