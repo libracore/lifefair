@@ -12,6 +12,7 @@ var rechAdd = "notDone";
 var inTheChekout = false;
 var userDefined = "No"
 var initialState = {
+	meeting: JSON.parse(localStorage.getItem("MEETING")) || "",
 	userTypeValue : JSON.parse(localStorage.getItem("USER")) || "Student",
 	cart : JSON.parse(localStorage.getItem("CART")) || [],
 	total: JSON.parse(localStorage.getItem("TOTAL")) || 0,
@@ -1258,7 +1259,7 @@ function nachbestellenBtn() {
 	document.getElementById("step3").style.display = "none";
 	document.getElementById("step0").style.display = "none";
 	
-	userDefined = "Yes"
+	userDefined = "Yes";
 	inTheChekout = true;
 	window.localStorage.removeItem("ADDRESSONE");
 	window.localStorage.removeItem("TICKETS");
@@ -1327,9 +1328,9 @@ function loadEndMsg() {
 	document.getElementById("step1").style.display = "none";
 	document.querySelector(".positionFixed").style.display = "none";
 	document.getElementById("step3").style.display = "block";
-	
+	anlass = initialState.meeting;
 
-		setTimeout(endMessage(), 10000);
+		setTimeout(endMessage(), 3000);
 
 	//~ clearFields.forEach((element) => {
 		//~ if (element.type == "text") {
@@ -1391,7 +1392,7 @@ function endMessage(){
 	endMsgContainer.innerHTML += `
 		<div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://sges.ch/official-congress-hotel-2022/" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
 		<div class="endMsgButtonsContainer">
-		<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${initialState.sinv}&format=Standard&no_letterhead=0&_lang=en" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
+		<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${initialState.sinv}&format=Sales Inovice - Ticket&no_letterhead=0&_lang=de" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
 		<button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
 		<button class="endMsgBtn zuruckBtnTwo" onclick="zuruckZurSeite()">ZURÜCK ZUR STARTSEITE</button>   
 		</div>
@@ -1431,6 +1432,8 @@ function get_arguments() {
 				loadEndMsg();
 			} else {
 				anlass = args['anlass'];
+				initialState.meeting = args['anlass'];
+				localStorage.setItem("MEETING", JSON.stringify(initialState.meeting));
 				loadVisitorTypes();
 				loadBlocks(args['anlass']);
 			}
