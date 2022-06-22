@@ -12,6 +12,7 @@ var rechAdd = "notDone";
 var inTheChekout = false;
 var userDefined = "No"
 var initialState = {
+	meeting: JSON.parse(localStorage.getItem("MEETING")) || "",
 	userTypeValue : JSON.parse(localStorage.getItem("USER")) || "Student",
 	cart : JSON.parse(localStorage.getItem("CART")) || [],
 	total: JSON.parse(localStorage.getItem("TOTAL")) || 0,
@@ -30,7 +31,7 @@ var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
 var selectedFilterDiv = document.getElementById("selectedFilters");
-var btnContainerOne = document.getElementById("filterBtnContainerUSER").querySelectorAll("button");
+var btnContainerOne = document.getElementById("filterBtnContainerUSER");
 var btnContainerTwo = document.getElementById("filterBtnContainerDATUM");
 var btnContainerThree = document.getElementById("filterBtnContainerZEIT").querySelectorAll("button");
 var btnContainerFour = document.getElementById("filterBtnContainerTHEMA");
@@ -42,7 +43,9 @@ var active = document.querySelector(".active");
 
 updateCart();
 
-function userSelection(c) {
+
+function userSelection(c, button) {
+	btnContainerOneFunc(c, button) // Creates the upper selected orange filter
 	userDefined = "Yes";
 	var currentUser;
 	initialState.userTypeValue = c;
@@ -53,7 +56,7 @@ function userSelection(c) {
 
 		loadBlocks(anlass)
 		datumBtn.innerHTML = `<h2 class="filterTitle" id="datum">DATUM</h2>`;
-		selectedFilterDiv.innerHTML = '';
+		errorContainer.innerHTML = "";
 		initialState.cart = [];
 		localStorage.setItem("CART", JSON.stringify(initialState.cart));
 	}
@@ -450,35 +453,33 @@ function removeClass(element, name) {
   element.className = arr1.join(" ");
 }
 // Add active class to the current button in the respective container and highlight it the top
-btnContainerOne.forEach((element) => {
-	element.addEventListener("click", function(){
-		
-		btnContainerOne.forEach(btn => {
-			btn.classList.remove("active");
-		});
-		
-		var orange = document.querySelector(".orangeFilter");
-		var answer = selectedFilterDiv.contains(orange);
-		var orangeFilterBlock;
-		if (answer == true) {
-			var userTypeChildLi = selectedFilterDiv.getElementsByTagName('li')[0];
-			orangeFilterBlock = document.createElement('li');
-			orangeFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
-			orangeFilterBlock.classList.add('orangeFilter');
-			orangeFilterBlock.classList.add('filter');
-			selectedFilterDiv.replaceChild(orangeFilterBlock, userTypeChildLi);
-			
-		} else {
-			orangeFilterBlock = document.createElement('li');
-			orangeFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
-			orangeFilterBlock.classList.add('orangeFilter');
-			orangeFilterBlock.classList.add('filter');
-			selectedFilterDiv.insertBefore(orangeFilterBlock, selectedFilterDiv.firstChild);
-		}
-		
-		this.classList.add("active");
-	}); 
-});
+function btnContainerOneFunc(c, button){
+	//console.log("clicking orange", c)
+	
+	btnContainerOne.querySelectorAll("button").forEach(btn => {
+		btn.classList.remove("active");
+	});
+	
+	selectedFilterDiv.innerHTML = '';
+	var orangeFilterBlock;
+	orangeFilterBlock = document.createElement('li');
+	orangeFilterBlock.classList.add('filter');
+	var orange = document.querySelector(".orangeFilter");
+	var answer = selectedFilterDiv.contains(orange);
+	if (answer == true) {
+		var userTypeChildLi = selectedFilterDiv.getElementsByTagName('li')[0];
+		orangeFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
+		orangeFilterBlock.classList.add('orangeFilter');
+		selectedFilterDiv.replaceChild(orangeFilterBlock, userTypeChildLi);
+	} else {
+		console.log("clicking orange answer false create new")
+		orangeFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
+		orangeFilterBlock.classList.add('orangeFilter');
+		selectedFilterDiv.insertBefore(orangeFilterBlock, selectedFilterDiv.firstChild);
+	}
+	
+	button.classList.add("active");
+}
 
 btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
@@ -601,7 +602,7 @@ function removeFilter(num) {
 	
 	if (num == 1 ){
 		selectedFilterDiv.removeChild(selectedFilterDiv.firstElementChild);
-		btnContainerOne.forEach(btn => {
+		btnContainerOne.querySelectorAll("button").forEach(btn => {
 			btn.classList.remove("active");
 			btn.style.display = "block";
 		});
@@ -1122,7 +1123,7 @@ function loadVisitorTypes() {
 			var visitorDropdown = document.getElementById("dropdown");
 			for (var i = 0; i < visitor_types.length; i++ ) {
 				var visitor_li = document.createElement('li');
-				visitor_li.innerHTML =`<button class="btnOrange" onclick="userSelection('${visitor_types[i]}')">${visitor_types[i]}</button>`;
+				visitor_li.innerHTML =`<button class="btnOrange" onclick="userSelection('${visitor_types[i]}', this)">${visitor_types[i]}</button>`;
 				visitorDropdown.appendChild(visitor_li);
 			}
 		}
@@ -1258,7 +1259,7 @@ function nachbestellenBtn() {
 	document.getElementById("step3").style.display = "none";
 	document.getElementById("step0").style.display = "none";
 	
-	userDefined = "Yes"
+	userDefined = "Yes";
 	inTheChekout = true;
 	window.localStorage.removeItem("ADDRESSONE");
 	window.localStorage.removeItem("TICKETS");
@@ -1327,9 +1328,9 @@ function loadEndMsg() {
 	document.getElementById("step1").style.display = "none";
 	document.querySelector(".positionFixed").style.display = "none";
 	document.getElementById("step3").style.display = "block";
-	
+	anlass = initialState.meeting;
 
-		setTimeout(endMessage(), 10000);
+		setTimeout(endMessage(), 3000);
 
 	//~ clearFields.forEach((element) => {
 		//~ if (element.type == "text") {
@@ -1391,7 +1392,7 @@ function endMessage(){
 	endMsgContainer.innerHTML += `
 		<div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://sges.ch/official-congress-hotel-2022/" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
 		<div class="endMsgButtonsContainer">
-		<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${initialState.sinv}&format=Standard&no_letterhead=0&_lang=en" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
+		<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${initialState.sinv}&format=Sales Inovice - Ticket&no_letterhead=0&_lang=de" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
 		<button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
 		<button class="endMsgBtn zuruckBtnTwo" onclick="zuruckZurSeite()">ZURÜCK ZUR STARTSEITE</button>   
 		</div>
@@ -1431,6 +1432,8 @@ function get_arguments() {
 				loadEndMsg();
 			} else {
 				anlass = args['anlass'];
+				initialState.meeting = args['anlass'];
+				localStorage.setItem("MEETING", JSON.stringify(initialState.meeting));
 				loadVisitorTypes();
 				loadBlocks(args['anlass']);
 			}
