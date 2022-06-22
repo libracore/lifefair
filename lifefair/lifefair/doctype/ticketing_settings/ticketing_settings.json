@@ -1,0 +1,71 @@
+{
+ "creation": "2022-06-15 14:56:35.568113",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "ticket_item",
+  "sales_taxes",
+  "stripe"
+ ],
+ "fields": [
+  {
+   "fieldname": "ticket_item",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Ticket Item",
+   "options": "Item",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sales_taxes",
+   "fieldtype": "Link",
+   "label": "Sales Taxes and Charges Template",
+   "options": "Sales Taxes and Charges Template"
+  },
+  {
+   "fieldname": "stripe",
+   "fieldtype": "Link",
+   "label": "Stripe Account",
+   "options": "Account"
+  }
+ ],
+ "issingle": 1,
+ "modified": "2022-06-21 16:19:32.266509",
+ "modified_by": "Administrator",
+ "module": "Lifefair",
+ "name": "Ticketing Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Lifefair User",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "Lifefair Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

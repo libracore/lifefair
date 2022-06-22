@@ -16,6 +16,7 @@
   "section_business_card",
   "business_card_html",
   "section_addresses",
+  "customer_address",
   "address_html",
   "section_contact_display",
   "contact_html",
@@ -61,6 +62,7 @@
   "linkedin_id",
   "homepage",
   "personal_postal_code",
+  "customer",
   "section_salutation",
   "salutation",
   "title",
@@ -509,10 +511,23 @@
    "fieldname": "ausland",
    "fieldtype": "Check",
    "label": "Ausland"
+  },
+  {
+   "fieldname": "customer",
+   "fieldtype": "Data",
+   "label": "Customer",
+   "options": "Customer"
+  },
+  {
+   "fieldname": "customer_address",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "Customer Address",
+   "options": "Address"
   }
  ],
  "image_field": "image",
- "modified": "2021-03-22 10:28:40.866562",
+ "modified": "2022-06-21 16:26:27.886563",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",

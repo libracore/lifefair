@@ -1,0 +1,99 @@
+{
+ "creation": "2022-06-07 14:36:21.386116",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "visitor_type",
+  "rate",
+  "col_main",
+  "meeting",
+  "sec_blocks",
+  "blocks"
+ ],
+ "fields": [
+  {
+   "fieldname": "visitor_type",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Visitor Type",
+   "options": "Visitor Type",
+   "reqd": 1
+  },
+  {
+   "fieldname": "blocks",
+   "fieldtype": "Table",
+   "label": "Blocks",
+   "options": "Block Price Block",
+   "reqd": 1
+  },
+  {
+   "fieldname": "rate",
+   "fieldtype": "Currency",
+   "in_list_view": 1,
+   "label": "Rate",
+   "reqd": 1
+  },
+  {
+   "fieldname": "col_main",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "meeting",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Meeting",
+   "options": "Meeting",
+   "reqd": 1
+  },
+  {
+   "fieldname": "sec_blocks",
+   "fieldtype": "Section Break",
+   "label": "Blocks"
+  }
+ ],
+ "modified": "2022-06-21 16:16:52.084853",
+ "modified_by": "Administrator",
+ "module": "Lifefair",
+ "name": "Block Price",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Lifefair User",
+   "share": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Lifefair Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "title_field": "visitor_type",
+ "track_changes": 1
+}
