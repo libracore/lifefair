@@ -31,7 +31,7 @@ var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
 var cartbButton = document.getElementById("btnCart");
 var selectedFilterDiv = document.getElementById("selectedFilters");
-var btnContainerOne = document.getElementById("filterBtnContainerUSER").querySelectorAll("button");
+var btnContainerOne = document.getElementById("filterBtnContainerUSER");
 var btnContainerTwo = document.getElementById("filterBtnContainerDATUM");
 var btnContainerThree = document.getElementById("filterBtnContainerZEIT").querySelectorAll("button");
 var btnContainerFour = document.getElementById("filterBtnContainerTHEMA");
@@ -43,7 +43,9 @@ var active = document.querySelector(".active");
 
 updateCart();
 
-function userSelection(c) {
+
+function userSelection(c, button) {
+	btnContainerOneFunc(c, button) // Creates the upper selected orange filter
 	userDefined = "Yes";
 	var currentUser;
 	initialState.userTypeValue = c;
@@ -54,7 +56,7 @@ function userSelection(c) {
 
 		loadBlocks(anlass)
 		datumBtn.innerHTML = `<h2 class="filterTitle" id="datum">DATUM</h2>`;
-		selectedFilterDiv.innerHTML = '';
+		errorContainer.innerHTML = "";
 		initialState.cart = [];
 		localStorage.setItem("CART", JSON.stringify(initialState.cart));
 	}
@@ -451,35 +453,33 @@ function removeClass(element, name) {
   element.className = arr1.join(" ");
 }
 // Add active class to the current button in the respective container and highlight it the top
-btnContainerOne.forEach((element) => {
-	element.addEventListener("click", function(){
-		
-		btnContainerOne.forEach(btn => {
-			btn.classList.remove("active");
-		});
-		
-		var orange = document.querySelector(".orangeFilter");
-		var answer = selectedFilterDiv.contains(orange);
-		var orangeFilterBlock;
-		if (answer == true) {
-			var userTypeChildLi = selectedFilterDiv.getElementsByTagName('li')[0];
-			orangeFilterBlock = document.createElement('li');
-			orangeFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
-			orangeFilterBlock.classList.add('orangeFilter');
-			orangeFilterBlock.classList.add('filter');
-			selectedFilterDiv.replaceChild(orangeFilterBlock, userTypeChildLi);
-			
-		} else {
-			orangeFilterBlock = document.createElement('li');
-			orangeFilterBlock.innerHTML += `${element.innerHTML} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
-			orangeFilterBlock.classList.add('orangeFilter');
-			orangeFilterBlock.classList.add('filter');
-			selectedFilterDiv.insertBefore(orangeFilterBlock, selectedFilterDiv.firstChild);
-		}
-		
-		this.classList.add("active");
-	}); 
-});
+function btnContainerOneFunc(c, button){
+	//console.log("clicking orange", c)
+	
+	btnContainerOne.querySelectorAll("button").forEach(btn => {
+		btn.classList.remove("active");
+	});
+	
+	selectedFilterDiv.innerHTML = '';
+	var orangeFilterBlock;
+	orangeFilterBlock = document.createElement('li');
+	orangeFilterBlock.classList.add('filter');
+	var orange = document.querySelector(".orangeFilter");
+	var answer = selectedFilterDiv.contains(orange);
+	if (answer == true) {
+		var userTypeChildLi = selectedFilterDiv.getElementsByTagName('li')[0];
+		orangeFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
+		orangeFilterBlock.classList.add('orangeFilter');
+		selectedFilterDiv.replaceChild(orangeFilterBlock, userTypeChildLi);
+	} else {
+		console.log("clicking orange answer false create new")
+		orangeFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
+		orangeFilterBlock.classList.add('orangeFilter');
+		selectedFilterDiv.insertBefore(orangeFilterBlock, selectedFilterDiv.firstChild);
+	}
+	
+	button.classList.add("active");
+}
 
 btnContainerThree.forEach((element) => {
 	element.addEventListener("click", function(){
@@ -602,7 +602,7 @@ function removeFilter(num) {
 	
 	if (num == 1 ){
 		selectedFilterDiv.removeChild(selectedFilterDiv.firstElementChild);
-		btnContainerOne.forEach(btn => {
+		btnContainerOne.querySelectorAll("button").forEach(btn => {
 			btn.classList.remove("active");
 			btn.style.display = "block";
 		});
@@ -1123,7 +1123,7 @@ function loadVisitorTypes() {
 			var visitorDropdown = document.getElementById("dropdown");
 			for (var i = 0; i < visitor_types.length; i++ ) {
 				var visitor_li = document.createElement('li');
-				visitor_li.innerHTML =`<button class="btnOrange" onclick="userSelection('${visitor_types[i]}')">${visitor_types[i]}</button>`;
+				visitor_li.innerHTML =`<button class="btnOrange" onclick="userSelection('${visitor_types[i]}', this)">${visitor_types[i]}</button>`;
 				visitorDropdown.appendChild(visitor_li);
 			}
 		}
