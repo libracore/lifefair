@@ -847,6 +847,12 @@ function removeCartItem(i) {
 function start() {
 	inTheChekout = false;
 	window.open(`/tickets?anlass=${anlass}`, "_self");
+	
+	window.localStorage.removeItem("ADDRESSONE");
+	initialState.addressOne = [];
+	window.localStorage.removeItem("ADDRESSTWO");
+	initialState.addressTwo = [];
+	
 }
 
 function checkOut() {
@@ -1330,19 +1336,6 @@ function loadEndMsg() {
 	document.getElementById("step3").style.display = "block";
 	anlass = initialState.meeting;
 
-		setTimeout(endMessage(), 3000);
-
-	//~ clearFields.forEach((element) => {
-		//~ if (element.type == "text") {
-			//~ element.value = "";
-		//~ } else if (element.type == "checkbox") {
-			//~ element.checked = false;
-			//~ }
-	//~ });
-}
-
-function endMessage(){
-	
 	var endMsgContainer = document.getElementById("step3");
 
 	endMsgContainer.innerHTML = `
