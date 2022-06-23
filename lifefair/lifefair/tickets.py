@@ -69,19 +69,40 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
 		person_name = db_person[0]['name']
 		# get person, check website_description and update if empty
 		person = frappe.get_doc("Person", db_person[0]['name'])
+		contact = frappe.get_all("Contact", filters={'email_id': addressOne["email"]}, fields=['name'])
 		done_data = "No"
 		if firma:
 			customer = firma
 		else:
 			customer = person.full_name
-		contact = frappe.get_all("Contact", filters={'email_id': addressOne["email"]}, fields=['name'])
+		# create customer if missing
+		if not person.customer_link: 
+			person.customer_link = create_customer(addressOne, person, customer)
+		# update if address is missing
+		if not person.customer_address:
+			person.customer_address = create_address(customer, check="No", info=addressOne, person=person.name)
+			current_address = person.customer_address
+		else:
+			# create an Address record to avoid replacing the current address
+			address_name = frappe.get_doc("Address", person.customer_address)
+			current_address = person.customer_address
+			if len(address_name.links) == 0:
+				link = address_name.append('links', {})
+				link.link_doctype = "Customer"
+				link.link_name = person.customer_link
+				address_name.save(ignore_permissions=True)
+			if addressOne['adresse'] != address_name.address_line1 or addressOne['ort'] != address_name.city or addressOne['plz'] != address_name.pincode or addressOne['land'] != address_name.country:
+				current_address = create_address(customer, check="No", info=addressOne, person=person.name)
+				if done_data == "No":
+					create_data_changes(addressOne, person)
+					done_data = "Yes"
 		#check if the data provided is different from the one found and create a contatc record for it
 		if addressOne['herrFrau'] != person.gender or addressOne['akademishTitle'] != person.title or addressOne['firstname'] != person.first_name or addressOne['lastname'] != person.last_name or addressOne['phone'] != person.company_phone:
 			create_contact(addressOne, customer, customer_address=person.customer_address, person_contact=contact )
 			if done_data == "No":
 				create_data_changes(addressOne, person)
 				done_data = "Yes"
-		elif contact:
+		if contact:
 			contact_data = frappe.get_doc("Contact", contact[0]['name'])
 			if addressOne['firma'] != contact_data.company_name or addressOne['funktion'] != contact_data.function:
 				create_contact(addressOne, customer, customer_address=person.customer_address, person_contact=contact)
@@ -93,19 +114,6 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
 		# update phone number if missing
 		if not person.company_phone:
 			person.company_phone = addressOne['phone']
-		# update if address is missing
-		if not person.customer_address:
-			person.customer_address = create_address(customer, check="No", info=addressOne, person=person.name)
-			current_address = person.customer_address
-		else:
-			# create an Address record to avoid replacing the current address
-			address_name = frappe.get_doc("Address", person.customer_address)
-			current_address = person.customer_address
-			if addressOne['adresse'] != address_name.address_line1 or addressOne['ort'] != address_name.city or addressOne['plz'] != address_name.pincode or addressOne['land'] != address_name.country:
-				current_address = create_address(customer, check="No", info=addressOne, person=person.name)
-				if done_data == "No":
-					create_data_changes(addressOne, person)
-					done_data = "Yes"
 		person.save(ignore_permissions=True)
 	else:
 		# person not found, create new person
@@ -229,6 +237,7 @@ def create_contact(addressOne, customer, customer_address, person_contact=None, 
 		gender = "Weiblich"
 	else:
 		gender = "Sonstige(s)"
+	address = None
 	if customer_address:
 		address = customer_address
 	if person_contact:
@@ -258,6 +267,7 @@ def create_contact(addressOne, customer, customer_address, person_contact=None, 
 			'function': addressOne["funktion"],
 			'address': address
 		})
+		contact_name = None
 		try:
 			contact = contact.insert(ignore_permissions=True)
 			email = contact.append('email_ids', {})
@@ -315,6 +325,7 @@ def create_address(customer, check, info, person, source="from ticketing"):
 def create_invoice(addressOne, addressTwo, customer, total, ticket_number, addresse, person, source="from ticketing"):
 	#frappe.log_error("on the create sinv")
 	person = frappe.get_doc("Person", person)
+	customer_link = person.customer_link
 	addresse_name = frappe.get_doc("Address", addresse).name
 	sinv_address = addresse_name
 
@@ -325,9 +336,6 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, addre
 	
 	taxes_and_charges = frappe.get_value("Ticketing Settings", "Ticketing Settings", "sales_taxes")
 	taxes_and_charges_template = frappe.get_doc("Sales Taxes and Charges Template", taxes_and_charges)
-	customer_link = person.customer_link
-	if not customer: 
-		customer_link = create_customer(addressOne, person, customer)
 	sinv = frappe.get_doc({
 		'doctype': "Sales Invoice",
 		'posting_date': today(),

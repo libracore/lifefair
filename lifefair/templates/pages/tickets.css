@@ -48,7 +48,9 @@
   /*border: solid blue;*/
   width: 100%;/**/
   min-height: 250px !important;
-  padding-left: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .error {
@@ -353,7 +355,7 @@ ul {
 }
 
 .btnOrange, .userMenuClass  {
-  width: 200px;
+  width: 245px;
   border: 1px solid #E94E26;
   border-radius: 0px;
   color: #E94E26;
@@ -425,10 +427,10 @@ ul {
   cursor: pointer;
   margin-top: 33px;
   margin-bottom: 30px;
-  position: fixed;
   min-width: 320px;
   max-width: 320px;
-  /*margin-left: 780px;
+  /*  position: fixed;
+  margin-left: 780px;
   margin-top: 10px;*/
 }
 
@@ -672,11 +674,15 @@ ul {
   background: none;
 }
 
-
 .positionFixed {
   position: fixed;
+}
+
+.warenkorbBtn {
+  /*position: fixed;
+  margin-top: 450px;*/
+  margin-top: 0px;
   margin-left: 0px;
-  margin-top: 450px;
   width: 320px;
   text-transform: uppercase;
 }
@@ -798,10 +804,18 @@ ul {
     /*column-count: 1 !important;*/
     position: static !important;
   }
-  .positionFixed  {
-    position: static !important;
-    margin-top: 0px;
+  .scondDiv {
+    align-items: baseline;
   }
+
+  .warenkorbBtn  {
+    margin-top: 30px;
+  }
+  
+  .positionFixed {
+    position: static !important;
+  }
+
   .display  {
     width: 874px;
   }
