@@ -866,7 +866,7 @@ function checkOut() {
 			inTheChekout = true;
 			document.getElementById("step0").style.display = "none";
 			document.getElementById("step1").style.display = "block"
-			document.querySelector(".positionFixed").style.display = "block";
+			document.querySelector(".warenkorbBtn").style.display = "block";
 			cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT BESTELLEN</p>`
 		}
 }
@@ -1275,7 +1275,7 @@ function nachbestellenBtn() {
 	localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
 	
 	document.getElementById("step1").style.display = "block";
-	document.querySelector(".positionFixed").style.display = "block";
+	document.querySelector(".warenkorbBtn").style.display = "block";
 	document.getElementById("warenkorb").style.display = "block";
 	document.getElementById("warenkorb").classList.remove("grey");
 	cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT BESTELLEN</p>`;
@@ -1320,7 +1320,7 @@ function successPayment() {
 	document.getElementById("step0").style.display = "none";
 	document.getElementById("warenkorb").style.display = "none";
 	document.getElementById("step1").style.display = "none";
-	document.querySelector(".positionFixed").style.display = "none";
+	document.querySelector(".warenkorbBtn").style.display = "none";
 	document.getElementById("step3").style.display = "block";
 	
 	initialState.stripe = "Yes"
@@ -1332,7 +1332,7 @@ function loadEndMsg() {
 	document.getElementById("step0").style.display = "none";
 	document.getElementById("warenkorb").style.display = "none";
 	document.getElementById("step1").style.display = "none";
-	document.querySelector(".positionFixed").style.display = "none";
+	document.querySelector(".warenkorbBtn").style.display = "none";
 	document.getElementById("step3").style.display = "block";
 	anlass = initialState.meeting;
 
