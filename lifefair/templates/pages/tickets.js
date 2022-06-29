@@ -3,6 +3,7 @@ var blocks;
 var interests = [];
 var itemVal;
 var dayName;
+var dayFlag = "all";
 var currentDatum = null;
 var currentTimeSlot = "all";
 var currentZeit = null;
@@ -26,6 +27,7 @@ var initialState = {
 	sinv: JSON.parse(localStorage.getItem("SINV")) || null,
 };
 var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ];
+var block_cards = document.getElementsByClassName("filterDiv");
 var datumBtn = document.getElementById("filterBtnContainerDATUM");
 var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
@@ -42,6 +44,7 @@ var errorContainer = document.querySelector(".error");
 var active = document.querySelector(".active");
 
 updateCart();
+//~ filterSelection("all");
 
 
 function userSelection(c, button) {
@@ -67,6 +70,7 @@ function userSelection(c, button) {
 	document.getElementById("filterBtnContainerTHEMA").classList.remove("grey");
 	document.getElementById("warenkorb").classList.remove("grey");
 	document.querySelector(".display").classList.remove("grey");
+	//document.querySelector(".display").style.display = "block";
 	btnContainerTwo.querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
 	btnContainerThree.forEach((element) => element.classList.add("btnHover"));
 	btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
@@ -86,6 +90,7 @@ function userSelection(c, button) {
     
 	if ( document.getElementById("selectedFilters").contains(document.querySelector(".grey")) == true) document.getElementById("selectedFilters").classList.remove("grey");
 	updateCart();
+
 }
 
 //Dropdown Menu
@@ -94,77 +99,111 @@ function openDropdown() {
     document.querySelector(".userMenuDiv").innerHTML =  "";
 }
 
-function filterDatum(c, button) {
+function filterDatum(date, button) {
+	console.log("filterDatum", date, button);
+	errorContainer.innerHTML = "";
 	currentTimeSlot = "all";
 	dayName = "iAmNull";
 	titleFilter(dayName);
-	dayName = c;
+	dayName = date;
 
 	if (userDefined == "No") {
 		document.getElementById("ichBin").classList.toggle("shake");
 	} else {
-		currentDatum = c;
+		currentDatum = date;
 		currentZeit = null;
-		if (selectedFilterDiv.children.length == 3) {
-			errorContainer.innerHTML = "";
+		if (selectedFilterDiv.children.length == 2 && dayFlag == "all" ) {
+			btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
+			btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
+			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+		} else if (selectedFilterDiv.children.length == 3) {
 			btnContainerThree.forEach(btn => btn.classList.remove("active"));
 			btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
+			btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
+			btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 		}  else if (selectedFilterDiv.children.length == 4) {
-			errorContainer.innerHTML = "";
 			btnContainerThree.forEach(btn => btn.classList.remove("active"));
 			btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 			btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild); 
 		}
-			var x, i;
-			
-			x = document.getElementsByClassName("filterDiv");
+			dayFlag = date;
 			//if (c == "all") c = "";
-			for (i = 0; i < x.length; i++) {
-			  removeClass(x[i], "show");
-			  if (x[i].className.indexOf(c) > -1) addClass(x[i], "show");
+
+			for (var i = 0; i < block_cards.length; i++) {
+			  removeClass(block_cards[i], "show");
+				if (block_cards[i].className.indexOf(date) > -1) {
+					addClass(block_cards[i], "show");
+				}
 			}
 			
-			blueThemaActive(c, button);
+			blueThemaActive(date, button);
 			titleFilter(dayName);
-			//console.log('newStr c', c);
-			//console.log('dayName', dayName);
+			//~ //console.log('newStr c', c);
+			//~ //console.log('dayName', dayName);
 		}
 }
 
-function filterSelection(c, button) {
-	if (userDefined == "No") {
-		document.getElementById("ichBin").classList.toggle("shake");
-	} else if (currentDatum == null) {
-		document.getElementById("datum").classList.toggle("shake");
-	} else if (currentZeit == null) {
-		document.getElementById("zeit").classList.toggle("shake");
-	} else {
+function purifyInterest(interest) {
+	return interest.replace(/[^a-zA-Z]/g, "");
+}
+
+function filterSelection(interest, button) {
 	
-	    var newStr = c;
-	    var x, i;
-	    
-	    if (c.split(/\W+/).length > 1) {
-		  newStr =  c.split(" ")[0];
-	    }
-	    x = document.getElementsByClassName("filterDiv");
-	    if (newStr == "all") newStr = "";
-	    for (i = 0; i < x.length; i++) {
-		  removeClass(x[i], "show");
-		  if (x[i].className.indexOf(newStr) > -1) addClass(x[i], "show");
-	    }
-	    cardFilter(newStr);
-		blueThemaActive(newStr, button);
-		currentThema = newStr;
+	if ((userDefined == "No") && (interest != "all")) {
+		document.getElementById("ichBin").classList.toggle("shake");
+	} else {
+		if (currentTimeSlot == "all" && dayFlag == "all") {
+			titleFilter(interest)
+			//~ for (var i = 0; i < block_cards.length; i++) {
+			  //~ removeClass(block_cards[i], "show");
+			  //~ if ((interest === "all") || (block_cards[i].className.indexOf(interest) > -1)) {
+				  //~ addClass(block_cards[i], "show");
+			  //~ }
+		}
+		if (currentTimeSlot == "all" && currentZeit == null ) {
+			titleFilter(interest)
+		}
+			//~ cardFilter(interest);
+			//~ blueThemaActive(interest, button);
+			//~ currentThema = interest;
+		//~ document.getElementById("datum").classList.toggle("shake");
+		//~ } else if (dayFlag != "all" && currentZeit == null) {
+			//~ document.getElementById("zeit").classList.toggle("shake");
+		//~ } else {
+		//~ else if (currentZeit == null) {
+		//~ document.getElementById("zeit").classList.toggle("shake");
+	
+		//~ } //else {
+			//interest =  purifyInterest(interest);
+			  
+			
+			//~ if (interest == "all") {
+				//~ interest = "";
+			//~ }
+			
+			for (var i = 0; i < block_cards.length; i++) {
+			  removeClass(block_cards[i], "show");
+			  if ((interest === "all") || (block_cards[i].className.indexOf(interest) > -1)) {
+				  addClass(block_cards[i], "show");
+			  }
+			}
+			cardFilter(interest);
+			blueThemaActive(interest, button);
+			currentThema = interest;
+		//}
 	}
+//~ }
 }
 
 function titleShowAll() {
-	//console.log("in the tittle fuuunc")
+	console.log("in the tittle showAll fuuunc")
 	var localTitle;
 	currentTimeSlot = "all";
+	dayFlag = "all";
+	console.log(currentTimeSlot, dayFlag);
 	
 	localTitle = document.querySelectorAll('.localTitle_vormittag');
 	for ( var j = 0; j < localTitle.length; j++ ) {
@@ -188,16 +227,21 @@ function titleShowAll() {
 	}
 	
 	//Show all cards
-	localTitle = document.querySelectorAll('.filterDiv');
-	for ( var j = 0; j < localTitle.length; j++ ) {
-		//if (localTitle[j].children.length > 1) {
-			localTitle[j].style.display = "block";
-		//}
+	//~ localTitle = document.querySelectorAll('.filterDiv');
+	//~ for ( var j = 0; j < localTitle.length; j++ ) {
+		//~ //if (localTitle[j].children.length > 1) {
+			//~ localTitle[j].style.display = "inline";
+			//~ console.log("initial")
+		//~ //}
+	//~ }
+	
+	for (var i = 0; i < block_cards.length; i++) {
+		addClass(block_cards[i], "show");
 	}
 }
 
 function titleFilter(c) {
-	//console.log("c in title", c);
+	//console.log("c in titleFilter", c);
 	var flag = 0;
 	var localTitle;
 	if (userDefined == "Yes") {
@@ -217,123 +261,172 @@ function titleFilter(c) {
 			for ( var j = 0; j < localTitle.length; j++ ) {
 				localTitle[j].style.display = "none";
 				}
-
-			//Show all cards
-			localTitle = document.querySelectorAll('.filterDiv');
-			for ( var j = 0; j < localTitle.length; j++ ) {
-				localTitle[j].style.display = "block";
-				}
+			
+			//~ //Show all cards
+			//~ localTitle = document.querySelectorAll('.filterDiv');
+			//~ for ( var j = 0; j < localTitle.length; j++ ) {
+				//~ localTitle[j].style.display = "block";
+			//~ }
+			for (var i = 0; i < block_cards.length; i++) {
+				addClass(block_cards[i], "show");
+			}
 		}
 		
 		if (c != "" && c != null) {
-
-		for (var i = 0; i < blocks.length; i++ ) {
 			
-			if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null) {
-				if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
-					document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
+
+			for (var i = 0; i < blocks.length; i++ ) {
+				
+				if ( currentTimeSlot == "all" && dayFlag == "all") {
+					//console.log("both all")
+					for (var j = 0; j < tags.length; j++ ) {
+						if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${tags[j]}`) != null) {
+							if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${tags[j]}`).querySelector(`.${c}`) == null ) {
+								document.getElementById(`vormittag_${blocks[i].neues_datum}_${tags[j]}`).style.display = "none";
+							} else {
+								flag = 1;
+								document.getElementById(`vormittag_${blocks[i].neues_datum}_${tags[j]}`).style.display = "block";
+							}
+						}
+						
+						if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${tags[j]}`) != null) {
+							if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${tags[j]}`).querySelector(`.${c}`) == null ) {
+								document.getElementById(`nachmittag_${blocks[i].neues_datum}_${tags[j]}`).style.display = "none";
+							} else {
+								flag = 1;
+								document.getElementById(`nachmittag_${blocks[i].neues_datum}_${tags[j]}`).style.display = "block";
+							}
+						}
+						
+						if (document.getElementById(`abend_${blocks[i].neues_datum}_${tags[j]}`) != null ) {
+							if (document.getElementById(`abend_${blocks[i].neues_datum}_${tags[j]}`).querySelector(`.${c}`) == null ) {
+								document.getElementById(`abend_${blocks[i].neues_datum}_${tags[j]}`).style.display = "none";
+							} else {
+								flag = 1;
+								document.getElementById(`abend_${blocks[i].neues_datum}_${tags[j]}`).style.display = "block";
+							}
+						}
+					}
 				} else {
-					if (currentTimeSlot == "vormittag" || currentTimeSlot == "all") {
-						flag = 1;
-						document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+					//console.log("in the else", dayName, c)
+					if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null) {
+						if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
+							document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
+						} else {
+							if (currentTimeSlot == "vormittag" || currentTimeSlot == "all") {
+								flag = 1;
+								document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+							}
+						}
+					}
+					if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`) != null) {
+						if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
+							document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
+								
+						} else {
+							if (currentTimeSlot == "nachmittag" || currentTimeSlot == "all") {
+								flag = 1;
+								document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+							}
+						}
+					} 
+					if (document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`) != null) {
+						if (document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
+							document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
+								
+						} else {
+							if (currentTimeSlot == "abend" || currentTimeSlot == "all") {
+								flag = 1;
+								document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
+							}
+						}
 					}
 				}
 			}
-			if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`) != null) {
-				if (document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
-					document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
-						
-				} else {
-					if (currentTimeSlot == "nachmittag" || currentTimeSlot == "all") {
-						flag = 1;
-						document.getElementById(`nachmittag_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
-					}
-				}
-			} 
-			if (document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`) != null) {
-				if (document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
-					document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
-						
-				} else {
-					if (currentTimeSlot == "abend" || currentTimeSlot == "all") {
-						flag = 1;
-						document.getElementById(`abend_${blocks[i].neues_datum}_${dayName}`).style.display = "block";
-					}
-				}
-			} 
+
+			if ( flag == 0) {
+					errorContainer.innerHTML = "Keine Ereignisse gefunden";
+			} else {
+					errorContainer.innerHTML = "";
+			}
 		}
-		
-		if ( flag == 0) {
-				errorContainer.innerHTML = "Keine Ereignisse gefunden";
-		} else {
-				errorContainer.innerHTML = "";
-		}
-	 }
 	}
 }
 
 function cardFilter(c) {
+	console.log("in cardFilter", c)
 	var flag = 0;
-	//Show all cards
-	var localTitle = document.querySelectorAll('.filterDiv');
-	for ( var j = 0; j < localTitle.length; j++ ) {
-		localTitle[j].style.display = "none";
-	}
-	if (c != "" && c != null) {
+	if (currentTimeSlot != "all" && dayFlag != "all") {
+		//Hidde all cards
+		//~ var localTitle = document.querySelectorAll('.filterDiv');
+		//~ for ( var j = 0; j < localTitle.length; j++ ) {
+			//~ localTitle[j].style.display = "none";
+		//~ }
+		for (var i = 0; i < block_cards.length; i++) {
+			  removeClass(block_cards[i], "show");
+			}
 		
-		if ( currentTimeSlot == "vormittag" ) {
-			var vormittagCards = document.querySelectorAll('.filterDiv');
-			for (var i = 0; i < vormittagCards.length - 1; i++ ) {
-				
-				if ( vormittagCards[i].classList.contains(`${dayName}`) == false || vormittagCards[i].classList.contains(`${c}`) == false || vormittagCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
-					vormittagCards[i].style.display = "none";
-				} else {
-						flag = 1;
-						vormittagCards[i].style.display = "block";
-						titleFilter(dayName)
+		if (c != "" && c != null) {
+			
+			if ( currentTimeSlot == "vormittag" ) {
+				var vormittagCards = document.querySelectorAll('.filterDiv');
+				for (var i = 0; i < vormittagCards.length; i++ ) {
+					
+					if ( vormittagCards[i].classList.contains(`${dayName}`) == false || vormittagCards[i].classList.contains(`${c}`) == false || vormittagCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
+						//vormittagCards[i].style.display = "none";
+						removeClass(vormittagCards[i], "show");
+					} else {
+							flag = 1;
+							//vormittagCards[i].style.display = "block";
+							addClass(vormittagCards[i], "show")
+							titleFilter(dayName)
+					}
 				}
+			}
+			if ( currentTimeSlot == "nachmittag" ) {
+				var nachmittagCards = document.querySelectorAll('.filterDiv');
+				for (var i = 0; i < nachmittagCards.length; i++ ) {
+					
+					if ( nachmittagCards[i].classList.contains(`${dayName}`) == false || nachmittagCards[i].classList.contains(`${c}`) == false || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
+						//nachmittagCards[i].style.display = "none";
+						removeClass(nachmittagCards[i], "show");
+					} else {
+							flag = 1;
+							//nachmittagCards[i].style.display = "block";
+							addClass(nachmittagCards[i], "show")
+							titleFilter(dayName)
+					}
+				}
+			}
+			if ( currentTimeSlot == "abend") {
+				var abendCards = document.querySelectorAll('.filterDiv');
+				for (var i = 0; i < abendCards.length; i++ ) {
+					
+					if ( abendCards[i].classList.contains(`${dayName}`) == false || abendCards[i].classList.contains(`${c}`) == false || abendCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
+						//abendCards[i].style.display = "none";
+						removeClass(abendCards[i], "show");
+					} else {
+							flag = 1;
+							//abendCards[i].style.display = "block";
+							addClass(abendCards[i], "show")
+							titleFilter(dayName)
+					}
+				}
+			}
+		
+			if ( flag == 0) {
+					//c = "none"
+					titleFilter(c)
+					errorContainer.innerHTML = "Keine Ereignisse gefunden";
+			} else {
+					errorContainer.innerHTML = "";
 			}
 		}
-		if ( currentTimeSlot == "nachmittag" ) {
-			var nachmittagCards = document.querySelectorAll('.filterDiv');
-			for (var i = 0; i < nachmittagCards.length - 1; i++ ) {
-				
-				if ( nachmittagCards[i].classList.contains(`${dayName}`) == false || nachmittagCards[i].classList.contains(`${c}`) == false || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
-					nachmittagCards[i].style.display = "none";
-				} else {
-						flag = 1;
-						nachmittagCards[i].style.display = "block";
-						titleFilter(dayName)
-				}
-			}
-		}
-		if ( currentTimeSlot == "abend") {
-			var abendCards = document.querySelectorAll('.filterDiv');
-			for (var i = 0; i < abendCards.length - 1; i++ ) {
-				
-				if ( abendCards[i].classList.contains(`${dayName}`) == false || abendCards[i].classList.contains(`${c}`) == false || abendCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
-					abendCards[i].style.display = "none";
-				} else {
-						flag = 1;
-						abendCards[i].style.display = "block";
-						titleFilter(dayName)
-				}
-			}
-		}	
-	
-	
-	if ( flag == 0) {
-			//c = "none"
-			titleFilter(c)
-			errorContainer.innerHTML = "Keine Ereignisse gefunden";
-	} else {
-			errorContainer.innerHTML = "";
 	}
- }
 }
 
 function filterTimeSlot(c) {
-	//console.log("c in time filter", c);
+	console.log("c in filterTimeSlot", c);
 	var flag = 0;
 	currentTimeSlot = c;
 	if (userDefined == "No") {
@@ -342,7 +435,12 @@ function filterTimeSlot(c) {
 		document.getElementById("datum").classList.toggle("shake");
 	} else {
 		
-		if (selectedFilterDiv.children.length == 4) {
+		if (selectedFilterDiv.children.length == 3 && currentZeit == null ) {
+			errorContainer.innerHTML = "";
+			btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
+			btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
+			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+		} else if (selectedFilterDiv.children.length == 4) {
 			errorContainer.innerHTML = "";
 			btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 			btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
@@ -351,9 +449,12 @@ function filterTimeSlot(c) {
 		currentZeit = c;
 		
 		//Show all cards
-		localTitle = document.querySelectorAll('.filterDiv');
-		for ( var j = 0; j < localTitle.length; j++ ) {
-			localTitle[j].style.display = "block";
+		//~ localTitle = document.querySelectorAll('.filterDiv');
+		//~ for ( var j = 0; j < localTitle.length; j++ ) {
+			//~ localTitle[j].style.display = "block";
+		//~ }
+		for (var i = 0; i < block_cards.length; i++) {
+			addClass(block_cards[i], "show");
 		}
 		
 		for (var i = 0; i < blocks.length; i++ ) {
@@ -422,36 +523,40 @@ function filterTimeSlot(c) {
 
 
 function addClass(element, name) {
-  var newStr;
-  var i, arr1, arr2;
+  //~ var newStr;
+  //~ var i, arr1, arr2;
   
-  if (name.split(/\W+/).length > 1) {
-	 newStr =  name.split(" ")[0];
-	 arr1 = element.className.split(" ");
-	 arr2 = newStr.split(" ");
-	 for (i = 0; i < arr2.length; i++) {
-		if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
-     }
-  } else {
-	 arr1 = element.className.split(" ");
-	 arr2 = name.split(" ");
-	 for (i = 0; i < arr2.length; i++) {
-		if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
-	 }
-  }
+  //~ if (name.split(/\W+/).length > 1) {
+	 //~ newStr =  name.split(" ")[0];
+	 //~ arr1 = element.className.split(" ");
+	 //~ arr2 = newStr.split(" ");
+	 //~ for (i = 0; i < arr2.length; i++) {
+		//~ if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
+     //~ }
+  //~ } else {
+	 var elementClasses = element.className.split(" ");
+	 //arr2 = name.split(" ");
+	 //for (i = 0; i < arr2.length; i++) {
+		if (elementClasses.indexOf(name) == -1) {
+			element.classList.add(name);
+		}
+	 //}
+  //}
 }
 
 function removeClass(element, name) {
-  var i, arr1, arr2;
-  arr1 = element.className.split(" ");
-  arr2 = name.split(" ");
-  for (i = 0; i < arr2.length; i++) {
-    while (arr1.indexOf(arr2[i]) > -1) {
-      arr1.splice(arr1.indexOf(arr2[i]), 1);     
-    }
-  }
-  element.className = arr1.join(" ");
+  //~ var i, arr1, arr2;
+  //~ arr1 = element.className.split(" ");
+  //~ arr2 = name.split(" ");
+  //~ for (i = 0; i < arr2.length; i++) {
+    //~ while (arr1.indexOf(arr2[i]) > -1) {
+      //~ arr1.splice(arr1.indexOf(arr2[i]), 1);     
+    //~ }
+  //~ }
+  //~ element.className = arr1.join(" ");
+  element.classList.remove(name);
 }
+
 // Add active class to the current button in the respective container and highlight it the top
 function btnContainerOneFunc(c, button){
 	//console.log("clicking orange", c)
@@ -472,7 +577,7 @@ function btnContainerOneFunc(c, button){
 		orangeFilterBlock.classList.add('orangeFilter');
 		selectedFilterDiv.replaceChild(orangeFilterBlock, userTypeChildLi);
 	} else {
-		console.log("clicking orange answer false create new")
+	//	console.log("clicking orange answer false create new")
 		orangeFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
 		orangeFilterBlock.classList.add('orangeFilter');
 		selectedFilterDiv.insertBefore(orangeFilterBlock, selectedFilterDiv.firstChild);
@@ -549,7 +654,7 @@ function blueThemaActive(c, button = undefined) {
 			var answer = selectedFilterDiv.contains(blueThema);
 			var blueFilterBlock;
 			if (answer == true) {
-				var themaChildLi = selectedFilterDiv.getElementsByTagName('li')[3];
+				var themaChildLi = selectedFilterDiv.lastChild;
 				blueFilterBlock = document.createElement('li');
 				blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(4)">X</div>`;
 				blueFilterBlock.classList.add('themaBlueFilter');
@@ -597,7 +702,7 @@ function toggleAction(button, num) {
 } 
 
 function removeFilter(num) {
-	//console.log('in the remove', num);
+	console.log('in the remove', num);
 	errorContainer.innerHTML = "";
 	
 	if (num == 1 ){
@@ -627,7 +732,12 @@ function removeFilter(num) {
 		} else if (selectedFilterDiv.children.length == 3) {
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+		} else if (selectedFilterDiv.children.length == 4) {
+			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 		}
+		
 		btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
 		btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
 		btnContainerThree.forEach(btn => btn.classList.remove("active"));
@@ -636,7 +746,6 @@ function removeFilter(num) {
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
 		document.getElementById("selectedFilters").querySelectorAll("li").forEach(li => console.log("li", li));
 		titleShowAll();
-		selectedFilterDiv.innerHTML.reload();
 
 	} else if ( num == 3) {
 		currentZeit = null;
@@ -649,24 +758,33 @@ function removeFilter(num) {
 		filterDatum(dayName);
 		
 	} else if ( num == 4) {
-		selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
+		if (selectedFilterDiv.children.length == 4) selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
 		//selectedFilterDiv.children[3].remove();
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-		filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
-		selectedFilterDiv.innerHTML.reload();
+		console.log("currentZeit", currentZeit)
+		if (currentZeit != null) {
+			filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
+		} else if (currentZeit == null && currentDatum != null) {
+			console.log("in the zeit null  but datum no")
+			filterDatum(dayFlag);
+			selectedFilterDiv.children[2].remove();
+		} else if (currentZeit == null && currentDatum == null){
+			console.log("in the else where zeil null and time all")
+			selectedFilterDiv.children[1].remove();
+		}
 	} else if ( num == 5) {
 		selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
 		//selectedFilterDiv.children[3].remove();
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
 		filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
-		selectedFilterDiv.innerHTML.reload();
 	} 
 	
 	if (selectedFilterDiv.children.length == 1) {
 		titleShowAll();
-	} 
+	}
+	selectedFilterDiv.innerHTML.reload();
 }
 
 function checkTime(time) {
@@ -707,16 +825,48 @@ function timeOfDay(timeRange) {
 	}
 }
 
+function checkItem(i, condition) {
+	var currentCartItem;
+	var answer;
+	
+	initialState.cart.some((item) => {
+		if (item.neues_datum == blocks[i].neues_datum && item.time == blocks[i].time) {
+			currentCartItem = item;
+			answer = true;
+		} else if (item.neues_datum == blocks[i].neues_datum && item.time.split("-")[0].split(":")[0] == blocks[i].time.split("-")[0].split(":")[0]) {
+			currentCartItem = item;
+			answer = true;
+		} else if (item.neues_datum == blocks[i].neues_datum && item.time.split("-")[0].split(":")[0] == blocks[i].time.split("-")[1].split(":")[0]) {
+			currentCartItem = item;
+			answer = true;
+		} else if (item.neues_datum == blocks[i].neues_datum && item.time.split("-")[1].split(":")[0] == blocks[i].time.split("-")[0].split(":")[0]) {
+			currentCartItem = item;
+			answer = true;
+		} else if (item.neues_datum == blocks[i].neues_datum && item.time.split("-")[1].split(":")[0] == blocks[i].time.split("-")[1].split(":")[0]) {
+			currentCartItem = item;
+			answer = true;
+		}
+	});
+	
+	if (condition == "cart") {
+	 return answer;
+	} else if (condition == "popUp"){
+		return currentCartItem;
+	}
+}
+
 function addToCart(i) {
+
 	if (userDefined == "No") {
 		document.getElementById("ichBin").classList.toggle("shake");
 	} else {
 		if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
-		console.log("already there", blocks[i].short_name);
-		//document.getElementById("warenkorb").classList.add("shake");
-		 } else if (initialState.cart.some((item) => item.neues_datum == blocks[i].neues_datum)) {
-			 popUp(i);
-		 } else {
+			console.log("already there", blocks[i].short_name);
+			//document.getElementById("warenkorb").classList.add("shake");
+		} else if (checkItem(i, "cart") == true) {
+			console.log("in the else if cart")
+			popUp(i);
+		} else {
 
 			initialState.cart.push({
 				 ...blocks[i], 
@@ -727,10 +877,8 @@ function addToCart(i) {
 }
 
 function popUp(i) {
-	var currentCartItem;
-	initialState.cart.some((item) => {
-		if (item.neues_datum == blocks[i].neues_datum) currentCartItem = item;
-	})
+	var currentCartItem = checkItem(i, "popUp")
+	
 	popUpDiv.innerHTML = `
 			<div class="popUp"> 
 				<div class="popUpContent"> 
@@ -1146,6 +1294,7 @@ function loadBlocks(anlass) {
 		},
 		'callback': function (response) {
             blocks = response.message;
+            console.log("blocks", blocks);
             
             var blocksContainer = document.querySelector(".display");
 			blocksContainer.innerHTML = "";
@@ -1180,12 +1329,13 @@ function loadBlocks(anlass) {
 				
 				//creating the filter thema buttons and adding the class to the card
 				var blockInterest = block.interests.split(",");
-				blockInterest.forEach(function (int) {
-					addClass(card, int);
-					if (interests.indexOf(int) == -1) { 
-						interests.push(int);
+				blockInterest.forEach(function (interest) {
+					var clean_interest =  purifyInterest(interest);
+					addClass(card, clean_interest);
+					if (interests.indexOf(interest) == -1) { 
+						interests.push(interest);
 						var themBtn = document.getElementById("filterBtnContainerTHEMA");
-						themBtn.innerHTML += `<button class="btn" onclick="filterSelection('${int}', this)">${int}</button>`
+						themBtn.innerHTML += `<button class="btn" onclick="filterSelection('${clean_interest}', this)">${interest}</button>`
 					}
 				});
 				
@@ -1255,7 +1405,7 @@ function loadBlocks(anlass) {
 			};
 			
 			// Like this all the blocks will automatically appear 
-			titleShowAll(); 
+			titleShowAll();
 		}
 		
 	});
