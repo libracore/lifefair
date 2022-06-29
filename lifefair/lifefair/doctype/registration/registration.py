@@ -23,7 +23,7 @@ class Registration(Document):
         # get ticket number (####-####-####)
         self.ticket_number = get_ticket_code()
         self.type = "LF-Ticket"
-        self.email_clerk = frappe.session.user or "support@lifafair.com"
+        self.email_clerk = frappe.session.user or frappe.get_doc("Ticketing Settings", "Ticketing Settings", "email_clerk")
         
         meeting = frappe.get_doc('Meeting', self.meeting)
         registration_date = self.date
