@@ -149,9 +149,7 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
                     'date': entry['neues_datum'],
                     'phone': addressOne['phone']
                 })
-                frappe.log_error("first registration")
                 registration = registration.insert(ignore_permissions=True)
-                frappe.log_error(registration.name)
                 registration.create_ticket(ignore_permissions=True)
                 #reg_name = registration.name
             except Exception as e:

@@ -1535,7 +1535,7 @@ function loadEndMsg() {
 	endMsgContainer.innerHTML += `
 		<div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://sges.ch/official-congress-hotel-2022/" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
 		<div class="endMsgButtonsContainer">
-		<a href="/api/method/erpnextswiss.erpnextswiss.guest_print.get_pdf_as_guest?doctype=Sales Invoice&name=${initialState.sinv}?&key=${initialState.signature}&format=Sales Inovice - Ticket&no_letterhead=0" target="_blank" class="endMsgBtn downloadBtn">TICKET / RECHNUNG HERUNTERLADEN</a>
+		<a href="/api/method/erpnextswiss.erpnextswiss.guest_print.get_pdf_as_guest?doctype=Sales Invoice&name=${initialState.sinv}&key=${initialState.signature}&format=Sales Inovice - Ticket&no_letterhead=0" target="_blank" class="endMsgBtn downloadBtn">TICKET / RECHNUNG HERUNTERLADEN</a>
 		<button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
 		<button class="endMsgBtn zuruckBtnTwo" onclick="zuruckZurSeite()">ZURÜCK ZUR STARTSEITE</button>   
 		</div>
