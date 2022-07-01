@@ -136,7 +136,6 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
             new_registration = frappe.copy_doc(registration, ignore_no_copy = False)
             new_registration.block = entry['name']
             new_registration.date = entry['neues_datum']
-            frappe.log_error(entry['neues_datum'])
             new_registration = new_registration.insert(ignore_permissions=True)
             new_registration.save(ignore_permissions=True)
         else:
@@ -149,11 +148,10 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
                     'date': entry['neues_datum'],
                     'phone': addressOne['phone']
                 })
-                registration = registration.insert(ignore_permissions=True)
+                registration.insert(ignore_permissions=True)
                 registration.create_ticket(ignore_permissions=True)
-                #reg_name = registration.name
             except Exception as e:
-                frappe.log_error("{0}\n\n{1}".format(e, entry), "val")
+                frappe.log_error("{0}\n\n{1}".format(e, entry), "Registration creation failed")
     frappe.db.commit()
 
     #sales invoice beign created

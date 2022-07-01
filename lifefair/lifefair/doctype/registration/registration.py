@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 import frappe
 from frappe.model.document import Document
 from frappe import _
+from frappe.utils.data import getdate
 import csv
 import re
 import datetime
@@ -17,28 +18,28 @@ from datetime import datetime
 
 class Registration(Document):
     def create_ticket(self, ignore_permissions=False):
-        self.date = date.today()
+        if not ignore_permissions:
+            self.date = date.today()
+            
         # get random 18 digit barcode
         self.barcode = get_barcode(18)
+        
         # get ticket number (####-####-####)
         self.ticket_number = get_ticket_code()
+        
         self.type = "LF-Ticket"
         self.email_clerk = frappe.session.user or frappe.get_doc("Ticketing Settings", "Ticketing Settings", "email_clerk")
         
         meeting = frappe.get_doc('Meeting', self.meeting)
         registration_date = self.date
         meeting_date = meeting.date_date_format #datetime.datetime.strptime(meeting.date_date_format, '%d-%m-%Y')
-    
-
-		
-        reg = registration_date + timedelta(days=10)
+        
+        reg = getdate(registration_date) + timedelta(days=10)
         met = meeting_date - timedelta(days=8)
         
         
-
         earliest = min(reg, met)
         self.meldedatum = earliest
-        
         
         self.save(ignore_permissions=ignore_permissions)
         
