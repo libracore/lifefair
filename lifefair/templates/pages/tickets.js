@@ -25,6 +25,7 @@ var initialState = {
 	stripe: JSON.parse(localStorage.getItem("STRIPE")) || "No",
 	ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
 	sinv: JSON.parse(localStorage.getItem("SINV")) || null,
+	signature: JSON.parse(localStorage.getItem("SIGNATURE")) || null,
 };
 var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ];
 var block_cards = document.getElementsByClassName("filterDiv");
@@ -71,9 +72,6 @@ function userSelection(c, button) {
 	document.getElementById("warenkorb").classList.remove("grey");
 	document.querySelector(".display").classList.remove("grey");
 	//document.querySelector(".display").style.display = "block";
-	btnContainerTwo.querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
-	btnContainerThree.forEach((element) => element.classList.add("btnHover"));
-	btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.add("btnHover"));
 	btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
 	btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
 	btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
@@ -84,7 +82,7 @@ function userSelection(c, button) {
 	var userMenu = document.getElementById("userMenu");
 	var userMenuDiv = document.createElement('div');
 	userMenuDiv.classList.add('userMenuDiv');
-	userMenuDiv.innerHTML = `<div class="userMenuClass" onclick="openDropdown()"><p>${c}</p> <img class='dropdownImg' src="/assets/lifefair/images/arrow.png"/ style="padding-top: 5px;"></div>`;
+	userMenuDiv.innerHTML = `<div class="userMenuClass" onclick="openDropdown()"><div></div><p>${c}</p> <img class='dropdownImg' src="/assets/lifefair/images/arrow.png"/ style="padding-top: 5px;"></div>`;
 	userMenu.insertBefore(userMenuDiv, userMenu.firstChild)
     document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "none");
     
@@ -719,9 +717,6 @@ function removeFilter(num) {
 		document.getElementById("filterBtnContainerZEIT").classList.add("grey");
 		document.getElementById("filterBtnContainerTHEMA").classList.add("grey");
 		document.querySelector(".display").classList.add("grey");
-		btnContainerTwo.querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
-		btnContainerThree.forEach((element) => element.classList.remove("btnHover"));
-		btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("btnHover"));
 		document.querySelector(".userMenuDiv").innerHTML =  "";
 	} else if ( num == 2) {
 		currentDatum = null;
@@ -878,11 +873,12 @@ function addToCart(i) {
 
 function popUp(i) {
 	var currentCartItem = checkItem(i, "popUp")
+	console.log(currentCartItem)
 	
 	popUpDiv.innerHTML = `
 			<div class="popUp"> 
 				<div class="popUpContent"> 
-					<p class="popUpTittle">SIE SIND BEREITS AUGEMELDET FRÜHER</p>
+					<p class="popUpTittle">SIE SIND BEREITS ANGEMELDET</p>
 					<table class="popUpTable"> 					
 						<tr><td style="width: 50%;">${currentCartItem.short_name} <br> ${currentCartItem.official_title.split(":")[0]}</td> <td style="text-align: right; padding-right: 40px">${currentCartItem.neues_datum}</td> <td class="popUpImg"><div><img src="/assets/lifefair/images/minus.png" style="width:12px; "/></div></td></tr> 				
 					</table>
@@ -899,8 +895,9 @@ function popUp(i) {
 }
 
 function popUpConfirm(i) {
+	var currentCartItem = checkItem(i, "popUp")
 	popUpDiv.style.display = "none";
-	var index = initialState.cart.findIndex(item => item.neues_datum == blocks[i].neues_datum);
+	var index = initialState.cart.findIndex(item => item.official_title == currentCartItem.official_title);
 	initialState.cart[index] = blocks[i];
 	updateCart();
 }
@@ -1248,6 +1245,9 @@ function createTicket() {
 				
 				initialState.sinv = (res.sinv_name);
 				localStorage.setItem("SINV", JSON.stringify(initialState.sinv));
+				
+				initialState.signature = (res.signature);
+				localStorage.setItem("SIGNATURE", JSON.stringify(initialState.signature));
 				anlass = "ticketkauf"
 				window.open(`/tickets?anlass=${anlass}`, "_self"); 
 			}
@@ -1319,7 +1319,7 @@ function loadBlocks(anlass) {
 					dateTitle.innerHTML += `<div style="display: none" id="abend_${block.neues_datum}_${dayName}" class='localTitle_abend'><table> <tr> <td class='ticketsName'>TICKETS</td> <td class='dateName'>${dayName}</td><td class='dateNum'> ${date}</td>  <td class='timeName'>ABEND</td> </tr> </table></div>`;
 					blocksContainer.appendChild(dateTitle);
 					
-					datumBtn.innerHTML += `<button class="btn widthBtn" onclick="filterDatum('${dayName}', this)">${dayName}</button>`
+					datumBtn.innerHTML += `<button class="btn widthBtn" onclick="filterDatum('${dayName}', this)">${dayName} ${date}</button>`
 					
 				}
 				
@@ -1535,7 +1535,7 @@ function loadEndMsg() {
 	endMsgContainer.innerHTML += `
 		<div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://sges.ch/official-congress-hotel-2022/" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
 		<div class="endMsgButtonsContainer">
-		<a href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales Invoice&name=${initialState.sinv}&format=Sales Inovice - Ticket&no_letterhead=0&_lang=de" class="endMsgBtn downloadBtn" download>TICKET / RECHNUNG HERUNTERLADEN</a>
+		<a href="/api/method/erpnextswiss.erpnextswiss.guest_print.get_pdf_as_guest?doctype=Sales Invoice&name=${initialState.sinv}?&key=${initialState.signature}&format=Sales Inovice - Ticket&no_letterhead=0" target="_blank" class="endMsgBtn downloadBtn">TICKET / RECHNUNG HERUNTERLADEN</a>
 		<button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
 		<button class="endMsgBtn zuruckBtnTwo" onclick="zuruckZurSeite()">ZURÜCK ZUR STARTSEITE</button>   
 		</div>

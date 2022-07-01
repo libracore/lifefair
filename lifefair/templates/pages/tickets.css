@@ -326,7 +326,7 @@
 
 .display {
   margin-left: 15px;
-  max-width: 1042px;
+  max-width: 1020px;
 }
 
 .filterTitle {
@@ -355,7 +355,7 @@ ul {
 }
 
 .btnOrange, .userMenuClass  {
-  width: 245px;
+  width: 500px;
   border: 1px solid #E94E26;
   border-radius: 0px;
   color: #E94E26;
@@ -404,10 +404,16 @@ ul {
   text-transform: uppercase;
 }
 
+.btn:focus {
+  box-shadow: none;
+}
+
+/*
 .btnHover:hover {
   background: #003764;
   color: white;
 }
+*/
 
 .btn.active {
   background: #003764;

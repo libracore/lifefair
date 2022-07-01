@@ -16,7 +16,7 @@ from datetime import date
 from datetime import datetime
 
 class Registration(Document):
-    def create_ticket(self):
+    def create_ticket(self, ignore_permissions=False):
         self.date = date.today()
         # get random 18 digit barcode
         self.barcode = get_barcode(18)
@@ -40,7 +40,7 @@ class Registration(Document):
         self.meldedatum = earliest
         
         
-        self.save()
+        self.save(ignore_permissions=ignore_permissions)
         
         
         return

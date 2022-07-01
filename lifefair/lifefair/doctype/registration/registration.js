@@ -3,7 +3,7 @@
 
 frappe.ui.form.on('Registration', {
     refresh: function(frm) {
-        if (!frm.doc.barcode) {
+        if (!frm.doc.ticket_number) {
             frm.add_custom_button( __("Create ticket"), function() {
                 create_ticket(frm);
             });
