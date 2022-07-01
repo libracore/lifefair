@@ -76,9 +76,9 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
         else:
             customer = person.full_name
         # create customer if missing
-        if not person.customer_link: 
-            person.customer_link = create_customer(addressOne, person, customer)
-        elif firma != person.customer_link:
+        if not person.customer: 
+            person.customer = create_customer(addressOne, person, customer)
+        elif firma != person.customer:
             create_customer(addressOne, person, customer)
         # update if address is missing
         if not person.customer_address:
@@ -91,7 +91,7 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
             if len(address_name.links) == 0:
                 link = address_name.append('links', {})
                 link.link_doctype = "Customer"
-                link.link_name = person.customer_link
+                link.link_name = person.customer
                 address_name.save(ignore_permissions=True)
             if addressOne['adresse'] != address_name.address_line1 or addressOne['ort'] != address_name.city or addressOne['plz'] != address_name.pincode or addressOne['land'] != address_name.country:
                 current_address = create_address(customer, check="No", info=addressOne, person=person.name)
@@ -222,7 +222,7 @@ def create_person(addressOne, customer, full_name, source="from ticketing"):
         person_name = None
         try:
             person = person.insert(ignore_permissions=True)
-            person.customer_link = create_customer(addressOne, person, customer)
+            person.customer = create_customer(addressOne, person, customer)
             person.customer_address = create_address(customer, check="No", info=addressOne, person=person.name)
             # only insert company reference if provided (and matched)
             if company_matches and addressOne['firma'] and addressOne['firma'] != "":
@@ -340,7 +340,7 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, addre
     person = frappe.get_doc("Person", person)
     
     contact_name = person.full_name
-    customer_link = person.customer_link
+    customer_link = person.customer
     addresse_name = frappe.get_doc("Address", addresse).name
     sinv_address = addresse_name
     
@@ -379,7 +379,10 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, addre
     })
     sinv_name = None
     try: 
-        sinv.insert(ignore_permissions=True)
+        try:
+            sinv.insert(ignore_permissions=True)
+        except Exception as err:
+            frappe.throw("{0}".format(customer_link))
         signature = sinv.get_signature()
         sinv.submit()
         sinv_name = sinv.name
