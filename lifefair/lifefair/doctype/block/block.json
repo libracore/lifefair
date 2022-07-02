@@ -9,6 +9,7 @@
   "title",
   "meeting",
   "anderes_datum_setzen",
+  "bookable",
   "neues_datum",
   "section_information",
   "short_name",
@@ -262,9 +263,15 @@
    "fieldtype": "Table MultiSelect",
    "label": "Interest",
    "options": "Block Interest"
+  },
+  {
+   "default": "0",
+   "fieldname": "bookable",
+   "fieldtype": "Check",
+   "label": "Buchbar im Ticketing"
   }
  ],
- "modified": "2022-07-02 20:08:33.270122",
+ "modified": "2022-07-02 20:57:42.725486",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",
