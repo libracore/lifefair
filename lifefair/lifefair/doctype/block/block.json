@@ -28,7 +28,7 @@
   "content",
   "use",
   "section_interests",
-  "interest",
+  "interests",
   "interest_1",
   "column_break_24",
   "interest_2",
@@ -258,13 +258,13 @@
    "options": "Interesse"
   },
   {
-   "fieldname": "interest",
+   "fieldname": "interests",
    "fieldtype": "Table MultiSelect",
    "label": "Interest",
    "options": "Block Interest"
   }
  ],
- "modified": "2022-07-02 19:53:27.146137",
+ "modified": "2022-07-02 20:08:33.270122",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",
