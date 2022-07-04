@@ -915,14 +915,13 @@ function updateCart() {
     updateTotal();
     localStorage.setItem("CART", JSON.stringify(initialState.cart));
 }
-//`<div class="alleArtikel"><p>${res}% Ermässigung.</p><p class="discount">-${discount}</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
+
 function updateTotal() {
-<<<<<<< HEAD
 	var totalPrice = 0;
 	if ( initialState.cart.length > 0) {
 		initialState.cart.forEach((item, i) => {
 			totalPrice += item.rate ;
-			cartTotal.innerHTML = `<div class="alleArtikel"><p style=" font-size: 13px; padding-top: 5px; font-weight: bold;">inkl. MwSt</p><p></p> </div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
+			cartTotal.innerHTML = `<div class="alleArtikel"><p style=" font-size: 13px; padding-top: 5px; font-weight: bold;">inkl. MwSt</p> </div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
 			initialState.total = totalPrice;
 			localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
 		});
@@ -931,21 +930,6 @@ function updateTotal() {
 		initialState.total = 0;
 		localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
 	}
-=======
-    var totalPrice = 0;
-    if ( initialState.cart.length > 0) {
-        initialState.cart.forEach((item, i) => {
-            totalPrice += item.rate ;
-            cartTotal.innerHTML = `<div class="alleArtikel"><p></p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;    
-            initialState.total = totalPrice;
-            localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
-        });
-    } else { 
-        cartTotal.innerHTML = "" 
-        initialState.total = 0;
-        localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
-    }
->>>>>>> 148712e6c0988db334730122c76d21f32b85ba06
 }
 
 function updateItems() {
@@ -1084,7 +1068,7 @@ function checkGiftCard(){
                 var newTotal = initialState.total - discount;
                 initialState.total = newTotal;
                 localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
-                cartTotal.innerHTML = `<div class="alleArtikel"><p>${res}% Ermässigung.</p><p class="discount">-${discount}</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
+                cartTotal.innerHTML = `<div class="alleArtikel"><p style=" font-size: 13px; padding-top: 5px; font-weight: bold; margin-bottom: 0px;">inkl. MwSt</p> <div style="display: flex; justify-content: space-between; "> <p>${res}% Ermässigung.</p><p class="discount">-${discount}</p> </div></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
             }
         }
     });
