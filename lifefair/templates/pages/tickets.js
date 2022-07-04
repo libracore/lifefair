@@ -1068,7 +1068,7 @@ function checkGiftCard(){
                 var newTotal = initialState.total - discount;
                 initialState.total = newTotal;
                 localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
-                cartTotal.innerHTML = `<div class="alleArtikel"><p style=" font-size: 13px; padding-top: 5px; font-weight: bold; margin-bottom: 0px;">inkl. MwSt</p> <div style="display: flex; justify-content: space-between; "> <p>${res}% Ermässigung.</p><p class="discount">-${discount}</p> </div></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
+                cartTotal.innerHTML = `<div class="alleArtikel"><p style=" font-size: 13px; padding-top: 5px; font-weight: bold; margin-bottom: 0px;">inkl. MwSt</p> <div style="display: flex; justify-content: space-between; "> <p>${res}% Ermässigung.</p><p class="discount">-${discount.toFixed(2)}</p> </div></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
             }
         }
     });
