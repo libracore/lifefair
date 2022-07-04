@@ -9,6 +9,7 @@
   "title",
   "meeting",
   "anderes_datum_setzen",
+  "bookable",
   "neues_datum",
   "section_information",
   "short_name",
@@ -28,6 +29,7 @@
   "content",
   "use",
   "section_interests",
+  "interests",
   "interest_1",
   "column_break_24",
   "interest_2",
@@ -59,6 +61,7 @@
    "fieldname": "meeting",
    "fieldtype": "Link",
    "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Meeting",
    "options": "Meeting",
    "reqd": 1
@@ -254,9 +257,21 @@
    "fieldtype": "Link",
    "label": "Interesse 3",
    "options": "Interesse"
+  },
+  {
+   "fieldname": "interests",
+   "fieldtype": "Table MultiSelect",
+   "label": "Interest",
+   "options": "Block Interest"
+  },
+  {
+   "default": "0",
+   "fieldname": "bookable",
+   "fieldtype": "Check",
+   "label": "Buchbar im Ticketing"
   }
  ],
- "modified": "2021-03-29 17:49:39.567060",
+ "modified": "2022-07-02 20:57:42.725486",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",

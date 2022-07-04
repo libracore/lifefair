@@ -28,14 +28,14 @@ def get_visitor_type():
 def get_blocks(meeting, usertype):
     sql_query = """
         SELECT
-            `official_title`,
-            `location`,
-            `short_name`,
-            `neues_datum`,
-            `time`,
+            `tabBlock`.`official_title`,
+            `tabBlock`.`location`,
+            `tabBlock`.`short_name`,
+            `tabBlock`.`neues_datum`,
+            `tabBlock`.`time`,
             `tabBlock Price`.`rate` AS `rate`,
             GROUP_CONCAT(`tabBlock Interest`.`interest`) AS `interests`,
-            `website_link`,
+            `tabBlock`.`website_link`,
             `tabBlock`.`name`,
             `tabBlock`.`meeting`
         FROM `tabBlock`
@@ -43,7 +43,8 @@ def get_blocks(meeting, usertype):
         LEFT JOIN `tabBlock Price Block` ON `tabBlock Price Block`.`block` = `tabBlock`.`name`
         LEFT JOIN `tabBlock Price` ON `tabBlock Price`.`name` = `tabBlock Price Block`.`parent`
         WHERE `tabBlock`.`meeting` = '{meeting}'
-        AND `tabBlock Price`.`visitor_type` = '{usertype}'
+          AND `tabBlock Price`.`visitor_type` = '{usertype}'
+          AND `tabBlock`.`bookable` = 1
         GROUP BY `tabBlock`.`name`
         ORDER BY `tabBlock`.`neues_datum` ASC;
     """.format(meeting=meeting, usertype=usertype)
