@@ -911,13 +911,13 @@ function updateCart() {
 	updateTotal();
 	localStorage.setItem("CART", JSON.stringify(initialState.cart));
 }
-
+//`<div class="alleArtikel"><p>${res}% Ermässigung.</p><p class="discount">-${discount}</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
 function updateTotal() {
 	var totalPrice = 0;
 	if ( initialState.cart.length > 0) {
 		initialState.cart.forEach((item, i) => {
 			totalPrice += item.rate ;
-			cartTotal.innerHTML = `<div class="alleArtikel"><p></p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
+			cartTotal.innerHTML = `<div class="alleArtikel"><p style=" font-size: 13px; padding-top: 5px; font-weight: bold;">inkl. MwSt</p><p></p> </div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
 			initialState.total = totalPrice;
 			localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
 		});

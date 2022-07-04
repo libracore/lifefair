@@ -135,7 +135,6 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
         if registration:
             new_registration = frappe.copy_doc(registration, ignore_no_copy = False)
             new_registration.block = entry['name']
-            new_registration.date = entry['neues_datum']
             new_registration = new_registration.insert(ignore_permissions=True)
             new_registration.save(ignore_permissions=True)
         else:
@@ -145,7 +144,7 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
                     'person': person_name,
                     'meeting': entry['meeting'],
                     'block': entry['name'],
-                    'date': entry['neues_datum'],
+                    'date': today(),
                     'phone': addressOne['phone']
                 })
                 registration.insert(ignore_permissions=True)
@@ -364,6 +363,7 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, addre
         'company': frappe.get_value("Ticketing Settings", "Ticketing Settings", "company"),
         'customer_address': sinv_address,
         'contact_person': contact_name,
+        'contact_email': addressOne["email"],
         'shipping_address_name': addresse_name,
         'ticket_number': ticket_number,
         'taxes_and_charges': taxes_and_charges,
