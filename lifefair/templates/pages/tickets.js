@@ -783,7 +783,7 @@ function removeFilter(num) {
 }
 
 function checkTime(time) {
-    //7 - 13 Vormitag; 13:01 - 18 Nachmittag; 18:01 - 23 Abend;
+    //7 - 13 Vormitag; 13:01 - 17 Nachmittag; 18:00 - 23 Abend;
     if (time.length > 1) {
         var timeSplitFrom = time[0].split(":");
         var timeSplitTo = time[1].split(":");
@@ -813,8 +813,8 @@ function timeOfDay(timeRange) {
             return 1
         }
     } 
-    else if ( parseInt(timeRange[0]) >= 18) {
-        if (parseInt(timeRange[0]) == 18 && parseInt(timeRange[1]) == 0) {
+    else if ( parseInt(timeRange[0]) >= 17) {
+        if (parseInt(timeRange[0]) == 17 && parseInt(timeRange[1]) >= 0) {
             return 2
         } else {
             return 3
