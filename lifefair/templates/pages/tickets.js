@@ -882,7 +882,7 @@ function popUp(i) {
     popUpDiv.innerHTML = `
             <div class="popUp"> 
                 <div class="popUpContent"> 
-                    <p class="popUpTittle">SIE SIND BEREITS ANGEMELDET</p>
+                    <p class="popUpTittle">SIE SIND BEREITS ANGEMELDET FÜR</p>
                     <table class="popUpTable">                     
                         <tr><td style="width: 50%;">${currentCartItem.short_name} <br> ${currentCartItem.official_title.split(":")[0]}</td> <td style="text-align: right; padding-right: 40px">${currentCartItem.neues_datum}</td> <td class="popUpImg"><div><img src="/assets/lifefair/images/minus.png" style="width:12px; "/></div></td></tr>                 
                     </table>
@@ -1016,7 +1016,7 @@ function checkOut() {
             document.getElementById("step0").style.display = "none";
             document.getElementById("step1").style.display = "block"
             document.querySelector(".warenkorbBtn").style.display = "block";
-            cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT BESTELLEN</p>`
+            cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT KAUFEN</p>`
         }
 }
 
@@ -1068,7 +1068,7 @@ function checkGiftCard(){
                 var newTotal = initialState.total - discount;
                 initialState.total = newTotal;
                 localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
-                cartTotal.innerHTML = `<div class="alleArtikel"><div style="display: flex; justify-content: space-between; padding-top: 5px;"><p style="margin: 0px; ">${res}% Ermässigung.</p><p class="discount">-${discount.toFixed(2)}</p></div> <p style=" font-size: 13px; font-weight: bold; margin-bottom: 1rem;">inkl. MwSt</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
+                cartTotal.innerHTML = `<div class="alleArtikel"><div style="display: flex; justify-content: space-between; padding-top: 5px;"><p style="margin: 0px; ">${res}% Ermässigung.</p><p class="discount">-${discount.toFixed(2)}</p></div> <p style=" font-size: 13px; font-weight: bold; margin-bottom: 1rem;">inkl. MwSt 7.7%<t</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
             }
         }
     });
@@ -1436,7 +1436,7 @@ function nachbestellenBtn() {
     document.querySelector(".warenkorbBtn").style.display = "block";
     document.getElementById("warenkorb").style.display = "block";
     document.getElementById("warenkorb").classList.remove("grey");
-    cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT BESTELLEN</p>`;
+    cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT KAUFEN</p>`;
     
     if ( initialState.rechCheck == "Yes" ) {
         

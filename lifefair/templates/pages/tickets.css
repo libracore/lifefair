@@ -431,8 +431,8 @@ ul {
   outline: none;
   padding: 12px 14px;
   cursor: pointer;
-  margin-top: 33px;
-  margin-bottom: 30px;
+  margin-top: 0px;
+  margin-bottom: 20px;
   min-width: 320px;
   max-width: 320px;
   /*  position: fixed;
