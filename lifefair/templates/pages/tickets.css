@@ -17,6 +17,8 @@
 
 .container-fluid {
   padding-left: 40px;
+  margin: 20px;
+  margin-top: 0px !important;
   /*border: solid yellow;
   margin: 0px;
   margin-left: 118px;
