@@ -871,6 +871,12 @@ ul {
   .popUp {
     width: 500px;
   }
+}
+
+@media all and (max-width: 496px) {
+  .popUp {
+    width: 350px;
+  }
 
 }
 
@@ -880,8 +886,5 @@ ul {
     font-size: 13px;
   }
   .container-fluid {padding: 0px !important;}
-  .popUp {
-    width: 350px;
-  }
 
 }
