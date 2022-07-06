@@ -829,6 +829,13 @@ ul {
   }
 }
 
+@media all and (max-width: 999px) {
+  #warenkorb {
+    margin-left: 20px;
+  }
+}
+
+
 @media all and (max-width: 746px) {
   .display  {
     width: auto;
@@ -842,12 +849,39 @@ ul {
   .ticketsName, .dateName, .dateNum, .timeName  {
     font-size: 20px;
   }
+  .popUp {
+    width: 500px;
+  }
+}
+
+@media all and (max-width: 570px) {
+   .btnOrange, .userMenuClass {
+    width: 300px;
+  }
 }
 
 @media all and (max-width: 538px) {
+   .userMenuClass {
+    width: 300px;
+  }
   .ticketsName, .dateName, .dateNum, .timeName  {
     font-size: 15px;
   }
   .container-fluid {padding: 0px !important;}
+  .popUp {
+    width: 500px;
+  }
+
+}
+
+@media all and (max-width: 365px) {
+
+  .ticketsName, .dateName, .dateNum, .timeName  {
+    font-size: 13px;
+  }
+  .container-fluid {padding: 0px !important;}
+  .popUp {
+    width: 350px;
+  }
 
 }
