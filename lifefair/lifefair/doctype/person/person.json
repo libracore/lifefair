@@ -514,7 +514,7 @@
   },
   {
    "fieldname": "customer",
-   "fieldtype": "Data",
+   "fieldtype": "Link",
    "label": "Customer",
    "options": "Customer"
   },
@@ -527,7 +527,7 @@
   }
  ],
  "image_field": "image",
- "modified": "2022-06-21 16:26:27.886563",
+ "modified": "2022-07-07 17:29:13.212534",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",

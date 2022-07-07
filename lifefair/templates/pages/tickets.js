@@ -32,7 +32,7 @@ var block_cards = document.getElementsByClassName("filterDiv");
 var datumBtn = document.getElementById("filterBtnContainerDATUM");
 var cartElement = document.querySelector(".cartElement");
 var cartTotal = document.querySelector(".cartTotal");
-var cartbButton = document.getElementById("btnCart");
+var cartbButton = document.querySelector(".cartBtn");
 var selectedFilterDiv = document.getElementById("selectedFilters");
 var btnContainerOne = document.getElementById("filterBtnContainerUSER");
 var btnContainerTwo = document.getElementById("filterBtnContainerDATUM");
@@ -1014,8 +1014,9 @@ function checkOut() {
         } else {
             inTheChekout = true;
             document.getElementById("step0").style.display = "none";
-            document.getElementById("step1").style.display = "block"
+            document.getElementById("step1").style.display = "block";
             document.querySelector(".warenkorbBtn").style.display = "block";
+            document.getElementById("inputLand").value = "Schweiz";
             cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT KAUFEN</p>`
         }
 }
@@ -1041,6 +1042,10 @@ kreditkarte.addEventListener('change', function(e){
         console.log("kreditkarte check");
     }
 });
+
+function test() {
+	console.log("in the test")
+}
 
 var rechnung = document.getElementById("rechnung");
 rechnung.addEventListener('change', function(e){
@@ -1224,8 +1229,9 @@ function checkDataAndPay() {
         if (rechnung.checked) {
             createTicket();
         } else { 
-            window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-            //~ openStripe();
+            //window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+            //openStripe();
+            alert("Derzeit nicht verfügbar, bitte stellen Sie Ihren Kauf in Rechnung")
         }
     }
 }
@@ -1267,10 +1273,21 @@ function createTicket() {
     //~ }) 
 //~ }
 
-//~ function openStripe(){
+function openStripe(){
     //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
     //~ createTicket();
-//~ }
+    frappe.call({
+        'method': "lifefair.lifefair.tickets.open_stripe",
+        'args': {
+                'total': initialState.total
+            },
+        'callback': function (response) {
+			var response = response.message
+           //console.log(response.id)
+           window.open(`https://checkout.stripe.com/pay/${response.id}`, "_self"); 
+        }
+    })
+}
 
 function loadVisitorTypes() {
     frappe.call({

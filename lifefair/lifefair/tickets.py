@@ -9,6 +9,9 @@ from frappe import throw, _
 import json
 from frappe.utils.data import today
 from frappe.utils.data import add_to_date
+import stripe
+
+stripe.api_key = "sk_test_51Kyu70BODcMMWEBOLPrG7Wd0e7QGzWdmUUEgOymQ7dQwtOHlAWDolNdaeeIHUSFJTeeaiXogE33OcWT8zlMOHWbd00L8NwIh93" 
 
 @frappe.whitelist(allow_guest=True) 
 def get_visitor_type():
@@ -112,6 +115,8 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
                 if done_data == "No":
                     create_data_changes(addressOne, person)
                     done_data = "Yes"
+        else:
+            create_contact(addressOne, customer, customer_address=current_address)
         if not person.website_description:
             person.website_description = "{0}, {1}".format(addressOne['funktion'], addressOne['firma'])
         # update phone number if missing
@@ -243,7 +248,7 @@ def create_person(addressOne, customer, full_name, source="from ticketing"):
     #frappe.log_error(person_name)
     return person_name
 
-def create_contact(addressOne, customer, customer_address, person_contact=None, source="from ticketing"):
+def create_contact(addressOne, customer, customer_address=None, person_contact=None, source="from ticketing"):
     if addressOne['herrFrau'] == "Herr":
         gender = "Männlich"
     elif addressOne['herrFrau'] == "Frau":
@@ -302,6 +307,9 @@ def create_contact(addressOne, customer, customer_address, person_contact=None, 
     return contact_name
 
 def create_address(customer, check, info, person, source="from ticketing"):
+    city = None 
+    if info["ort"]:
+        city = info["ort"]
     #frappe.log_error("on the create address")
     if check == "Yes":
         person = info["firma"]
@@ -476,3 +484,23 @@ def check_giftcode(giftcode):
             giftcRate = -1
     
     return giftcRate
+
+
+@frappe.whitelist(allow_guest=True) 
+def open_stripe(total):
+    session = stripe.checkout.Session.create( 
+        line_items=[{
+            'price_data': { 
+                'currency': 'chf', 
+                'product_data': { 
+                    'name': 'Ticket SGES 2022', 
+                }, 
+            'unit_amount': total, 
+            },
+            'quantity': 1, 
+        }],
+        mode='payment', 
+        success_url='https://example.com/success',
+        cancel_url='https://example.com/cancel', 
+    )
+    return session
