@@ -11,7 +11,7 @@ from frappe.utils.data import today
 from frappe.utils.data import add_to_date
 import stripe
 
-stripe.api_key = "sk_test_51Kyu70BODcMMWEBOLPrG7Wd0e7QGzWdmUUEgOymQ7dQwtOHlAWDolNdaeeIHUSFJTeeaiXogE33OcWT8zlMOHWbd00L8NwIh93" 
+stripe.api_key = frappe.get_value("Ticketing Settings", "Ticketing Settings", "stripe_api_key")
 
 @frappe.whitelist(allow_guest=True) 
 def get_visitor_type():
@@ -51,6 +51,16 @@ def get_blocks(meeting, usertype):
         GROUP BY `tabBlock`.`name`
         ORDER BY `tabBlock`.`neues_datum` ASC;
     """.format(meeting=meeting, usertype=usertype)
+    data = frappe.db.sql(sql_query, as_dict = True)
+    return data
+
+@frappe.whitelist(allow_guest=True) 
+def get_countries():
+    sql_query = """
+        SELECT 
+            `tabCountry`.`name`
+        FROM `tabCountry`
+    """
     data = frappe.db.sql(sql_query, as_dict = True)
     return data
 
@@ -307,9 +317,6 @@ def create_contact(addressOne, customer, customer_address=None, person_contact=N
     return contact_name
 
 def create_address(customer, check, info, person, source="from ticketing"):
-    city = None 
-    if info["ort"]:
-        city = info["ort"]
     #frappe.log_error("on the create address")
     if check == "Yes":
         person = info["firma"]
@@ -347,7 +354,7 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, addre
     #frappe.log_error("on the create sinv")
     person = frappe.get_doc("Person", person)
     
-    contact_name = person.full_name
+    contact_name = None
     customer_link = person.customer
     addresse_name = frappe.get_doc("Address", addresse).name
     sinv_address = addresse_name
@@ -452,7 +459,7 @@ def create_payment_entry(sinv_name):
         pe.submit()
         frappe.db.commit()
     except Exception as e:
-        frappe.log_error("Import Ticketing Error", "Insert Customer {1} failed. {0}".format(e, sinv_name))      
+        frappe.log_error("Import Ticketing Error", "Insert Payment {1} failed. {0}".format(e, sinv_name))      
     return pe_name
 
 @frappe.whitelist(allow_guest=True) 
@@ -500,7 +507,7 @@ def open_stripe(total):
             'quantity': 1, 
         }],
         mode='payment', 
-        success_url='https://example.com/success',
+        success_url='http://localhost:8000/tickets?anlass=success',
         cancel_url='https://example.com/cancel', 
     )
     return session

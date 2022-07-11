@@ -17,6 +17,7 @@ var initialState = {
     userTypeValue : JSON.parse(localStorage.getItem("USER")) || "Student",
     cart : JSON.parse(localStorage.getItem("CART")) || [],
     total: JSON.parse(localStorage.getItem("TOTAL")) || 0,
+    discountTotal: JSON.parse(localStorage.getItem("NEWTOTAL")) || 0,
     //cartTwo: JSON.parse(localStorage.getItem("CARTTWO")) || [],
     addressOne: JSON.parse(localStorage.getItem("ADDRESSONE")) || [],
     addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
@@ -201,6 +202,16 @@ function titleShowAll() {
     var localTitle;
     currentTimeSlot = "all";
     dayFlag = "all";
+    window.localStorage.removeItem("ADDRESSONE");
+    window.localStorage.removeItem("TICKETS");
+    initialState.addressOne = [];
+    initialState.ticketNum = null;
+    initialState.total = 0;
+    localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
+    initialState.discountTotal = 0;
+    localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
+    initialState.stripe = "No";
+    localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
     console.log(currentTimeSlot, dayFlag);
     
     localTitle = document.querySelectorAll('.localTitle_vormittag');
@@ -1013,12 +1024,35 @@ function checkOut() {
             shaketext.classList.add("shake");
         } else {
             inTheChekout = true;
+            
+            var country_option = document.getElementById("inputLand");
+            getCountries(country_option)
+            
             document.getElementById("step0").style.display = "none";
             document.getElementById("step1").style.display = "block";
             document.querySelector(".warenkorbBtn").style.display = "block";
-            document.getElementById("inputLand").value = "Schweiz";
+            //document.getElementById("inputLand").value = "Schweiz";
             cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT KAUFEN</p>`
         }
+}
+
+function getCountries(country_option, country_in_addrss_two) {
+	frappe.call({
+		'method': "lifefair.lifefair.tickets.get_countries",
+		'callback': function (response) {
+			countries = response.message;
+			
+			for (var i = 0; i < countries.length; i++ ) {
+				//console.log("countrieees", countries[i].name)
+				if (country_in_addrss_two) {
+					country_option.innerHTML +=`<option class="btnOrange" selected="selected" value="${country_in_addrss_two}">${country_in_addrss_two}</option>`;
+				} else if (countries[i].name == "Schweiz") {
+					country_option.innerHTML +=`<option class="btnOrange" selected="selected" value="${countries[i].name}">${countries[i].name}</option>`;
+				}
+				country_option.innerHTML +=`<option class="btnOrange" value="${countries[i].name}">${countries[i].name}</option>`;
+			}
+		}
+	})
 }
 
 //Watching over the rechnungAdresse checkbox in the checkout 
@@ -1027,6 +1061,8 @@ rechnungAdresse.checked = false;
 rechnungAdresse.addEventListener('change', function(e){
     if (rechnungAdresse.checked) {
         document.getElementById("step2").style.display = "block";
+        var country_option = document.getElementById("inputLandTwo");
+        getCountries(country_option)
         initialState.rechCheck = "Yes";
         localStorage.setItem("RECHCHECK", JSON.stringify(initialState.rechCheck));
     } else if (!rechnungAdresse.checked) {
@@ -1071,8 +1107,11 @@ function checkGiftCard(){
             } else {
                 var discount = (res/100) * initialState.total;
                 var newTotal = initialState.total - discount;
-                initialState.total = newTotal;
-                localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
+                //~ initialState.total = parseFloat(newTotal.toFixed(2));
+                //~ localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
+                
+                initialState.discountTotal = parseFloat(newTotal.toFixed(2));
+                localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
                 cartTotal.innerHTML = `<div class="alleArtikel"><div style="display: flex; justify-content: space-between; padding-top: 5px;"><p style="margin: 0px; ">${res}% Ermässigung.</p><p class="discount">-${discount.toFixed(2)}</p></div> <p style=" font-size: 13px; font-weight: bold; margin-bottom: 1rem;">inkl. MwSt 7.7%<t</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
             }
         }
@@ -1135,6 +1174,10 @@ function checkDataAndPay() {
     } else if (!plzOrt.value) {
         plzOrt.style.border = "1px solid red;"
         plzOrt.focus();
+    } else if (checkPlzAndOrtVals(plzOrt.value) == false) {
+        // check if the field contains both mandatory information: postal code and city
+        plzOrt.style.border = "1px solid red;"
+        plzOrt.focus();
     } else if ((rechnungAdresse.checked) && (rechAdd == "notDone")) {
         
         var herrFrauTwo = document.getElementById("inputHerrFrauTwo");
@@ -1179,6 +1222,10 @@ function checkDataAndPay() {
             landTwo.style.border = "1px solid red;"
             landTwo.focus();
         } else if (!plzOrtTwo.value) {
+            plzOrtTwo.style.border = "1px solid red;"
+            plzOrtTwo.focus();
+        } else if (checkPlzAndOrtVals(plzOrtTwo.value) == false) {
+            // check if the field contains both mandatory information: postal code and city
             plzOrtTwo.style.border = "1px solid red;"
             plzOrtTwo.focus();
         } else {
@@ -1230,14 +1277,31 @@ function checkDataAndPay() {
             createTicket();
         } else { 
             //window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-            //openStripe();
-            alert("Derzeit nicht verfügbar, bitte stellen Sie Ihren Kauf in Rechnung")
+            openStripe();
+            //alert("Derzeit nicht verfügbar, bitte stellen Sie Ihren Kauf in Rechnung")
         }
     }
 }
 
+// check if the field contains both mandatory information: postal code and city
+function checkPlzAndOrtVals(str) {
+  var result = str.split(" ")
+  
+  if (result.length == 1) {
+  	return false
+  } else {
+  	var num = parseInt(result[0])
+    return !isNaN(num)
+  
+  }
+}
+
 function createTicket() {
+	var total = initialState.total
     //console.log("in the caaaaalll")
+    if (initialState.discountTotal != 0) {
+		total = initialState.discountTotal
+	}
     frappe.call({
             'method': 'lifefair.lifefair.tickets.create_ticket',
             'args': {
@@ -1245,7 +1309,7 @@ function createTicket() {
                 'addressOne': initialState.addressOne,
                 'addressTwo': initialState.addressTwo,
                 'warenkorb': initialState.cart,
-                'total': initialState.total
+                'total': total
             },
             'callback': function(response) {
                 var res = response.message;
@@ -1276,17 +1340,49 @@ function createTicket() {
 function openStripe(){
     //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
     //~ createTicket();
+    var stripeTotal = correctStripeValue();
+    console.log("stripe total", stripeTotal)
+    
     frappe.call({
         'method': "lifefair.lifefair.tickets.open_stripe",
         'args': {
-                'total': initialState.total
+                'total': stripeTotal
             },
         'callback': function (response) {
-			var response = response.message
-           //console.log(response.id)
-           window.open(`https://checkout.stripe.com/pay/${response.id}`, "_self"); 
+            var response = response.message
+            console.log(response)
+            window.open(response.url, "_self"); 
         }
     })
+}
+
+function checkFloat(stringNum) {
+	return stringNum.indexOf(".");
+}
+
+function correctStripeValue() {
+  var total = initialState.total
+  if (initialState.discountTotal != 0) {
+	total = initialState.discountTotal
+  }
+  var fixedTotal;
+  var stringNum = total.toString();
+  if ( checkFloat(stringNum) == -1 ) {
+  	fixedTotal = parseInt(stringNum + "00");
+    return fixedTotal
+  } else {
+	 
+    splitValueString = stringNum.split(".")
+    var floatTotal = splitValueString[0] + splitValueString[1]
+    //console.log("is splitValueString", splitValueString)
+    if (splitValueString[1].length == 1) {
+       fixedTotal = parseInt(floatTotal + "0");
+	} else {
+		fixedTotal = parseInt(floatTotal);
+	}
+    //console.log("stripetotal", fixedTotal)
+    return fixedTotal
+  }
 }
 
 function loadVisitorTypes() {
@@ -1448,6 +1544,11 @@ function nachbestellenBtn() {
     initialState.ticketNum = null;
     initialState.stripe = "No";
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
+    initialState.discountTotal = 0;
+    localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
+    
+    var country_option = document.getElementById("inputLand");
+    getCountries(country_option)
     
     document.getElementById("step1").style.display = "block";
     document.querySelector(".warenkorbBtn").style.display = "block";
@@ -1456,6 +1557,9 @@ function nachbestellenBtn() {
     cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT KAUFEN</p>`;
     
     if ( initialState.rechCheck == "Yes" ) {
+
+        var country_option = document.getElementById("inputLandTwo");
+        getCountries(country_option, initialState.addressTwo.land)
         
         document.getElementById("gleiche").checked = true;
         document.getElementById("step2").style.display = "block";
@@ -1482,7 +1586,7 @@ function nachbestellenBtn() {
         firmaTwo.value = initialState.addressTwo.firma;
         funktionTwo.value = initialState.addressTwo.funktion;
         plzOrtTwo.value = initialState.addressTwo.plz + " " + initialState.addressTwo.ort;
-        landTwo.value = initialState.addressTwo.land;
+        //landTwo.value = initialState.addressTwo.land;
     }
 }
 

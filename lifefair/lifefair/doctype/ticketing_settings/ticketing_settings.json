@@ -8,7 +8,8 @@
   "ticket_item",
   "sales_taxes",
   "stripe",
-  "email_clerk"
+  "email_clerk",
+  "stripe_api_key"
  ],
  "fields": [
   {
@@ -42,10 +43,15 @@
    "label": "Company",
    "options": "Company",
    "reqd": 1
+  },
+  {
+   "fieldname": "stripe_api_key",
+   "fieldtype": "Data",
+   "label": "Stripe Api Key"
   }
  ],
  "issingle": 1,
- "modified": "2022-06-30 08:58:13.664171",
+ "modified": "2022-07-11 11:11:41.939724",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Ticketing Settings",

@@ -832,7 +832,7 @@ ul {
 }
 
 @media all and (max-width: 999px) {
-  #warenkorb {
+  .scondDiv {
     margin-left: 20px;
   }
 }
