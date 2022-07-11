@@ -197,6 +197,7 @@ function filterSelection(interest, button) {
 //~ }
 }
 
+// it shows all the cards and reset all the initial values
 function titleShowAll() {
     console.log("in the tittle showAll fuuunc")
     var localTitle;
@@ -213,6 +214,8 @@ function titleShowAll() {
     initialState.stripe = "No";
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
     console.log(currentTimeSlot, dayFlag);
+    initialState.rechCheck = "No";
+    localStorage.setItem("RECHCHECK", JSON.stringify(initialState.rechCheck));
     
     localTitle = document.querySelectorAll('.localTitle_vormittag');
     for ( var j = 0; j < localTitle.length; j++ ) {
@@ -532,43 +535,18 @@ function filterTimeSlot(c) {
 
 
 function addClass(element, name) {
-  //~ var newStr;
-  //~ var i, arr1, arr2;
-  
-  //~ if (name.split(/\W+/).length > 1) {
-     //~ newStr =  name.split(" ")[0];
-     //~ arr1 = element.className.split(" ");
-     //~ arr2 = newStr.split(" ");
-     //~ for (i = 0; i < arr2.length; i++) {
-        //~ if (arr1.indexOf(arr2[i]) == -1) {element.className += " " + arr2[i];}
-     //~ }
-  //~ } else {
-     var elementClasses = element.className.split(" ");
-     //arr2 = name.split(" ");
-     //for (i = 0; i < arr2.length; i++) {
-        if (elementClasses.indexOf(name) == -1) {
-            element.classList.add(name);
-        }
-     //}
-  //}
+  var elementClasses = element.className.split(" ");
+  if (elementClasses.indexOf(name) == -1) {
+      element.classList.add(name);
+  }
 }
 
 function removeClass(element, name) {
-  //~ var i, arr1, arr2;
-  //~ arr1 = element.className.split(" ");
-  //~ arr2 = name.split(" ");
-  //~ for (i = 0; i < arr2.length; i++) {
-    //~ while (arr1.indexOf(arr2[i]) > -1) {
-      //~ arr1.splice(arr1.indexOf(arr2[i]), 1);     
-    //~ }
-  //~ }
-  //~ element.className = arr1.join(" ");
   element.classList.remove(name);
 }
 
 // Add active class to the current button in the respective container and highlight it the top
 function btnContainerOneFunc(c, button){
-    //console.log("clicking orange", c)
     
     btnContainerOne.querySelectorAll("button").forEach(btn => {
         btn.classList.remove("active");
@@ -1036,6 +1014,7 @@ function checkOut() {
         }
 }
 
+// Creating the Country Dropdown List
 function getCountries(country_option, country_in_addrss_two) {
 	frappe.call({
 		'method': "lifefair.lifefair.tickets.get_countries",
@@ -1079,10 +1058,6 @@ kreditkarte.addEventListener('change', function(e){
     }
 });
 
-function test() {
-	console.log("in the test")
-}
-
 var rechnung = document.getElementById("rechnung");
 rechnung.addEventListener('change', function(e){
     if (rechnung.checked) {
@@ -1118,7 +1093,7 @@ function checkGiftCard(){
     });
 }
 
-//Cheking the Values after proceeding to pay
+//Cheking the Form Values after proceeding to pay
 function checkDataAndPay() {
     //console.log("in the pay func");
     
@@ -1276,7 +1251,6 @@ function checkDataAndPay() {
         if (rechnung.checked) {
             createTicket();
         } else { 
-            //window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
             openStripe();
             //alert("Derzeit nicht verfügbar, bitte stellen Sie Ihren Kauf in Rechnung")
         }
@@ -1286,7 +1260,6 @@ function checkDataAndPay() {
 // check if the field contains both mandatory information: postal code and city
 function checkPlzAndOrtVals(str) {
   var result = str.split(" ")
-  
   if (result.length == 1) {
   	return false
   } else {
@@ -1328,14 +1301,6 @@ function createTicket() {
         });
 }
 
-//~ function checkValueField(arr) {
-    //~ arr.some((input) => {
-        //~ if (!input.value) {
-            //~ input.style.border = "1px solid red;"
-            //~ input.focus();
-        //~ }
-    //~ }) 
-//~ }
 
 function openStripe(){
     //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
