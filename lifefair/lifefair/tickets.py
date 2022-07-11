@@ -113,14 +113,9 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
                     create_data_changes(addressOne, person)
                     done_data = "Yes"
         #check if the data provided is different from the one found and create a contatc record for it
-        if addressOne['herrFrau'] != person.gender or addressOne['akademishTitle'] != person.title or addressOne['firstname'] != person.first_name or addressOne['lastname'] != person.last_name or addressOne['phone'] != person.company_phone:
-            create_contact(addressOne, customer, customer_address=current_address, person_contact=contact )
-            if done_data == "No":
-                create_data_changes(addressOne, person)
-                done_data = "Yes"
         if contact:
             contact_data = frappe.get_doc("Contact", contact[0]['name'])
-            if addressOne['firma'] != contact_data.company_name or addressOne['funktion'] != contact_data.function:
+            if addressOne['firma'] != contact_data.company_name or addressOne['funktion'] != contact_data.function or addressOne['herrFrau'] != person.gender or addressOne['akademishTitle'] != person.title or addressOne['firstname'] != person.first_name or addressOne['lastname'] != person.last_name or addressOne['phone'] != person.company_phone:
                 create_contact(addressOne, customer, customer_address=current_address, person_contact=contact)
                 if done_data == "No":
                     create_data_changes(addressOne, person)
