@@ -1251,8 +1251,8 @@ function checkDataAndPay() {
         if (rechnung.checked) {
             createTicket();
         } else { 
-            //openStripe();
-            alert("Derzeit nicht verfügbar, bitte stellen Sie Ihren Kauf in Rechnung")
+            openStripe();
+            //alert("Derzeit nicht verfügbar, bitte stellen Sie Ihren Kauf in Rechnung")
         }
     }
 }
