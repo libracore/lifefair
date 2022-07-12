@@ -11,8 +11,6 @@ from frappe.utils.data import today
 from frappe.utils.data import add_to_date
 import stripe
 
-stripe.api_key = frappe.get_value("Ticketing Settings", "Ticketing Settings", "stripe_api_key")
-
 @frappe.whitelist(allow_guest=True) 
 def get_visitor_type():
     sql_query = """
@@ -490,19 +488,20 @@ def check_giftcode(giftcode):
 
 @frappe.whitelist(allow_guest=True) 
 def open_stripe(total):
+    stripe.api_key = frappe.get_value("Ticketing Settings", "Ticketing Settings", "stripe_api_key")
     session = stripe.checkout.Session.create( 
         line_items=[{
             'price_data': { 
                 'currency': 'chf', 
                 'product_data': { 
-                    'name': 'Ticket SGES 2022', 
+                    'name': frappe.get_value("Ticketing Settings", "Ticketing Settings", "stripe_name"), 
                 }, 
             'unit_amount': total, 
             },
             'quantity': 1, 
         }],
         mode='payment', 
-        success_url='http://localhost:8000/tickets?anlass=success',
-        cancel_url='https://example.com/cancel', 
+        success_url= frappe.get_value("Ticketing Settings", "Ticketing Settings", "success_url"),
+        cancel_url= frappe.get_value("Ticketing Settings", "Ticketing Settings", "cancel_url"), 
     )
     return session

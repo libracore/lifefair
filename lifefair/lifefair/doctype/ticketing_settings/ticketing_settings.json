@@ -7,9 +7,12 @@
   "company",
   "ticket_item",
   "sales_taxes",
-  "stripe",
   "email_clerk",
-  "stripe_api_key"
+  "stripe_name",
+  "stripe",
+  "stripe_api_key",
+  "success_url",
+  "cancel_url"
  ],
  "fields": [
   {
@@ -48,10 +51,25 @@
    "fieldname": "stripe_api_key",
    "fieldtype": "Data",
    "label": "Stripe Api Key"
+  },
+  {
+   "fieldname": "stripe_name",
+   "fieldtype": "Data",
+   "label": "Stripe Checkout Title"
+  },
+  {
+   "fieldname": "success_url",
+   "fieldtype": "Data",
+   "label": "Success URL"
+  },
+  {
+   "fieldname": "cancel_url",
+   "fieldtype": "Data",
+   "label": "Cancel URL"
   }
  ],
  "issingle": 1,
- "modified": "2022-07-11 11:11:41.939724",
+ "modified": "2022-07-12 09:56:25.364216",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Ticketing Settings",
