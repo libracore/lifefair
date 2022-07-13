@@ -14,6 +14,8 @@
   "date",
   "status",
   "column_event",
+  "erster_tag_offen",
+  "zweiter_tag_offen",
   "remarks",
   "section_xing",
   "ticket_number",
@@ -188,9 +190,21 @@
    "fieldname": "meldedatum",
    "fieldtype": "Date",
    "label": "Meldedatum"
+  },
+  {
+   "default": "0",
+   "fieldname": "erster_tag_offen",
+   "fieldtype": "Check",
+   "label": "IF erster Tag offen"
+  },
+  {
+   "default": "0",
+   "fieldname": "zweiter_tag_offen",
+   "fieldtype": "Check",
+   "label": "IF zweiter Tag offen"
   }
  ],
- "modified": "2021-01-14 23:46:43.509324",
+ "modified": "2022-07-13 08:31:34.879498",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Registration",

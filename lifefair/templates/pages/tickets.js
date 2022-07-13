@@ -1316,7 +1316,7 @@ function openStripe(){
         'callback': function (response) {
             var response = response.message
             console.log(response)
-            window.open(response.url, "_self"); 
+            window.open(response.url, "_blank"); 
         }
     })
 }
