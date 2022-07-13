@@ -832,6 +832,12 @@ ul {
   }
 }
 
+@media all and (max-width: 1200px) {
+  .container-fluid {
+    padding-left: 0px;
+  }
+}
+
 @media all and (max-width: 999px) {
   .scondDiv {
     margin-left: 20px;
