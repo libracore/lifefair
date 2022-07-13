@@ -30,10 +30,11 @@
    "fieldtype": "Link",
    "label": "Used By",
    "options": "Person",
-   "read_only": 1
+   "read_only": 1,
+   "no_copy": 1
   }
  ],
- "modified": "2022-07-04 15:49:51.587735",
+ "modified": "2022-07-13 20:55:51.587735",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Ticket Voucher",
