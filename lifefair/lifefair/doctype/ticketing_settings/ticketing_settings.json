@@ -6,10 +6,13 @@
  "field_order": [
   "company",
   "ticket_item",
+  "column_general",
   "sales_taxes",
   "email_clerk",
+  "section_stripe",
   "stripe_name",
   "stripe",
+  "column_stripe",
   "stripe_api_key",
   "success_url",
   "cancel_url"
@@ -50,7 +53,8 @@
   {
    "fieldname": "stripe_api_key",
    "fieldtype": "Data",
-   "label": "Stripe Api Key"
+   "label": "Stripe Api Key",
+   "reqd": 1
   },
   {
    "fieldname": "stripe_name",
@@ -60,17 +64,32 @@
   {
    "fieldname": "success_url",
    "fieldtype": "Data",
-   "label": "Success URL"
+   "label": "Success URL",
+   "reqd": 1
   },
   {
    "fieldname": "cancel_url",
    "fieldtype": "Data",
-   "label": "Cancel URL"
+   "label": "Cancel URL",
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_stripe",
+   "fieldtype": "Section Break",
+   "label": "Stripe"
+  },
+  {
+   "fieldname": "column_stripe",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "column_general",
+   "fieldtype": "Column Break"
   }
  ],
  "issingle": 1,
- "modified": "2022-07-12 09:56:25.364216",
- "modified_by": "Administrator",
+ "modified": "2022-07-13 13:36:54.794731",
+ "modified_by": "valentina.sulbaran@libracore.com",
  "module": "Lifefair",
  "name": "Ticketing Settings",
  "owner": "Administrator",
@@ -106,4 +125,3 @@
  "sort_field": "modified",
  "sort_order": "DESC",
  "track_changes": 1
-}
