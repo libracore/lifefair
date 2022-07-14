@@ -505,5 +505,4 @@ def open_stripe(total):
         success_url= frappe.get_value("Ticketing Settings", "Ticketing Settings", "success_url"),
         cancel_url= frappe.get_value("Ticketing Settings", "Ticketing Settings", "cancel_url"), 
     )
-    frappe.log_error("Import Ticketing Error", "Stripe connected. {0}".format(stripe.api_key))
     return session
