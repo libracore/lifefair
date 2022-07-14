@@ -443,7 +443,8 @@ def create_payment_entry(sinv_name):
         ],
         'reference_no': sinv.name,
         'reference_date': today(),
-        'remarks': 'Auto Payment for {sinv}'.format(sinv=sinv.name)
+        'remarks': 'Auto Payment for {sinv}'.format(sinv=sinv.name),
+        'company': frappe.defaults.get_global_default("Company")
     })
     pe_name = None 
     try:
