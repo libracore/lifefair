@@ -426,11 +426,12 @@ def create_payment_entry(sinv_name):
     sinv = frappe.get_doc("Sales Invoice", sinv_name)
     pe = frappe.get_doc({
         'doctype': "Payment Entry",
+        'company': frappe.get_value("Ticketing Settings", "Ticketing Settings", "company"),
         'posting_date': today(),
         'payment_type': "Receive",
         'party_type': "Customer",
         'party': sinv.customer,
-        'paid_from': frappe.get_value("Company", frappe.defaults.get_global_default("Company"), "default_receivable_accoutn"),
+        'paid_from': frappe.get_value("Company", frappe.get_value("Ticketing Settings", "Ticketing Settings", "company"), "default_receivable_account"),
         'paid_to': frappe.get_value("Ticketing Settings", "Ticketing Settings", "stripe"),
         'paid_amount': sinv.outstanding_amount,
         'received_amount': sinv.outstanding_amount,
@@ -443,8 +444,7 @@ def create_payment_entry(sinv_name):
         ],
         'reference_no': sinv.name,
         'reference_date': today(),
-        'remarks': 'Auto Payment for {sinv}'.format(sinv=sinv.name),
-        'company': frappe.defaults.get_global_default("Company")
+        'remarks': 'Auto Payment for {sinv}'.format(sinv=sinv.name)
     })
     pe_name = None 
     try:
