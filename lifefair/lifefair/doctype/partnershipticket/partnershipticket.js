@@ -17,6 +17,12 @@ frappe.ui.form.on('Partnershipticket', {
 	}
 });
 
+frappe.ui.form.on('Partnership Ticket Item', {
+	tickets_add: function(frm, cdt, cdn) {
+		frappe.model.set_value(cdt, cdn, "name", Date.now().toString());
+	}
+});
+
 function secure_items(frm) {
 	var tickets = cur_frm.doc.tickets;
 	var ticket_no = 1;
