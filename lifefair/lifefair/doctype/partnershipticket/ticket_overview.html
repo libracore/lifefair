@@ -6,27 +6,29 @@
         <th>{{ __("Person") }}</th>
         <th>{{ __("Registration") }}</th>
     </tr>
-    {% for ticket in tickets %}
-{% if ticket.email %}
-<tr>
-    <td>{% if ticket.first_name %}{{ ticket.first_name }}{% endif %}</td>
-    <td>{% if ticket.last_name %}{{ ticket.last_name }}{% endif %}</td>
-    <td>{{ ticket.email }}</td>
-    <td>
-    {% if ticket.person %}
-     <span class="octicon octicon-person" style="color: green;"></span>&nbsp;
-    {% else %}
-     <span class="octicon octicon-person" style="color: gainsboro;"></span>&nbsp;
+    {% if tickets %}
+        {% for ticket in tickets %}
+            {% if ticket.email %}
+                <tr>
+                    <td>{% if ticket.first_name %}{{ ticket.first_name }}{% endif %}</td>
+                    <td>{% if ticket.last_name %}{{ ticket.last_name }}{% endif %}</td>
+                    <td>{{ ticket.email }}</td>
+                    <td>
+                    {% if ticket.person %}
+                     <span class="octicon octicon-person" style="color: green;"></span>&nbsp;
+                    {% else %}
+                     <span class="octicon octicon-person" style="color: gainsboro;"></span>&nbsp;
+                    {% endif %}
+                    </td>
+                    <td>
+                    {% if ticket.registration %}
+                     <span class="octicon octicon-thumbsup" style="color: green;"></span>&nbsp;
+                    {% else %}
+                     <span class="octicon octicon-thumbsup" style="color: gainsboro;"></span>&nbsp;
+                    {% endif %}
+                    </td>
+                </tr>
+            {% endif %}
+        {% endfor %}    
     {% endif %}
-    </td>
-    <td>
-    {% if ticket.registration %}
-     <span class="octicon octicon-thumbsup" style="color: green;"></span>&nbsp;
-    {% else %}
-     <span class="octicon octicon-thumbsup" style="color: gainsboro;"></span>&nbsp;
-    {% endif %}
-    </td>
-</tr>
-{% endif %}
-{% endfor %}    
 </table>
