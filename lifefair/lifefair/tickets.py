@@ -89,9 +89,10 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
             customer = person.full_name
         # create customer if missing
         if not person.customer: 
-            person.customer = create_customer(addressOne, person, customer)
+            customer = create_customer(addressOne, person, customer)
+            person.customer = customer
         elif firma != person.customer:
-            create_customer(addressOne, person, customer)
+            customer = create_customer(addressOne, person, customer)
         # update if address is missing
         if not person.customer_address:
             person.customer_address = create_address(customer, check="No", info=addressOne, person=person.name)
@@ -230,7 +231,8 @@ def create_person(addressOne, customer, full_name, source="from ticketing"):
         person_name = None
         try:
             person = person.insert(ignore_permissions=True)
-            person.customer = create_customer(addressOne, person, customer)
+            customer = create_customer(addressOne, person, customer)
+            person.customer = customer
             person.customer_address = create_address(customer, check="No", info=addressOne, person=person.name)
             # only insert company reference if provided (and matched)
             if company_matches and addressOne['firma'] and addressOne['firma'] != "":
@@ -418,7 +420,7 @@ def create_customer(addressOne, person, customer, source="from ticketing"):
         customer_name = customer_db.name
         frappe.db.commit()
     except Exception as e:
-        frappe.log_error("Import Ticketing Error", "Insert Customer {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))      
+        frappe.log_error("Import Ticketing Error", "Insert Customer {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source))
     return customer_name
 
 @frappe.whitelist(allow_guest=True) 
