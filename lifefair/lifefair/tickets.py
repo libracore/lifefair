@@ -456,6 +456,8 @@ def check_giftcode(giftcode):
         giftc = frappe.get_doc("Ticket Voucher", db_giftc[0]['name'])
         if not giftc.used_by:
             giftcRate = giftc.discount
+        elif giftc.remain_active == 1 :
+            giftcRate = giftc.discount
         else:
             giftcRate = -1
     
