@@ -9,6 +9,7 @@ from frappe import throw, _
 import json
 from frappe.utils.data import today
 from frappe.utils.data import add_to_date
+from frappe.utils import cint
 import stripe
 
 @frappe.whitelist(allow_guest=True) 
@@ -389,7 +390,7 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, strip
         try:
             sinv.insert(ignore_permissions=True)
             #check if kreditkard payment was done
-            if int(stripe) == 1:
+            if cint(stripe) == 1:
                 sinv.is_pos = 1
                 sinv.pos_profile = frappe.get_value("Ticketing Settings", "Ticketing Settings", "pos_profile")
                 #sinv.update_stock = 0
