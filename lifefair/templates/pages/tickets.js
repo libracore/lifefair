@@ -1278,7 +1278,7 @@ function createTicket() {
     frappe.call({
             'method': 'lifefair.lifefair.tickets.create_ticket',
             'args': {
-                'stripe': initialState.stripe,
+                'include_payment': initialState.stripe,
                 'addressOne': initialState.addressOne,
                 'addressTwo': initialState.addressTwo,
                 'warenkorb': initialState.cart,
