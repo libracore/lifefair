@@ -23,7 +23,7 @@ var initialState = {
     addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
     info: JSON.parse(localStorage.getItem("INFO")) || [],
     rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || "No",
-    stripe: JSON.parse(localStorage.getItem("STRIPE")) || "No",
+    stripe: JSON.parse(localStorage.getItem("STRIPE")) || 0,
     ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
     sinv: JSON.parse(localStorage.getItem("SINV")) || null,
     signature: JSON.parse(localStorage.getItem("SIGNATURE")) || null,
@@ -211,7 +211,7 @@ function titleShowAll() {
     localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
     initialState.discountTotal = 0;
     localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
-    initialState.stripe = "No";
+    initialState.stripe = 0;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
     console.log(currentTimeSlot, dayFlag);
     initialState.rechCheck = "No";
@@ -1507,7 +1507,7 @@ function nachbestellenBtn() {
     window.localStorage.removeItem("TICKETS");
     initialState.addressOne = [];
     initialState.ticketNum = null;
-    initialState.stripe = "No";
+    initialState.stripe = 0;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
     initialState.discountTotal = 0;
     localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
@@ -1567,9 +1567,9 @@ function successPayment() {
     document.querySelector(".warenkorbBtn").style.display = "none";
     document.getElementById("step3").style.display = "block";
     
-    initialState.stripe = "Yes"
+    initialState.stripe = 1;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
-    createTicket()
+    createTicket();
 }
 
 function loadEndMsg() {

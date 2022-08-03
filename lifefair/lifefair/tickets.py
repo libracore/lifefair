@@ -164,7 +164,7 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
     frappe.db.commit()
 
     #sales invoice beign created
-    sinv_name, signature = create_invoice(stripe, addressOne, addressTwo, customer, total, registration.ticket_number, addresse=current_address, person=person_name, contact=contact )
+    sinv_name, signature = create_invoice(addressOne, addressTwo, customer, total, registration.ticket_number, stripe, addresse=current_address, person=person_name, contact=contact)
     
     #check giftcard if provided
     if addressOne['giftcode'] != "":
@@ -341,7 +341,7 @@ def create_address(customer, check, info, person, source="from ticketing"):
     return address_name
 
 @frappe.whitelist(allow_guest=True) 
-def create_invoice(stripe, addressOne, addressTwo, customer, total, ticket_number, addresse, person, contact=None, source="from ticketing"):
+def create_invoice(addressOne, addressTwo, customer, total, ticket_number, stripe, addresse, person, contact=None, source="from ticketing"):
     #frappe.log_error("on the create sinv")
     person = frappe.get_doc("Person", person)
     
@@ -389,9 +389,9 @@ def create_invoice(stripe, addressOne, addressTwo, customer, total, ticket_numbe
         try:
             sinv.insert(ignore_permissions=True)
             #check if kreditkard payment was done
-            if stripe == "Yes":
+            if int(stripe) == 1:
                 sinv.is_pos = 1
-                sinv.pos_profile = frappe.get_value("Ticketing Settings", "Ticketing Settings", "pos_account")
+                sinv.pos_profile = frappe.get_value("Ticketing Settings", "Ticketing Settings", "pos_profile")
                 #sinv.update_stock = 0
                 sinv.append('payments', {
                     'mode_of_payment': frappe.get_value("Ticketing Settings", "Ticketing Settings", "mode_of_payment"),
