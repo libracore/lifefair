@@ -92,6 +92,14 @@ def get_data():
                    {
                        "type": "report",
                        "doctype": "Person",
+                       "name": "Actor per Meeting Details",
+                       "label": _("Actor per Meeting Details"),
+                       "description": _("Actor per Meeting Details"),
+                        "is_query_report": True
+                   },
+                   {
+                       "type": "report",
+                       "doctype": "Person",
                        "name": "Kontakte nach Interessen",
                        "label": _("Kontakte nach Interessen"),
                        "description": _("Kontakte nach Interessen"),

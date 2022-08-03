@@ -55,9 +55,13 @@ def get_actors(meeting=None, block=None, interests=None, as_list=True):
     elif block:
         sql_query += """ WHERE `t2`.`title` = '{0}'""".format(block)
     elif interests:
-        sql_query += """ WHERE `t2`.`interest_1` = '{0}' OR `t2`.`interest_2` = '{0}' OR `t2`.`interest_3` = '{0}'""".format(interests)		
+        sql_query += """
+            LEFT JOIN `tabBlock Interest` AS `t11` ON `t2`.`name` = `t11`.`parent`
+            WHERE `t11`.`interest` = '{0}'""".format(interests)
     sql_query += """ GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))"""          # removed per role filter (person multiple times) by request 2021-08-16
     sql_query += """ ORDER BY `t1`.`title` ASC, `t2`.`title` ASC, `t3`.`idx` ASC"""
+    # ~ if interests:
+        # ~ frappe.throw(sql_query)
     if as_list:
         data = frappe.db.sql(sql_query, as_list = True)
     else:

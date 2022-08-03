@@ -86,7 +86,9 @@ def get_actors(interests=None, as_list=True):
 /*	GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`))*/
     """
     if interests:
-        sql_query += """ WHERE `t2`.`interest_1` = '{0}' OR `t2`.`interest_2` = '{0}' OR `t2`.`interest_3` = '{0}'""".format(interests)		
+        sql_query += """ 
+            LEFT JOIN `tabBlock Interest` AS `t11` ON `t2`.`name` = `t11`.`parent`
+            WHERE `t11`.`interest` = '{0}'""".format(interests)		
     sql_query += """ GROUP BY (CONCAT(`t2`.`title`, `t3`.`person`, `t3`.`person_role`))"""
     #sql_query += """ ORDER BY `t1`.`title` ASC, `t2`.`title` ASC, `t4`.`idx` ASC"""
     if as_list:

@@ -101,7 +101,9 @@ def get_data(meeting=None, interests=None, as_list=True):
     if meeting:
         sql_query += """ AND `tabRegistration`.`meeting` = '{0}'""".format(meeting)
     #elif interests:
-    #   sql_query += """ WHERE `t2`.`interest_1` = '{0}' OR `t2`.`interest_2` = '{0}' OR `t2`.`interest_3` = '{0}'""".format(interests)	
+    #   sql_query += """ 
+        # ~ LEFT JOIN `tabBlock Interest` AS `t11` ON `t2`.`name` = `t11`.`parent`
+        # ~ WHERE `t11`.`interest` = '{0}'""".format(interests)
     sql_query += """ GROUP BY  `tabRegistration`.`name`"""
     sql_query += """ LIMIT 10000;"""
 
