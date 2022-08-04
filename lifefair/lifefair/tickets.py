@@ -9,6 +9,7 @@ from frappe import throw, _
 import json
 from frappe.utils.data import today
 from frappe.utils.data import add_to_date
+from frappe.utils import cint
 import stripe
 
 @frappe.whitelist(allow_guest=True) 
@@ -63,7 +64,7 @@ def get_countries():
     return data
 
 @frappe.whitelist(allow_guest=True) 
-def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
+def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total):
     
     if isinstance(addressOne, str):
         addressOne = json.loads(addressOne)
@@ -164,7 +165,7 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
     frappe.db.commit()
 
     #sales invoice beign created
-    sinv_name, signature = create_invoice(addressOne, addressTwo, customer, total, registration.ticket_number, addresse=current_address, person=person_name, contact=contact )
+    sinv_name, signature = create_invoice(addressOne, addressTwo, customer, total, registration.ticket_number, include_payment, addresse=current_address, person=person_name, contact=contact)
     
     #check giftcard if provided
     if addressOne['giftcode'] != "":
@@ -172,10 +173,6 @@ def create_ticket(stripe, addressOne, addressTwo, warenkorb, total):
         giftc = frappe.get_doc("Ticket Voucher", db_giftc[0]['name'])
         giftc.used_by = person_name
         giftc.save(ignore_permissions=True)
-    
-    #check if kreditkard payment was done
-    if stripe == "Yes":
-        create_payment_entry(sinv_name)
     
     return {'ticket_number': registration.ticket_number, 'sinv_name': sinv_name, 'signature': signature}
 
@@ -345,7 +342,7 @@ def create_address(customer, check, info, person, source="from ticketing"):
     return address_name
 
 @frappe.whitelist(allow_guest=True) 
-def create_invoice(addressOne, addressTwo, customer, total, ticket_number, addresse, person, contact=None, source="from ticketing"):
+def create_invoice(addressOne, addressTwo, customer, total, ticket_number, include_payment, addresse, person, contact=None, source="from ticketing"):
     #frappe.log_error("on the create sinv")
     person = frappe.get_doc("Person", person)
     
@@ -392,6 +389,17 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, addre
     try: 
         try:
             sinv.insert(ignore_permissions=True)
+            #check if kreditkard payment was done
+            if cint(include_payment) == 1:
+                sinv.is_pos = 1
+                sinv.pos_profile = frappe.get_value("Ticketing Settings", "Ticketing Settings", "pos_profile")
+                #sinv.update_stock = 0
+                sinv.append('payments', {
+                    'mode_of_payment': frappe.get_value("Ticketing Settings", "Ticketing Settings", "mode_of_payment"),
+                    'default': 1,
+                    'amount': total
+                })
+                sinv.save(ignore_permissions=True)
         except Exception as err:
             frappe.throw("{0}".format(customer_link))
         signature = sinv.get_signature()
@@ -424,41 +432,6 @@ def create_customer(addressOne, person, customer, source="from ticketing"):
     return customer_name
 
 @frappe.whitelist(allow_guest=True) 
-def create_payment_entry(sinv_name):
-    sinv = frappe.get_doc("Sales Invoice", sinv_name)
-    pe = frappe.get_doc({
-        'doctype': "Payment Entry",
-        'company': frappe.get_value("Ticketing Settings", "Ticketing Settings", "company"),
-        'posting_date': today(),
-        'payment_type': "Receive",
-        'party_type': "Customer",
-        'party': sinv.customer,
-        'paid_from': frappe.get_value("Company", frappe.get_value("Ticketing Settings", "Ticketing Settings", "company"), "default_receivable_account"),
-        'paid_to': frappe.get_value("Ticketing Settings", "Ticketing Settings", "stripe"),
-        'paid_amount': sinv.outstanding_amount,
-        'received_amount': sinv.outstanding_amount,
-        'references': [
-            {
-                'reference_doctype': "Sales Invoice",
-                'reference_name': sinv.name,
-                'allocated_amount': sinv.outstanding_amount
-            }
-        ],
-        'reference_no': sinv.name,
-        'reference_date': today(),
-        'remarks': 'Auto Payment for {sinv}'.format(sinv=sinv.name)
-    })
-    pe_name = None 
-    try:
-        pe.insert(ignore_permissions=True)
-        pe_name = pe.name
-        pe.submit()
-        frappe.db.commit()
-    except Exception as e:
-        frappe.log_error("Import Ticketing Error", "Insert Payment {1} failed. {0}".format(e, sinv_name))      
-    return pe_name
-
-@frappe.whitelist(allow_guest=True) 
 def create_data_changes(addressOne, person):
     data_changes_name = None
     try:
@@ -482,6 +455,8 @@ def check_giftcode(giftcode):
     else:
         giftc = frappe.get_doc("Ticket Voucher", db_giftc[0]['name'])
         if not giftc.used_by:
+            giftcRate = giftc.discount
+        elif giftc.remain_active == 1 :
             giftcRate = giftc.discount
         else:
             giftcRate = -1

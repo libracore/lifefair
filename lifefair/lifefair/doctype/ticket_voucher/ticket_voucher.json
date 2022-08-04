@@ -7,6 +7,8 @@
  "field_order": [
   "voucher_code",
   "discount",
+  "remain_active",
+  "used_column",
   "used_by"
  ],
  "fields": [
@@ -29,12 +31,22 @@
    "fieldname": "used_by",
    "fieldtype": "Link",
    "label": "Used By",
+   "no_copy": 1,
    "options": "Person",
-   "read_only": 1,
-   "no_copy": 1
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "remain_active",
+   "fieldtype": "Check",
+   "label": " Remain Active"
+  },
+  {
+   "fieldname": "used_column",
+   "fieldtype": "Column Break"
   }
  ],
- "modified": "2022-07-13 20:55:51.587735",
+ "modified": "2022-08-03 15:26:27.057340",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Ticket Voucher",
