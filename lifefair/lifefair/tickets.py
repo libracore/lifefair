@@ -401,7 +401,7 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, inclu
                 })
                 sinv.save(ignore_permissions=True)
         except Exception as err:
-            error = "Insert Invoice {1} {2} failed. {3}: {0}".format(e, addressOne["firstname"], addressOne["lastname"], source)
+            error = "Insert Invoice {1} {2} failed. {3}: {0}".format(err, addressOne["firstname"], addressOne["lastname"], source)
             frappe.log_error("Import Ticketing Error", error)
             return {'error': error}
         signature = sinv.get_signature()
