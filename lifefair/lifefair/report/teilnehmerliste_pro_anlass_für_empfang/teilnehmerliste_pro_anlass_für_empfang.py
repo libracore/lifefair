@@ -65,6 +65,7 @@ def get_data(meeting=None, interests=None, as_dict=True):
              /*(SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,*/
              `tabRegistration`.`meldedatum` AS `Meldedatum`,
              `tabRegistration`.`email_clerk` AS `Email Clerk`,
+             `tabRegistration`.`code` AS `Gutscheincode`,
              `tabRegistration`.`meeting` AS `Anlass`,
              IFNULL(`tabPerson`.`primary_function`, "-") AS `Funktion`,
              IFNULL(`tabPerson`.`primary_organisation`, "-") AS `Organisation`,
