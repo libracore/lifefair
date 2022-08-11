@@ -913,6 +913,10 @@ function updateTotal() {
 			cartTotal.innerHTML = `<div class="alleArtikel"><p style=" font-size: 13px; padding-top: 5px; font-weight: bold;">inkl. MwSt 7.7%</p> </div> <div class="totalDisplay"><p>TOTAL</p> <p>${totalPrice.toFixed(2)}</p></div>`;	
 			initialState.total = totalPrice;
 			localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
+			var giftCard = document.getElementById("inputGutschein");
+			if (giftCard) {
+				checkGiftCard();
+			}
 		});
 	} else { 
 		cartTotal.innerHTML = "" 
