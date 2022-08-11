@@ -17,7 +17,7 @@ var initialState = {
     userTypeValue : JSON.parse(localStorage.getItem("USER")) || "Student",
     cart : JSON.parse(localStorage.getItem("CART")) || [],
     total: JSON.parse(localStorage.getItem("TOTAL")) || 0,
-    discountTotal: JSON.parse(localStorage.getItem("NEWTOTAL")) || 0,
+    discountTotal: JSON.parse(localStorage.getItem("NEWTOTAL")) || -1,
     //cartTwo: JSON.parse(localStorage.getItem("CARTTWO")) || [],
     addressOne: JSON.parse(localStorage.getItem("ADDRESSONE")) || [],
     addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
@@ -209,7 +209,7 @@ function titleShowAll() {
     initialState.ticketNum = null;
     initialState.total = 0;
     localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
-    initialState.discountTotal = 0;
+    initialState.discountTotal = -1;
     localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
     initialState.stripe = 0;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
@@ -1079,12 +1079,14 @@ function checkGiftCard(){
             if (res == -1) {
                 giftCard.value = "";
                 giftCard.placeholder = "Ungültiger Code"; 
+                console.log("ultiger")
             } else {
                 var discount = (res/100) * initialState.total;
                 var newTotal = initialState.total - discount;
                 //~ initialState.total = parseFloat(newTotal.toFixed(2));
                 //~ localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
                 
+                console.log(newTotal)
                 initialState.discountTotal = parseFloat(newTotal.toFixed(2));
                 localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
                 cartTotal.innerHTML = `<div class="alleArtikel"><div style="display: flex; justify-content: space-between; padding-top: 5px;"><p style="margin: 0px; ">${res}% Ermässigung.</p><p class="discount">-${discount.toFixed(2)}</p></div> <p style=" font-size: 13px; font-weight: bold; margin-bottom: 1rem;">inkl. MwSt 7.7%<t</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
@@ -1272,7 +1274,7 @@ function checkPlzAndOrtVals(str) {
 function createTicket() {
 	var total = initialState.total
     //console.log("in the caaaaalll")
-    if (initialState.discountTotal != 0) {
+    if (initialState.discountTotal >= 0) {
 		total = initialState.discountTotal
 	}
     frappe.call({
@@ -1327,7 +1329,7 @@ function checkFloat(stringNum) {
 
 function correctStripeValue() {
   var total = initialState.total
-  if (initialState.discountTotal != 0) {
+  if (initialState.discountTotal >= 0) {
 	total = initialState.discountTotal
   }
   var fixedTotal;
@@ -1509,7 +1511,7 @@ function nachbestellenBtn() {
     initialState.ticketNum = null;
     initialState.stripe = 0;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
-    initialState.discountTotal = 0;
+    initialState.discountTotal = -1;
     localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
     
     var country_option = document.getElementById("inputLand");
