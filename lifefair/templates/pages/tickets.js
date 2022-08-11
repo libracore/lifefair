@@ -1083,14 +1083,12 @@ function checkGiftCard(){
             if (res == -1) {
                 giftCard.value = "";
                 giftCard.placeholder = "Ungültiger Code"; 
-                console.log("ultiger")
             } else {
                 var discount = (res/100) * initialState.total;
                 var newTotal = initialState.total - discount;
                 //~ initialState.total = parseFloat(newTotal.toFixed(2));
                 //~ localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
                 
-                console.log(newTotal)
                 initialState.discountTotal = parseFloat(newTotal.toFixed(2));
                 localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
                 cartTotal.innerHTML = `<div class="alleArtikel"><div style="display: flex; justify-content: space-between; padding-top: 5px;"><p style="margin: 0px; ">${res}% Ermässigung.</p><p class="discount">-${discount.toFixed(2)}</p></div> <p style=" font-size: 13px; font-weight: bold; margin-bottom: 1rem;">inkl. MwSt 7.7%<t</p></div> <div class="totalDisplay"><p>TOTAL</p> <p>${newTotal.toFixed(2)}</p></div>`;
