@@ -3,6 +3,7 @@
 
 from __future__ import unicode_literals
 import frappe
+from frappe.utils import cint
 
 def execute(filters=None):
     columns, data = [], []
@@ -17,12 +18,12 @@ def execute(filters=None):
                "Geprüft von::50",
                "Meldedatum::80",
                "Email Clerk::100",
-               "Registrierung:Link/Registration:100",
-               "Gutscheincode::170",
-               "Anlass::200",
+               "Registrierung:Link/Registration:170",
+               "Gutscheincode::100",
+               "Anlass::170",
                "Bemerkungen::190",
                "Teilnahme::100",
-               "Block:Link/Block:170",
+               "Block:Link/Block:200",
                "Funktion::150",
                "Organisation::200",
                "Verbandsmitglied::50",
@@ -44,13 +45,13 @@ def execute(filters=None):
                "IF zweiter Tag offen::50"
                ]
     if filters:
-        data = get_data(meeting=filters.meeting, interests=filters.interests, as_dict=True)
+        data = get_data(meeting=filters.meeting, interests=filters.interests, with_details=filters.with_details, as_dict=True)
     else:
         data = get_data(as_dict=True)
           
     return columns, data
 
-def get_data(meeting=None, interests=None, as_dict=True):
+def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
         
     sql_query = """
         SELECT
@@ -62,11 +63,15 @@ def get_data(meeting=None, interests=None, as_dict=True):
              IF (SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1) !=
              SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 1),
              SUBSTRING_INDEX(SUBSTRING_INDEX(`tabPerson`.`website_description`, ';', 2), ';', -1), "") AS `Zeile 2`,
-             /*(SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,*/
+             (SELECT IF(MAX(`tabRegistration`.`is_checked`) = 1, "Ja", "Nein")) AS `Geprüft von`,
              `tabRegistration`.`meldedatum` AS `Meldedatum`,
              `tabRegistration`.`email_clerk` AS `Email Clerk`,
+             GROUP_CONCAT(IFNULL(`tabRegistration`.`name`, "-")) AS `Registrierung`,
+             GROUP_CONCAT(IFNULL(`tabRegistration`.`remarks`, "-")) AS `Bemerkungen`,
+             GROUP_CONCAT(IFNULL(`tabRegistration`.`participation`, "-")) AS `Teilnahme`,
              `tabRegistration`.`code` AS `Gutscheincode`,
              `tabRegistration`.`meeting` AS `Anlass`,
+             GROUP_CONCAT(IFNULL(`tabRegistration`.`block`, "-")) AS `Block`,
              IFNULL(`tabPerson`.`primary_function`, "-") AS `Funktion`,
              IFNULL(`tabPerson`.`primary_organisation`, "-") AS `Organisation`,
              IFNULL((SELECT `tabOrganisation`.`ist_ver`
@@ -87,9 +92,11 @@ def get_data(meeting=None, interests=None, as_dict=True):
              `tabPerson`.`last_name` AS `Nachname`,
              `tabPerson`.`personal_postal_code` AS `PLZ`,
               GROUP_CONCAT(IFNULL(`tabPerson Interest`.`interesse`, "-")) AS `Interessen`,
+             `tabRegistration`.`type` AS `Typ`,
              `tabRegistration`.`ticket_number` AS `Ticketnummer`,
-             /*`tabRegistration`.`erster_tag_offen` AS `IF erster Tag offen`,*/
-             /*`tabRegistration`.`zweiter_tag_offen` AS `IF zweiter Tag offen`,*/
+             `tabRegistration`.`barcode` AS `Barcode`,
+             MAX(`tabRegistration`.`erster_tag_offen`) AS `IF erster Tag offen`,
+             MAX(`tabRegistration`.`zweiter_tag_offen`) AS `IF zweiter Tag offen`,
              0 AS `indent`
         FROM `tabRegistration`
         LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
@@ -102,14 +109,12 @@ def get_data(meeting=None, interests=None, as_dict=True):
         sql_query += """ AND `tabRegistration`.`meeting` = '{0}'""".format(meeting)
 
     sql_query += """ GROUP BY  `tabRegistration`.`ticket_number`"""
-    sql_query += """ ORDER BY `tabRegistration`.`creation` DESC """
-    sql_query += """ LIMIT 4000"""
-    # ~ sql_query += """ LIMIT 10 """
+    sql_query += """ ORDER BY `tabPerson`.`first_characters` ASC; """
 
-    if as_dict:
-        tickets = frappe.db.sql(sql_query, as_dict = True)
-    else:
-        tickets = frappe.db.sql(sql_query, as_dict = True)
+    tickets = frappe.db.sql(sql_query, as_dict = True)
+
+    if cint(with_details) == 0:
+        return tickets
     
     data = []
     # create drill-down
@@ -120,17 +125,12 @@ def get_data(meeting=None, interests=None, as_dict=True):
         sql_query = """
             SELECT 
                 `tabRegistration`.`person` AS `Kontakt KNT`,
-                `tabPerson`.`long_name` AS `Name`,
                  (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,
                  `tabRegistration`.`meldedatum` AS `Meldedatum`,
-                 `tabRegistration`.`email_clerk` AS `Email Clerk`,
                  `tabRegistration`.`name` AS `Registrierung`,
-                 `tabRegistration`.`code` AS `Gutscheincode`,
-                 `tabRegistration`.`meeting` AS `Anlass`,
                  IFNULL(`tabRegistration`.`remarks`, "-") AS `Bemerkungen`,
                  IFNULL(`tabRegistration`.`participation`, "-") AS `Teilnahme`,
                  IFNULL(`tabRegistration`.`block`, "-") AS `Block`,
-                 `tabRegistration`.`type` AS `Typ`,
                  `tabRegistration`.`ticket_number` AS `Ticketnummer`,
                  `tabRegistration`.`barcode` AS `Barcode`,
                  `tabRegistration`.`erster_tag_offen` AS `IF erster Tag offen`,
@@ -147,14 +147,10 @@ def get_data(meeting=None, interests=None, as_dict=True):
             sql_query += """ AND `tabRegistration`.`meeting` = '{0}'""".format(meeting)
             
         sql_query += """ GROUP BY  `tabRegistration`.`name`"""
-        sql_query += """ ORDER BY `tabRegistration`.`creation` DESC """
-        sql_query += """ LIMIT 4000"""
-        # ~ sql_query += """ LIMIT 10 """
+        sql_query += """ ORDER BY `tabRegistration`.`block` ASC; """
 
-        if as_dict:
-            registration = frappe.db.sql(sql_query, as_dict = True)
-        else:
-            registration = frappe.db.sql(sql_query, as_dict = True)
+        registration = frappe.db.sql(sql_query, as_dict = True)
+
         for r in registration:
             data.append(r)
         
