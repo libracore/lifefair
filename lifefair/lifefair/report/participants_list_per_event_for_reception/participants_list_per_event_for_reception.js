@@ -11,12 +11,6 @@ frappe.query_reports["Participants list per event for reception"] = {
             "options": "Meeting",
             "reqd": 1
         },
-                {
-            "fieldname":"interests",
-            "label": __("Interests"),
-            "fieldtype": "Link",
-            "options": "Interesse"
-        },
         {
             "fieldname":"with_details",
             "label": __("With Details"),

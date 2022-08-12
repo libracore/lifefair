@@ -66,7 +66,7 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
              (SELECT IF(MAX(`tabRegistration`.`is_checked`) = 1, "Ja", "Nein")) AS `Geprüft von`,
              `tabRegistration`.`meldedatum` AS `Meldedatum`,
              `tabRegistration`.`email_clerk` AS `Email Clerk`,
-             GROUP_CONCAT(IFNULL(`tabRegistration`.`name`, "-")) AS `Registrierung`,
+             GROUP_CONCAT(`tabRegistration`.`name`, "-") AS `Registrierung`,
              GROUP_CONCAT(IFNULL(`tabRegistration`.`remarks`, "-")) AS `Bemerkungen`,
              GROUP_CONCAT(IFNULL(`tabRegistration`.`participation`, "-")) AS `Teilnahme`,
              `tabRegistration`.`code` AS `Gutscheincode`,
@@ -91,7 +91,7 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
              `tabPerson`.`letter_salutation` AS `Briefanrede`,
              `tabPerson`.`last_name` AS `Nachname`,
              `tabPerson`.`personal_postal_code` AS `PLZ`,
-              GROUP_CONCAT(IFNULL(`tabPerson Interest`.`interesse`, "-")) AS `Interessen`,
+              /*GROUP_CONCAT(IFNULL(`tabPerson Interest`.`interesse`, "-")) AS `Interessen`,*/
              `tabRegistration`.`type` AS `Typ`,
              `tabRegistration`.`ticket_number` AS `Ticketnummer`,
              `tabRegistration`.`barcode` AS `Barcode`,
@@ -100,7 +100,7 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
              0 AS `indent`
         FROM `tabRegistration`
         LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
-        LEFT JOIN `tabPerson Interest` ON `tabPerson Interest`.`parent` = `tabPerson`.`name`
+        /*LEFT JOIN `tabPerson Interest` ON `tabPerson Interest`.`parent` = `tabPerson`.`name`*/
         LEFT JOIN `tabBlock` ON `tabBlock`.`name` = `tabRegistration`.`block`
             WHERE 
                 `tabRegistration`.`status` NOT IN ("Cancelled", "Abgemeldet", "Tentative")
@@ -137,7 +137,6 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
                  `tabRegistration`.`zweiter_tag_offen` AS `IF zweiter Tag offen`,
                  1 AS `indent`
             FROM `tabRegistration`
-            LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
             LEFT JOIN `tabBlock` ON `tabBlock`.`name` = `tabRegistration`.`block`
                 WHERE 
                     `tabRegistration`.`status` NOT IN ("Cancelled", "Abgemeldet", "Tentative")
