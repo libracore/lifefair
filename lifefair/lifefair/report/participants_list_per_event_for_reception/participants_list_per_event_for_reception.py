@@ -109,9 +109,7 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
         sql_query += """ AND `tabRegistration`.`meeting` = '{0}'""".format(meeting)
 
     sql_query += """ GROUP BY  `tabRegistration`.`ticket_number`"""
-    sql_query += """ ORDER BY `tabRegistration`.`creation` DESC """
-    sql_query += """ LIMIT 100"""
-    # ~ sql_query += """ LIMIT 10 """
+    sql_query += """ ORDER BY `tabPerson`.`first_characters` ASC; """
 
     tickets = frappe.db.sql(sql_query, as_dict = True)
 
@@ -149,9 +147,7 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
             sql_query += """ AND `tabRegistration`.`meeting` = '{0}'""".format(meeting)
             
         sql_query += """ GROUP BY  `tabRegistration`.`name`"""
-        sql_query += """ ORDER BY `tabRegistration`.`creation` DESC """
-        sql_query += """ LIMIT 100"""
-        # ~ sql_query += """ LIMIT 10 """
+        sql_query += """ ORDER BY `tabRegistration`.`block` ASC; """
 
         registration = frappe.db.sql(sql_query, as_dict = True)
 
