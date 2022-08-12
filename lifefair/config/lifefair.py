@@ -112,6 +112,14 @@ def get_data():
                        "label": _("Anmeldeliste Anlass"),
                        "description": _("Anmeldeliste Anlass"),
                         "is_query_report": True
+                   },
+                   {
+                       "type": "report",
+                       "doctype": "Registration",
+                       "name": "Participants list per event for reception",
+                       "label": _("Participants list per event for reception"),
+                       "description": _("Participants list per event for reception"),
+                        "is_query_report": True
                    }
             ]
         },

@@ -144,3 +144,5 @@ DocType: Marketing and Activity,ISA quoted,ISA angeboten
 DocType: Marketing and Activity,ISA interest,ISA Interesse
 DocType: Marketing and Activity,ISA declined,ISA Absage
 DocType: Marketing and Activity,Testimonial generation,Testimonialgenerierung
+Report: Participants list per event for reception,Participants list per event for reception,Teilnehmerliste pro Anlass für Empfang
+Report: Participants list per event for reception,With Details,Mit Details
