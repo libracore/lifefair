@@ -105,7 +105,7 @@ def create_flyer_pdf(name):
     # create html
     html = frappe.get_print("Block", name, print_format=block.flyer_print_format)
     # create pdf
-    pdf = frappe.utils.pdf.get_pdf(html)
+    pdf = frappe.utils.pdf.get_pdf(html, print_format=block.flyer_print_format)
     # clear attached files
     remove_all("Block", name)
     # save and attach pdf
