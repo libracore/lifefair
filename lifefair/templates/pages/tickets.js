@@ -164,8 +164,6 @@ function filterDatum(date, button) {
             
             blueThemaActive(date, button);
             titleFilter(dayName);
-            //~ //console.log('newStr c', c);
-            //~ //console.log('dayName', dayName);
         }
 }
 
@@ -174,8 +172,6 @@ function purifyInterest(interest) {
 }
 
 function filterSelection(filter, button) {
-    //console.log("filterSelection",filter, button)
-    
     if ((userDefined == "No") && (filter != "all")) {
         document.getElementById("ichBin").classList.toggle("shake");
     } else {
@@ -186,41 +182,19 @@ function filterSelection(filter, button) {
             titleFilter(filter)
         } 
             
-            for (var i = 0; i < block_cards.length; i++) {
-              removeClass(block_cards[i], "show");
-              if ((filter === "all") || (block_cards[i].className.indexOf(filter) > -1)) {
-                  addClass(block_cards[i], "show");
-              }
-            }
-            //FirmaFilter
-			//~ if  (button.closest("#filterBtnContainerTHEMA")){
-				//~ var filterBtnContainer = document.getElementById("filterBtnContainerFIRMA");
-				//~ var buttons = filterBtnContainer.getElementsByTagName("button");
+        for (var i = 0; i < block_cards.length; i++) {
+          removeClass(block_cards[i], "show");
+          if ((filter === "all") || (block_cards[i].className.indexOf(filter) > -1)) {
+              addClass(block_cards[i], "show");
+          }
+        }
 
-				//~ for (var i = 0; i < buttons.length; i++) {
-					//~ if (buttons[i].classList.contains("active")) {
-						//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-						//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-						//~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-						//~ break;
-					//~ }
-				//~ }
-				//~ currentFirma = null;
-				currentThema = filter;
-				cardFilter(filter);
-			//~ } else if (button.closest("#filterBtnContainerFIRMA")) {
-				//~ currentFirma = filter;
-				//~ if (currentThema && currentFirma) {
-					//~ filterThemaAndFirma(currentThema, currentFirma)
-				//~ } else {
-					//~ cardFilter(filter);
-				//~ }
-			//~ }
+        currentThema = filter;
+        cardFilter(filter);
+
             
-				blueThemaActive(filter, button);
-        //}
+        blueThemaActive(filter, button);
       }
-//~ }
 }
 
 // it shows all the cards and reset all the initial values
@@ -1057,15 +1031,14 @@ function addToCart(i, ...priority) {
             console.log("in the else if cart")
             popUp(i);
         } else {
-			
-			if (blocks[i].official_title.includes('Firmenbesuch') && priority[0] != "done") {
-				// Show a pop-up/modal with the firmen
-				showFirmen(blocks[i], i);
-			} else {
-				initialState.cart.push({
+            if (blocks[i].official_title.includes('Firmenbesuch') && priority[0] != "done") {
+                // Show a pop-up/modal with the firmen
+                showFirmen(blocks[i], i);
+            } else {
+                initialState.cart.push({
                  ...blocks[i], 
-				});
-			} 
+                });
+            } 
          }
       updateCart();
     } 
@@ -1095,21 +1068,21 @@ function popUp(i) {
 }
 
 function popUpConfirm(i) {
-	console.log("popUpConfirm", i)
+    console.log("popUpConfirm", i)
     var currentCartItem = checkItem(i, "popUp")
     console.log("currentCartItem", currentCartItem)
     popUpDiv.style.display = "none";
     var index = initialState.cart.findIndex(item => item.official_title == currentCartItem.official_title);
 
-		initialState.cart[index] = blocks[i];
-		console.log("index", index)
-		
-		if (blocks[i].official_title.includes('Firmenbesuch')) {
-				// Show a pop-up/modal with the firmen
-				showFirmen(initialState.cart[index], i);
-		} else {
-		updateCart();
-	}
+    initialState.cart[index] = blocks[i];
+    console.log("index", index)
+    
+    if (blocks[i].official_title.includes('Firmenbesuch')) {
+        // Show a pop-up/modal with the firmen
+        showFirmen(initialState.cart[index], i);
+    } else {
+        updateCart();
+    }
 
 }
 
@@ -1123,27 +1096,32 @@ function showFirmen(block, i) {
     console.log("Firmeeeen", blockfirmen)
     
     popUpDiv.innerHTML = `
-			<div class="popUp" id="firmenModal"> 
-			  <div class="popUpContent">
-				<p class="popUpTittle">IN DER REIHENFOLGE DES VORRANGIGEN BESUCHS ZIEHEN</p>
-				<ol id="firmenList" class="firmen-list"></ol>
-				<div class="popUpBtnDiv"> 
-					<button class="popUpCancel" onclick="popUpCancel()">ABBRECHEN</button> <button class="popUpConfirm" onclick="saveFirmenOrder(${i})">BESTÄTIGEN</button> 
-				</div>
-			  </div>
-			</div>`;
+            <div class="popUp" id="firmenModal"> 
+              <div class="popUpContent">
+                <p class="popUpTittle">IN DER REIHENFOLGE DES VORRANGIGEN BESUCHS ZIEHEN</p>
+                <ol id="firmenList" class="firmen-list"></ol>
+                <div class="popUpBtnDiv"> 
+                    <button class="popUpCancel" onclick="popUpCancel()">ABBRECHEN</button> <button class="popUpConfirm" onclick="saveFirmenOrder(${i})">BESTÄTIGEN</button> 
+                </div>
+              </div>
+            </div>`;
 
-	var modal = document.getElementById('firmenModal');
-	var firmenList = document.getElementById('firmenList');
-	
-	firmenList.innerHTML = '';
-	blockfirmen.forEach(function(firma) {
-		var listItem = document.createElement('li');
-		listItem.textContent = firma;
-		listItem.classList.add('firmen-item');
-		firmenList.appendChild(listItem);
-	});
-
+    var modal = document.getElementById('firmenModal');
+    var firmenList = document.getElementById('firmenList');
+    
+    firmenList.innerHTML = '';
+    blockfirmen.forEach(function(firma) {
+        var listItem = document.createElement('li');
+        listItem.textContent = firma;
+        listItem.classList.add('firmen-item');
+        firmenList.appendChild(listItem);
+    });
+    // add no interest divider
+    var listItem = document.createElement('li');
+    listItem.textContent = "-- kein Interesse --";
+    listItem.classList.add('firmen-item');
+    firmenList.appendChild(listItem);
+        
     popUpDiv.style.display = "block";
     enableDragging();
 }
@@ -1678,13 +1656,13 @@ function loadBlocks(anlass) {
     frappe.call({
         'method': "lifefair.lifefair.tickets.get_blocks",
         'args': {
-            meeting: anlass,
-            source: initialState.source,
-            usertype: initialState.userTypeValue
+            'meeting': anlass,
+            'source': initialState.source,
+            'usertype': initialState.userTypeValue
         },
         'callback': function (response) {
             blocks = response.message;
-            
+
             var blocksContainer = document.querySelector(".display");
             blocksContainer.innerHTML = "";
             var currentDate = null;
@@ -1721,7 +1699,7 @@ function loadBlocks(anlass) {
                 if (block.interests) {
                     var blockInterest = block.interests.split(",");
                     blockInterest.forEach(function (interest) {
-						//console.log("inters", interest)
+                        //console.log("inters", interest)
                         var clean_interest =  purifyInterest(interest);
                         //console.log("clean_interest", clean_interest)
                         addClass(card, clean_interest);
@@ -1732,23 +1710,6 @@ function loadBlocks(anlass) {
                         }
                     });
                 }
-                
-                //creating the filter Firma buttons and adding the class to the card
-                //~ if (block.firmen) {
-					//~ //console.log("firmaaa", block.firmen)
-                    //~ var blockFirmen = block.firmen.split(",");
-                    //~ blockFirmen.forEach(function (firma) {
-						//~ //console.log("firma", firma)
-                        //~ var clean_firma =  purifyInterest(firma);
-                        //~ //console.log("clean_firma", clean_firma)
-                        //~ addClass(card, clean_firma);
-                        //~ if (firmen.indexOf(firma) == -1) { 
-                            //~ firmen.push(firma);
-                            //~ var firmaBtn = document.getElementById("filterBtnContainerFIRMA");
-                            //~ firmaBtn.innerHTML += `<button class="btn" onclick="filterSelection('${clean_firma}', this)">${firma}</button>`
-                        //~ }
-                    //~ });
-                //~ }
                 
                 if (block.time) {
                     var twoTimeRange = block.time.split("und");
@@ -1981,25 +1942,25 @@ function get_arguments() {
     var arguments = window.location.toString().split("?");
     var currentURL = window.location.href;
 
-	// Check if the website is opened from sges.ch or how.ch
-	if (currentURL.includes('localhost:8000')) { //sges.ch
-	  currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how'; //'source=sges'
-	} else if (currentURL.includes('how.ch')) {
-	  currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how';
-	}
-	
-	if (currentURL.includes('source'))  {
-		// Create a URLSearchParams object from the URL
-		var urlParams = new URLSearchParams(currentURL);
-		if (urlParams.has("source")) {
-			// Get the value of the "source" parameter
-			var sourceValue = urlParams.get("source");
-			initialState.source = (sourceValue);
-			localStorage.setItem("SOURCE", JSON.stringify(initialState.source));
-		} 
-	} else {
-	  window.location.href = currentURL;
-	}
+    // Check if the website is opened from sges.ch or how.ch
+    if (currentURL.includes('localhost:8000')) { //sges.ch
+      currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how'; //'source=sges'
+    } else if (currentURL.includes('how.ch')) {
+      currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how';
+    }
+    
+    if (currentURL.includes('source'))  {
+        // Create a URLSearchParams object from the URL
+        var urlParams = new URLSearchParams(currentURL);
+        if (urlParams.has("source")) {
+            // Get the value of the "source" parameter
+            var sourceValue = urlParams.get("source");
+            initialState.source = (sourceValue);
+            localStorage.setItem("SOURCE", JSON.stringify(initialState.source));
+        } 
+    } else {
+      window.location.href = currentURL;
+    }
 
     if (!arguments[arguments.length - 1].startsWith("http")) {
         var args_raw = arguments[arguments.length - 1].split("&");
