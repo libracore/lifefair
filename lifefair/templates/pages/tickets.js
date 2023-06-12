@@ -1588,10 +1588,7 @@ function createTicket() {
 
 
 function openStripe(){
-    //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-    //~ createTicket();
     var stripeTotal = correctStripeValue();
-    console.log("stripe total", stripeTotal)
     
     frappe.call({
         'method': "lifefair.lifefair.tickets.open_stripe",
@@ -1600,7 +1597,6 @@ function openStripe(){
             },
         'callback': function (response) {
             var response = response.message
-            console.log(response)
             window.open(response.url, "_blank"); 
         }
     })
@@ -1699,9 +1695,7 @@ function loadBlocks(anlass) {
                 if (block.interests) {
                     var blockInterest = block.interests.split(",");
                     blockInterest.forEach(function (interest) {
-                        //console.log("inters", interest)
                         var clean_interest =  purifyInterest(interest);
-                        //console.log("clean_interest", clean_interest)
                         addClass(card, clean_interest);
                         if (interests.indexOf(interest) == -1) { 
                             interests.push(interest);
