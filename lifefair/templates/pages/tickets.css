@@ -157,6 +157,28 @@
   text-decoration: none;
 }
 
+.firmen-list {
+  margin-top: 28px;
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+.firmen-item {
+  padding: 10px;
+  border: 1px solid #003764;
+  cursor: move;
+  margin: 6px;
+  margin-bottom: 0px;
+  color: #003764;
+  text-transform: uppercase;
+  padding-left: 23px;
+}
+}
+
+.dragging {
+  opacity: 0.5;
+}
+
 .title {
   font-size: 45px;
   color: #E94E26;
@@ -197,7 +219,7 @@
   font-size: 12px;
 }
 
-.datumBlueFilter, .zeitBlueFilter, .themaBlueFilter {
+.datumBlueFilter, .zeitBlueFilter, .themaBlueFilter, .firmaBlueFilter {
   background: #003764;
 }
 
@@ -316,13 +338,13 @@
   transform: rotate(-10deg);
 }
 
-#filterBtnContainerUSER, #filterBtnContainerDATUM, #filterBtnContainerZEIT, #filterBtnContainerTHEMA {
+#filterBtnContainerUSER, #filterBtnContainerDATUM, #filterBtnContainerZEIT, #filterBtnContainerTHEMA, #filterBtnContainerFIRMA {
   margin-bottom: 25px;
   max-width: 1032px;
   margin-left: 15px;
 }
 
-#filterBtnContainerTHEMA {
+#filterBtnContainerFIRMA {
   margin-bottom: 0px;
 }
 
@@ -433,7 +455,7 @@ ul {
   outline: none;
   padding: 12px 14px;
   cursor: pointer;
-  margin-top: 0px;
+  margin-top: 150px;
   margin-bottom: 20px;
   min-width: 320px;
   max-width: 320px;
