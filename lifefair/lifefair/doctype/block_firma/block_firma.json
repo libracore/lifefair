@@ -1,0 +1,30 @@
+{
+ "creation": "2023-06-02 11:52:19.287563",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "firma"
+ ],
+ "fields": [
+  {
+   "fieldname": "firma",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "Firma",
+   "options": "Firma",
+   "reqd": 1
+  }
+ ],
+ "istable": 1,
+ "modified": "2023-06-02 11:55:59.515202",
+ "modified_by": "Administrator",
+ "module": "Lifefair",
+ "name": "Block Firma",
+ "owner": "Administrator",
+ "permissions": [],
+ "quick_entry": 1,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

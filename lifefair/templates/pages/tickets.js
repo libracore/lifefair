@@ -1,6 +1,7 @@
 var anlass;
 var blocks;
 var interests = [];
+var firmen = [];
 var itemVal;
 var dayName;
 var dayFlag = "all";
@@ -8,6 +9,7 @@ var currentDatum = null;
 var currentTimeSlot = "all";
 var currentZeit = null;
 var currentThema = null;
+var currentFirma = null;
 var rechAdd = "notDone";
 //var datumFlag = 0;
 var inTheChekout = false;
@@ -27,6 +29,7 @@ var initialState = {
     ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
     sinv: JSON.parse(localStorage.getItem("SINV")) || null,
     signature: JSON.parse(localStorage.getItem("SIGNATURE")) || null,
+    source: JSON.parse(localStorage.getItem("SOURCE")) || null,
 };
 var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ];
 var block_cards = document.getElementsByClassName("filterDiv");
@@ -39,6 +42,7 @@ var btnContainerOne = document.getElementById("filterBtnContainerUSER");
 var btnContainerTwo = document.getElementById("filterBtnContainerDATUM");
 var btnContainerThree = document.getElementById("filterBtnContainerZEIT").querySelectorAll("button");
 var btnContainerFour = document.getElementById("filterBtnContainerTHEMA");
+//~ var btnContainerFive = document.getElementById("filterBtnContainerFIRMA");
 var clearFields = document.getElementById("clearField").querySelectorAll("input");
 var clearFieldsTwo = document.getElementById("clearFieldTwo").querySelectorAll("input");
 var popUpDiv = document.getElementById("modal");
@@ -70,6 +74,7 @@ function userSelection(c, button) {
     document.getElementById("filterBtnContainerDATUM").classList.remove("grey");
     document.getElementById("filterBtnContainerZEIT").classList.remove("grey");
     document.getElementById("filterBtnContainerTHEMA").classList.remove("grey");
+    //~ document.getElementById("filterBtnContainerFIRMA").classList.remove("grey");
     document.getElementById("warenkorb").classList.remove("grey");
     document.querySelector(".display").classList.remove("grey");
     //document.querySelector(".display").style.display = "block";
@@ -79,6 +84,9 @@ function userSelection(c, button) {
     btnContainerThree.forEach(btn => btn.classList.remove("active"));
     btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
     btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+    //FirmaFilter
+    //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+    //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
 
     var userMenu = document.getElementById("userMenu");
     var userMenuDiv = document.createElement('div');
@@ -99,9 +107,10 @@ function openDropdown() {
 }
 
 function filterDatum(date, button) {
-    console.log("filterDatum", date, button);
+    //console.log("filterDatum", date, button);
     errorContainer.innerHTML = "";
     currentTimeSlot = "all";
+    currentThema = null;
     dayName = "iAmNull";
     titleFilter(dayName);
     dayName = date;
@@ -114,20 +123,35 @@ function filterDatum(date, button) {
         if (selectedFilterDiv.children.length == 2 && dayFlag == "all" ) {
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
+            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         } else if (selectedFilterDiv.children.length == 3) {
             btnContainerThree.forEach(btn => btn.classList.remove("active"));
             btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
+            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         }  else if (selectedFilterDiv.children.length == 4) {
             btnContainerThree.forEach(btn => btn.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild); 
-        }
+         } //~ else if (selectedFilterDiv.children.length == 5) {
+            //~ btnContainerThree.forEach(btn => btn.classList.remove("active"));
+            //~ btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+            //~ btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+        //~ }
             dayFlag = date;
             //if (c == "all") c = "";
 
@@ -140,8 +164,6 @@ function filterDatum(date, button) {
             
             blueThemaActive(date, button);
             titleFilter(dayName);
-            //~ //console.log('newStr c', c);
-            //~ //console.log('dayName', dayName);
         }
 }
 
@@ -149,57 +171,35 @@ function purifyInterest(interest) {
     return interest.replace(/[^a-zA-Z]/g, "");
 }
 
-function filterSelection(interest, button) {
-    
-    if ((userDefined == "No") && (interest != "all")) {
+function filterSelection(filter, button) {
+    if ((userDefined == "No") && (filter != "all")) {
         document.getElementById("ichBin").classList.toggle("shake");
     } else {
         if (currentTimeSlot == "all" && dayFlag == "all") {
-            titleFilter(interest)
-            //~ for (var i = 0; i < block_cards.length; i++) {
-              //~ removeClass(block_cards[i], "show");
-              //~ if ((interest === "all") || (block_cards[i].className.indexOf(interest) > -1)) {
-                  //~ addClass(block_cards[i], "show");
-              //~ }
-        }
-        if (currentTimeSlot == "all" && currentZeit == null ) {
-            titleFilter(interest)
-        }
-            //~ cardFilter(interest);
-            //~ blueThemaActive(interest, button);
-            //~ currentThema = interest;
-        //~ document.getElementById("datum").classList.toggle("shake");
-        //~ } else if (dayFlag != "all" && currentZeit == null) {
-            //~ document.getElementById("zeit").classList.toggle("shake");
-        //~ } else {
-        //~ else if (currentZeit == null) {
-        //~ document.getElementById("zeit").classList.toggle("shake");
-    
-        //~ } //else {
-            //interest =  purifyInterest(interest);
-              
+            titleFilter(filter)
+
+        } else if (currentTimeSlot == "all" && currentZeit == null ) {
+            titleFilter(filter)
+        } 
             
-            //~ if (interest == "all") {
-                //~ interest = "";
-            //~ }
+        for (var i = 0; i < block_cards.length; i++) {
+          removeClass(block_cards[i], "show");
+          if ((filter === "all") || (block_cards[i].className.indexOf(filter) > -1)) {
+              addClass(block_cards[i], "show");
+          }
+        }
+
+        currentThema = filter;
+        cardFilter(filter);
+
             
-            for (var i = 0; i < block_cards.length; i++) {
-              removeClass(block_cards[i], "show");
-              if ((interest === "all") || (block_cards[i].className.indexOf(interest) > -1)) {
-                  addClass(block_cards[i], "show");
-              }
-            }
-            cardFilter(interest);
-            blueThemaActive(interest, button);
-            currentThema = interest;
-        //}
-    }
-//~ }
+        blueThemaActive(filter, button);
+      }
 }
 
 // it shows all the cards and reset all the initial values
 function titleShowAll() {
-    console.log("in the tittle showAll fuuunc")
+    //console.log("in the tittle showAll fuuunc")
     var localTitle;
     currentTimeSlot = "all";
     dayFlag = "all";
@@ -256,6 +256,7 @@ function titleFilter(c) {
     //console.log("c in titleFilter", c);
     var flag = 0;
     var localTitle;
+    
     if (userDefined == "Yes") {
 
         if (dayName == "iAmNull" ) {
@@ -366,8 +367,9 @@ function titleFilter(c) {
 }
 
 function cardFilter(c) {
-    console.log("in cardFilter", c)
+    //console.log("in cardFilter", c)
     var flag = 0;
+    
     if (currentTimeSlot != "all" && dayFlag != "all") {
         //Hidde all cards
         //~ var localTitle = document.querySelectorAll('.filterDiv');
@@ -377,7 +379,6 @@ function cardFilter(c) {
         for (var i = 0; i < block_cards.length; i++) {
               removeClass(block_cards[i], "show");
             }
-        
         if (c != "" && c != null) {
             
             if ( currentTimeSlot == "vormittag" ) {
@@ -399,7 +400,7 @@ function cardFilter(c) {
                 var nachmittagCards = document.querySelectorAll('.filterDiv');
                 for (var i = 0; i < nachmittagCards.length; i++ ) {
                     
-                    if ( nachmittagCards[i].classList.contains(`${dayName}`) == false || nachmittagCards[i].classList.contains(`${c}`) == false || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
+                    if ( nachmittagCards[i].classList.contains(`${dayName}`) == false || nachmittagCards[i].classList.contains(`${c}`) == false || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
                         //nachmittagCards[i].style.display = "none";
                         removeClass(nachmittagCards[i], "show");
                     } else {
@@ -437,27 +438,139 @@ function cardFilter(c) {
     }
 }
 
+
+//~ function filterThemaAndFirma(currentThema, currentFirma) {
+    //~ //console.log("in filterThemaAndFirma", currentThema, currentFirma)
+    //~ var flag = 0;
+    
+    //~ if (currentThema && currentFirma) {
+		
+		//~ if (currentTimeSlot != "all" && dayFlag != "all") {
+            
+            //~ if ( currentTimeSlot == "vormittag" ) {
+                //~ var vormittagCards = document.querySelectorAll('.filterDiv.show');
+                //~ for (var i = 0; i < vormittagCards.length; i++ ) {
+                    
+                    //~ if ( vormittagCards[i].classList.contains(`${currentThema}`) == true && vormittagCards[i].classList.contains(`${currentFirma}`) == false || vormittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
+                        //~ //vormittagCards[i].style.display = "none";
+                        //~ removeClass(vormittagCards[i], "show");
+                    //~ } else if (vormittagCards[i].classList.contains(`${currentThema}`) == false && vormittagCards[i].classList.contains(`${currentFirma}`) == true || vormittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
+						//~ removeClass(vormittagCards[i], "show");
+                    //~ } else {
+                            //~ flag = 1;
+                            //~ //vormittagCards[i].style.display = "block";
+                            //~ addClass(vormittagCards[i], "show")
+                            //~ titleFilter(dayName)
+                    //~ }
+                //~ }
+            //~ }
+            //~ if ( currentTimeSlot == "nachmittag" ) {
+                //~ var nachmittagCards = document.querySelectorAll('.filterDiv.show');
+                //~ for (var i = 0; i < nachmittagCards.length; i++ ) {
+                    
+                    //~ if ( nachmittagCards[i].classList.contains(`${currentThema}`) == true && nachmittagCards[i].classList.contains(`${currentFirma}`) == false || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
+                        //~ //nachmittagCards[i].style.display = "none";
+                        //~ removeClass(nachmittagCards[i], "show");
+                    //~ } else if (nachmittagCards[i].classList.contains(`${currentThema}`) == false && nachmittagCards[i].classList.contains(`${currentFirma}`) == true || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
+						//~ removeClass(nachmittagCards[i], "show");
+                    //~ } else {
+                            //~ flag = 1;
+                            //~ //nachmittagCards[i].style.display = "block";
+                            //~ addClass(nachmittagCards[i], "show")
+                            //~ titleFilter(dayName)
+                    //~ }
+                //~ }
+            //~ }
+            //~ if ( currentTimeSlot == "abend") {
+                //~ var abendCards = document.querySelectorAll('.filterDiv.show');
+                //~ for (var i = 0; i < abendCards.length; i++ ) {
+                    
+                    //~ if ( abendCards[i].classList.contains(`${currentThema}`) == true && abendCards[i].classList.contains(`${currentFirma}`) == false || abendCards[i].classList.contains(`${currentTimeSlot}`) == false) {
+                        //~ //abendCards[i].style.display = "none";
+                        //~ removeClass(abendCards[i], "show");
+                    //~ } else if (abendCards[i].classList.contains(`${currentThema}`) == false && abendCards[i].classList.contains(`${currentFirma}`) == true || abendCards[i].classList.contains(`${currentTimeSlot}`) == false) {
+						//~ removeClass(abendCards[i], "show");
+                    //~ } else {
+                        //~ flag = 1;
+                        //~ //abendCards[i].style.display = "block";
+                        //~ addClass(abendCards[i], "show")
+                        //~ titleFilter(dayName)
+                    //~ }
+                //~ }
+            //~ }
+
+      //~ } else {
+			//~ for (var i = 0; i < block_cards.length; i++) {
+              //~ removeClass(block_cards[i], "show");
+            //~ }
+			//~ var displayedCards = document.querySelectorAll(`.${currentThema}.${currentFirma}`);
+			//~ if (displayedCards.length != 0) {
+				//~ for (var i = 0; i < displayedCards.length; i++) {
+				  //~ addClass(displayedCards[i], "show")
+				//~ }
+
+				//~ var timeSlotDivs = document.querySelectorAll('[id^="vormittag"], [id^="nachmittag"], [id^="abend"]');
+
+				//~ for (var i = 0; i < timeSlotDivs.length; i++) {
+
+					//~ if (document.getElementById(`${timeSlotDivs[i].id}`) != null ) {
+						//~ if (document.getElementById(`${timeSlotDivs[i].id}`).querySelector(`.${currentThema}.${currentFirma}`) != null ) {
+							//~ document.getElementById(`${timeSlotDivs[i].id}`).style.display = "block";
+							//~ flag = 1;
+						//~ }else {
+							//~ document.getElementById(`${timeSlotDivs[i].id}`).style.display = "none";
+						//~ }
+					//~ }
+				
+				//~ }
+			//~ } else {
+				//~ errorContainer.innerHTML = "Keine Ereignisse gefunden";
+			//~ }
+	  //~ }
+	  
+	//~ if ( flag == 0) {
+		//~ titleFilter("iAmNull")
+		//~ errorContainer.innerHTML = "Keine Ereignisse gefunden";
+	//~ } else {
+		//~ errorContainer.innerHTML = "";
+	//~ }
+  //~ }
+//~ }
+
 function filterTimeSlot(c) {
-    console.log("c in filterTimeSlot", c);
+    //console.log("c in filterTimeSlot", c);
     var flag = 0;
-    currentTimeSlot = c;
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
     } else if (currentDatum == null) {
         document.getElementById("datum").classList.toggle("shake");
     } else {
-        
+        currentTimeSlot = c;
+		currentThema = null;
+		
         if (selectedFilterDiv.children.length == 3 && currentZeit == null ) {
             errorContainer.innerHTML = "";
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
+            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         } else if (selectedFilterDiv.children.length == 4) {
             errorContainer.innerHTML = "";
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-        } 
+        } //~ else if (selectedFilterDiv.children.length == 5) {
+			//~ errorContainer.innerHTML = "";
+            //~ btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+            //~ btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+        //~ }
         currentZeit = c;
         
         //Show all cards
@@ -606,7 +719,7 @@ btnContainerThree.forEach((element) => {
 });
 
 function blueThemaActive(c, button = undefined) {
-    //console.log("in the blue thema c", c);
+    //~ console.log("in the blue thema c", c);
     
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
@@ -633,7 +746,7 @@ function blueThemaActive(c, button = undefined) {
                 blueFilterBlock.classList.add('filter');
                 selectedFilterDiv.appendChild(blueFilterBlock);
             } 
-        } else {
+        } else if  (button.closest("#filterBtnContainerTHEMA")){
             document.getElementById("ichBin").classList.remove("shake");
             button.addEventListener("click", toggleAction(button, 4))
             
@@ -655,7 +768,29 @@ function blueThemaActive(c, button = undefined) {
                 selectedFilterDiv.appendChild(blueFilterBlock);
             }
             
-        }
+        } //~ else if  (button.closest("#filterBtnContainerFIRMA")){
+            //~ document.getElementById("ichBin").classList.remove("shake");
+            //~ button.addEventListener("click", toggleAction(button, 5))
+            
+            //~ var blueFirma = document.querySelector(".firmaBlueFilter");
+            //~ var answer = selectedFilterDiv.contains(blueFirma);
+            //~ var blueFilterBlock;
+            //~ if (answer == true) {
+                //~ var firmaChildLi = selectedFilterDiv.lastChild;
+                //~ blueFilterBlock = document.createElement('li');
+                //~ blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(5)">X</div>`;
+                //~ blueFilterBlock.classList.add('firmaBlueFilter');
+                //~ blueFilterBlock.classList.add('filter');
+                //~ selectedFilterDiv.replaceChild(blueFilterBlock, firmaChildLi);
+            //~ } else {
+                //~ blueFilterBlock = document.createElement('li');
+                //~ blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(5)">X</div>`;
+                //~ blueFilterBlock.classList.add('firmaBlueFilter');
+                //~ blueFilterBlock.classList.add('filter');
+                //~ selectedFilterDiv.appendChild(blueFilterBlock);
+            //~ }
+            
+        //~ }
     }
 }
 
@@ -670,7 +805,10 @@ function toggleAction(button, num) {
             } else if (num == 4) {
                 btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
                 btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-            }
+            } //~  else if (num == 5) {
+                //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
+                //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+            //~ }
             removeFilter(num);
         } else {
             if (num == 2) {
@@ -682,7 +820,10 @@ function toggleAction(button, num) {
             } else if (num == 4) {
                 btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
                 btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-            }
+             } //~ else if (num == 5) {
+                //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
+                //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
+            //~ }
             button.classList.add("toggleFilter");
             button.classList.add("active");
         }
@@ -720,7 +861,12 @@ function removeFilter(num) {
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-        }
+         } //~ else if (selectedFilterDiv.children.length == 5) {
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+        //~ }
         
         btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
         btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
@@ -728,17 +874,30 @@ function removeFilter(num) {
         btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+		//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         document.getElementById("selectedFilters").querySelectorAll("li").forEach(li => console.log("li", li));
         titleShowAll();
 
     } else if ( num == 3) {
         currentZeit = null;
         //selectedFilterDiv.children[2].remove();
-        if (selectedFilterDiv.children.length == 3) selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+        if (selectedFilterDiv.children.length == 3) {
+			 selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+		} else if (selectedFilterDiv.children.length == 4) {
+			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+		 } //~ else if (selectedFilterDiv.children.length == 5) {
+			//~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
+		//~ }
         btnContainerThree.forEach(btn => btn.classList.remove("active"));
         btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+		//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         filterDatum(dayName);
         
     } else if ( num == 4) {
@@ -746,7 +905,9 @@ function removeFilter(num) {
         //selectedFilterDiv.children[3].remove();
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-        console.log("currentZeit", currentZeit)
+        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+		//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+        //~ console.log("currentZeit", currentZeit)
         if (currentZeit != null) {
             filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
         } else if (currentZeit == null && currentDatum != null) {
@@ -758,12 +919,27 @@ function removeFilter(num) {
             selectedFilterDiv.children[1].remove();
         }
     } else if ( num == 5) {
-        selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
-        //selectedFilterDiv.children[3].remove();
-        btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+		selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
+		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
         filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
-    } 
+        //Firmafilter
+        //~ if (selectedFilterDiv.children.length == 5) selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
+        //selectedFilterDiv.children[3].remove();
+        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+        
+        //~ var text = selectedFilterDiv.children[3].textContent.split(" ")[0].toLowerCase();
+        //~ var capitalizedText = text.charAt(0).toUpperCase() + text.slice(1);
+        //~ cardFilter(capitalizedText);
+    } //~ else if ( num == 6) {
+        //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
+        //~ //selectedFilterDiv.children[4].remove();
+        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+		//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
+        //~ filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
+    //~ }
+ 
     
     if (selectedFilterDiv.children.length == 1) {
         titleShowAll();
@@ -843,8 +1019,8 @@ function checkItem(i, condition) {
     }
 }
 
-function addToCart(i) {
-
+function addToCart(i, ...priority) {
+	console.log("i and priority", i, priority[0])
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
     } else {
@@ -855,18 +1031,22 @@ function addToCart(i) {
             console.log("in the else if cart")
             popUp(i);
         } else {
-
-            initialState.cart.push({
+            if (blocks[i].official_title.includes('Firmenbesuch') && priority[0] != "done") {
+                // Show a pop-up/modal with the firmen
+                showFirmen(blocks[i], i);
+            } else {
+                initialState.cart.push({
                  ...blocks[i], 
-            });
+                });
+            } 
          }
-        updateCart();
+      updateCart();
     } 
 }
 
 function popUp(i) {
     var currentCartItem = checkItem(i, "popUp")
-    console.log(currentCartItem)
+    console.log("popUp currentCartItem", currentCartItem)
     
     popUpDiv.innerHTML = `
             <div class="popUp"> 
@@ -888,15 +1068,115 @@ function popUp(i) {
 }
 
 function popUpConfirm(i) {
+    console.log("popUpConfirm", i)
     var currentCartItem = checkItem(i, "popUp")
+    console.log("currentCartItem", currentCartItem)
     popUpDiv.style.display = "none";
     var index = initialState.cart.findIndex(item => item.official_title == currentCartItem.official_title);
+
     initialState.cart[index] = blocks[i];
-    updateCart();
+    console.log("index", index)
+    
+    if (blocks[i].official_title.includes('Firmenbesuch')) {
+        // Show a pop-up/modal with the firmen
+        showFirmen(initialState.cart[index], i);
+    } else {
+        updateCart();
+    }
+
 }
 
 function popUpCancel() {
     popUpDiv.style.display = "none";
+}
+
+function showFirmen(block, i) {
+    console.log("showFirmen", block)
+    var blockfirmen = block.firmen.split(",");
+    console.log("Firmeeeen", blockfirmen)
+    
+    popUpDiv.innerHTML = `
+            <div class="popUp" id="firmenModal"> 
+              <div class="popUpContent">
+                <p class="popUpTittle">IN DER REIHENFOLGE DES VORRANGIGEN BESUCHS ZIEHEN</p>
+                <ol id="firmenList" class="firmen-list"></ol>
+                <div class="popUpBtnDiv"> 
+                    <button class="popUpCancel" onclick="popUpCancel()">ABBRECHEN</button> <button class="popUpConfirm" onclick="saveFirmenOrder(${i})">BESTÄTIGEN</button> 
+                </div>
+              </div>
+            </div>`;
+
+    var modal = document.getElementById('firmenModal');
+    var firmenList = document.getElementById('firmenList');
+    
+    firmenList.innerHTML = '';
+    blockfirmen.forEach(function(firma) {
+        var listItem = document.createElement('li');
+        listItem.textContent = firma;
+        listItem.classList.add('firmen-item');
+        firmenList.appendChild(listItem);
+    });
+    // add no interest divider
+    var listItem = document.createElement('li');
+    listItem.textContent = "-- kein Interesse --";
+    listItem.classList.add('firmen-item');
+    firmenList.appendChild(listItem);
+        
+    popUpDiv.style.display = "block";
+    enableDragging();
+}
+
+function enableDragging() {
+  var firmenList = document.getElementById('firmenList');
+  var firmenItems = firmenList.getElementsByClassName('firmen-item');
+
+  // Add draggable attribute to firmen items
+  Array.from(firmenItems).forEach(function(item) {
+    item.draggable = true;
+  });
+
+  // Store the dragged item
+  var draggedItem = null;
+
+  // Handle dragstart event
+  firmenList.addEventListener('dragstart', function(event) {
+    draggedItem = event.target;
+    event.target.classList.add('dragging');
+  });
+
+  // Handle dragover event
+  firmenList.addEventListener('dragover', function(event) {
+    event.preventDefault();
+    var targetItem = event.target;
+
+    // Move the dragged item
+    if (targetItem !== draggedItem && targetItem.classList.contains('firmen-item')) {
+      var rect = targetItem.getBoundingClientRect();
+      var offset = rect.y + rect.height / 2 > event.clientY ? 0 : 1;
+      firmenList.insertBefore(draggedItem, targetItem.nextSibling);
+    }
+  });
+
+  // Handle dragend event
+  firmenList.addEventListener('dragend', function(event) {
+    event.target.classList.remove('dragging');
+    draggedItem = null;
+  });
+}
+
+function saveFirmenOrder(i) {
+	var firmenList = document.getElementById('firmenList');
+	var firmenPriorityOrder = [];
+	var updatedblockFirmen = blocks[i];
+	var firmen = Array.from(firmenList.getElementsByClassName('firmen-item')).map(function(firmaname) {
+		//~ return item.textContent
+		firmenPriorityOrder.push(firmaname.textContent);
+	});
+	updatedblockFirmen.firmen = firmenPriorityOrder.join(';')
+	blocks[i] = updatedblockFirmen;
+	console.log("blocks[i]", blocks[i])
+	addToCart(i, "done")
+	popUpDiv.style.display = "none";
 }
 
 function updateCart() {
@@ -1286,7 +1566,8 @@ function createTicket() {
                 'addressOne': initialState.addressOne,
                 'addressTwo': initialState.addressTwo,
                 'warenkorb': initialState.cart,
-                'total': total
+                'total': total,
+                'source': initialState.source
             },
             'callback': function(response) {
                 var res = response.message;
@@ -1307,10 +1588,7 @@ function createTicket() {
 
 
 function openStripe(){
-    //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-    //~ createTicket();
     var stripeTotal = correctStripeValue();
-    console.log("stripe total", stripeTotal)
     
     frappe.call({
         'method': "lifefair.lifefair.tickets.open_stripe",
@@ -1319,7 +1597,6 @@ function openStripe(){
             },
         'callback': function (response) {
             var response = response.message
-            console.log(response)
             window.open(response.url, "_blank"); 
         }
     })
@@ -1375,17 +1652,18 @@ function loadBlocks(anlass) {
     frappe.call({
         'method': "lifefair.lifefair.tickets.get_blocks",
         'args': {
-            meeting: anlass,
-            usertype: initialState.userTypeValue
+            'meeting': anlass,
+            'source': initialState.source,
+            'usertype': initialState.userTypeValue
         },
         'callback': function (response) {
             blocks = response.message;
-            console.log("blocks", blocks);
-            
+
             var blocksContainer = document.querySelector(".display");
             blocksContainer.innerHTML = "";
             var currentDate = null;
             blocks.forEach(function (block, x) {
+                //console.log("blooooocks", block.official_title, "interests", block.interests);
                 
                 var card = document.createElement('div');
                 card.classList.add('filterDiv');
@@ -1656,6 +1934,28 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 function get_arguments() {
     var arguments = window.location.toString().split("?");
+    var currentURL = window.location.href;
+
+    // Check if the website is opened from sges.ch or how.ch
+    if (currentURL.includes('localhost:8000')) { //sges.ch
+      currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how'; //'source=sges'
+    } else if (currentURL.includes('how.ch')) {
+      currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how';
+    }
+    
+    if (currentURL.includes('source'))  {
+        // Create a URLSearchParams object from the URL
+        var urlParams = new URLSearchParams(currentURL);
+        if (urlParams.has("source")) {
+            // Get the value of the "source" parameter
+            var sourceValue = urlParams.get("source");
+            initialState.source = (sourceValue);
+            localStorage.setItem("SOURCE", JSON.stringify(initialState.source));
+        } 
+    } else {
+      window.location.href = currentURL;
+    }
+
     if (!arguments[arguments.length - 1].startsWith("http")) {
         var args_raw = arguments[arguments.length - 1].split("&");
         var args = {};
@@ -1682,4 +1982,6 @@ function get_arguments() {
             }
         }
     }
+    
+    
 }

@@ -11,6 +11,8 @@
   "anderes_datum_setzen",
   "bookable",
   "neues_datum",
+  "maininfo_column",
+  "firmen",
   "section_information",
   "short_name",
   "official_title",
@@ -269,9 +271,19 @@
    "fieldname": "bookable",
    "fieldtype": "Check",
    "label": "Buchbar im Ticketing"
+  },
+  {
+   "fieldname": "maininfo_column",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "firmen",
+   "fieldtype": "Table MultiSelect",
+   "label": "Firmen",
+   "options": "Block Firma"
   }
  ],
- "modified": "2022-07-04 16:14:53.456264",
+ "modified": "2023-06-02 11:54:17.349205",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Block",
