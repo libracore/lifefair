@@ -380,13 +380,13 @@
    "fieldname": "gender",
    "fieldtype": "Select",
    "label": "Gender",
-   "options": "\nFrau\nHerr"
+   "options": "\nHerr\nFrau\nSonstige(s)"
   },
   {
    "fieldname": "letter_salutation",
    "fieldtype": "Select",
    "label": "Letter salutation",
-   "options": "\nSehr geehrte Frau\nSehr geehrter Herr"
+   "options": "Sehr geehrte Frau\nSehr geehrter Herr\nGuten Tag"
   },
   {
    "fieldname": "column_salutation",
@@ -527,7 +527,7 @@
   }
  ],
  "image_field": "image",
- "modified": "2022-07-07 17:29:13.212534",
+ "modified": "2023-06-27 08:25:12.794166",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",

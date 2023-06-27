@@ -7,8 +7,8 @@
 
 				<ul id="selectedFilters"></ul>
 
-				<div id="filterBtnContainerUSER">
-					<h2 class="filterTitle" id="ichBin">TICKET FÜR ...</h2>
+				<div id="filterBtnContainerUSER" >
+					<h2 style="  margin-bottom: 14px !important;" class="filterTitle" id="ichBin">BITTE WÄHLEN SIE HIER ZUERST IHRE TICKET-KATEGORIE AUS, UM DANN <br> IHR GEWÜNSCHTES PROGRAMM ZUSAMMEN ZU STELLEN.</h2>
 					<div class="btnOrange"  style="display: none"></div>
 					<li id="userMenu">
 						<ul id="dropdown">
@@ -36,9 +36,8 @@
 				<div>
 					 <div class="display grey" ></div>
 					 <div class="error"></div>
-					 <div id="modal"></div>
 				</div>
-				
+                
 			</div>
 			
 			<div id="step1" style="display: none">
@@ -48,8 +47,10 @@
 				 <table class="table"  id="clearField">
 					 <tr class="tr">
 						<td class="td">
-							<span class="tableSpan">Herr/Frau</span>
-							<input class="tableInput" type="text" id="inputHerrFrau" placeholder="Herr/Frau" class="input-xlarge" title="Der Title ist zwingend!" required/>
+							<span class="tableSpan">Herr/Frau/Sonstige(s)</span>
+							<select class="tableInput" type="text" id="inputHerrFrau" style="padding: 0px !important; padding-left: 20px !important; max-width: 400px;"   required>
+                                <option class="btnOrange" value=""></option>
+                            </select>
 						</td>
 						<td class="td">	
 							<span class="tableSpan">Akademische Titel</span>
@@ -134,8 +135,8 @@
 					 <table class="table "  id="clearFieldTwo">
 						<tr class="tr">
 							<td class="td">
-								<span class="tableSpan">Herr/Frau</span>
-								<input class="tableInput" type="text" id="inputHerrFrauTwo" placeholder="Herr/Frau" class="input-xlarge" title="Der Title ist zwingend!" required/>
+								<span class="tableSpan">Herr/Frau/Sonstige(s)</span>
+                                <select class="tableInput" type="text" id="inputHerrFrauTwo" style="padding: 0px !important; padding-left: 20px !important; max-width: 400px;"  required></select>
 							</td>
 							<td class="td">
 							</td>
@@ -193,18 +194,24 @@
 			
 			<div id="step3" style="display: none;"></div>
 		</div>
-		
+        
+        
 		<div class="scondDiv col-xs-12 order-xs-1 col-sm-12 order-sm-1 col-md-12 order-md-1 col-lg-4 order-lg-2">
-            <div class="positionFixed">
-                <div id="warenkorb" class="grey">
-                  <h2 class="cartTitle">WARENKORB</h2>
-                  <div class="cartElement"></div>
-                  <div class="cartTotal"></div>
-                  <button class="cartBtn"> <p onclick="checkOut()" class="cartBtnText">ZUR ZAHLUNG</p></button>
+        <div class="positionFixed">
+            <div id="warenkorb" class="grey">
+                <h2 class="cartTitle">WARENKORB</h2>
+                <div class="cartElement"></div>
+                <div class="cartTotal"></div>
+                    <button class="cartBtn"> <p onclick="checkOut()" class="cartBtnText">ZUR ZAHLUNG</p></button>
                 </div>
                 <button class="zuruckBtnOne warenkorbBtn" style="display: none;" onclick="start();">Zurück zur Auswahl der Programmteile</button>
             </div>
         </div>
 	</div>
+    
+    <div>
+        <div id="modal"></div>
+    </div>
+    
 </div>
   

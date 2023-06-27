@@ -27,7 +27,9 @@ def get_visitor_type():
     return visitor_types
 
 @frappe.whitelist(allow_guest=True) 
-def get_blocks(meeting, usertype):
+def get_blocks(meeting, usertype, source=None):
+    disable_company_visits = frappe.get_value("Ticketing Settings", "Ticketing Settings", "disable_how_company_visits")
+
     sql_query = """
         SELECT
             `tabBlock`.`official_title`,
@@ -36,7 +38,8 @@ def get_blocks(meeting, usertype):
             `tabBlock`.`neues_datum`,
             `tabBlock`.`time`,
             `tabBlock Price`.`rate` AS `rate`,
-            GROUP_CONCAT(`tabBlock Interest`.`interest`) AS `interests`,
+            GROUP_CONCAT(DISTINCT `tabBlock Interest`.`interest`) AS `interests`,
+            GROUP_CONCAT(DISTINCT `tabBlock Firma`.`firma`) AS `firmen`,
             `tabBlock`.`website_link`,
             `tabBlock`.`name`,
             `tabBlock`.`meeting`
@@ -44,12 +47,17 @@ def get_blocks(meeting, usertype):
         LEFT JOIN `tabBlock Interest` ON `tabBlock Interest`.`parent` = `tabBlock`.`name`
         LEFT JOIN `tabBlock Price Block` ON `tabBlock Price Block`.`block` = `tabBlock`.`name`
         LEFT JOIN `tabBlock Price` ON `tabBlock Price`.`name` = `tabBlock Price Block`.`parent`
+        LEFT JOIN `tabBlock Firma` ON `tabBlock Firma`.`parent` = `tabBlock`.`name`
         WHERE `tabBlock`.`meeting` = '{meeting}'
           AND `tabBlock Price`.`visitor_type` = '{usertype}'
           AND `tabBlock`.`bookable` = 1
-        GROUP BY `tabBlock`.`name`
-        ORDER BY `tabBlock`.`neues_datum` ASC;
     """.format(meeting=meeting, usertype=usertype)
+    
+    if source == "how" and disable_company_visits == "1":
+        sql_query += " AND `tabBlock`.`official_title` NOT LIKE '%Firmenbesuch%'"
+
+    sql_query += " GROUP BY `tabBlock`.`name` ORDER BY `tabBlock`.`neues_datum` ASC;"
+    
     data = frappe.db.sql(sql_query, as_dict = True)
     return data
 
@@ -64,7 +72,17 @@ def get_countries():
     return data
 
 @frappe.whitelist(allow_guest=True) 
-def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total):
+def get_genders():
+    sql_query = """
+        SELECT 
+            `tabGender`.`name`
+        FROM `tabGender`
+    """
+    data = frappe.db.sql(sql_query, as_dict = True)
+    return data
+
+@frappe.whitelist(allow_guest=True) 
+def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total, ichstimmezu, source=None):
     
     if isinstance(addressOne, str):
         addressOne = json.loads(addressOne)
@@ -143,9 +161,11 @@ def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total):
         warenkorb = json.loads(warenkorb)
     registration = None
     for entry in warenkorb:
+        frappe.log_error("entry {0}".format(entry))
         if registration:
             new_registration = frappe.copy_doc(registration, ignore_no_copy = False)
             new_registration.block = entry['name']
+            new_registration.firmen = entry['firmen']
             new_registration = new_registration.insert(ignore_permissions=True)
             new_registration.save(ignore_permissions=True)
         else:
@@ -156,7 +176,10 @@ def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total):
                     'meeting': entry['meeting'],
                     'block': entry['name'],
                     'date': today(),
-                    'phone': addressOne['phone']
+                    'phone': addressOne['phone'],
+                    'firmen': entry['firmen'],
+                    'ich_stimme_zu': ichstimmezu,
+                    'source': source
                 })
                 registration.insert(ignore_permissions=True)
                 registration.create_ticket(ignore_permissions=True)
@@ -207,8 +230,7 @@ def create_person(addressOne, customer, full_name, source="from ticketing"):
         elif gender == "Frau":
             letter_salutation = "Sehr geehrte Frau"
         else:
-            gender = ""
-            letter_salutation = ""
+            letter_salutation = "Guten Tag"
         person = frappe.get_doc({
             'doctype': "Person",
             'first_name': addressOne['firstname'],
@@ -442,7 +464,7 @@ def create_data_changes(addressOne, person):
         data_changes = frappe.get_doc({
             'doctype': "Contact Data Change",
             'person': person.name,
-            'form_data': "<strong>Herr/Frau:</strong> {0}, <br> <strong>Akademische Titel:</strong>  {1},<br> <strong>Vorname:</strong>  {2},<br> <strong>Name:</strong>  {3},<br> <strong>Firma:</strong> {4},<br> <strong>Funktion:</strong>  {5},<br> <strong>Telefonnummer:</strong> {6},<br> <strong>E-mail:</strong>  {7},<br> <strong>Adresse:</strong>  {8},<br> <strong>PLZ und Ort:</strong>  {9} {10},<br> <strong>Land:</strong> {11}.".format(addressOne['herrFrau'], addressOne["akademishTitle"], addressOne["lastname"], addressOne["firstname"], addressOne["firma"], addressOne["funktion"], addressOne["phone"], addressOne["email"], addressOne["adresse"], addressOne["plz"], addressOne["ort"], addressOne["land"])
+            'form_data': "<strong>Herr/Frau/Sonstige:</strong> {0}, <br> <strong>Akademische Titel:</strong>  {1},<br> <strong>Vorname:</strong>  {2},<br> <strong>Name:</strong>  {3},<br> <strong>Firma:</strong> {4},<br> <strong>Funktion:</strong>  {5},<br> <strong>Telefonnummer:</strong> {6},<br> <strong>E-mail:</strong>  {7},<br> <strong>Adresse:</strong>  {8},<br> <strong>PLZ und Ort:</strong>  {9} {10},<br> <strong>Land:</strong> {11}.".format(addressOne['herrFrau'], addressOne["akademishTitle"], addressOne["lastname"], addressOne["firstname"], addressOne["firma"], addressOne["funktion"], addressOne["phone"], addressOne["email"], addressOne["adresse"], addressOne["plz"], addressOne["ort"], addressOne["land"])
         })
         data_changes.save(ignore_permissions=True)
         data_changes_name = data_changes.name

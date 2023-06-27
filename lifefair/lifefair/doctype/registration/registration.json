@@ -6,6 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "person",
+  "ich_stimme_zu",
   "column_head",
   "person_name",
   "section_event",
@@ -30,10 +31,12 @@
   "is_checked",
   "section_ticket",
   "free_text",
-  "email_clerk",
+  "firmen",
   "column_ticket",
+  "email_clerk",
   "sponsor",
-  "meldedatum"
+  "meldedatum",
+  "source"
  ],
  "fields": [
   {
@@ -202,9 +205,26 @@
    "fieldname": "zweiter_tag_offen",
    "fieldtype": "Check",
    "label": "IF zweiter Tag offen"
+  },
+  {
+   "default": "0",
+   "fieldname": "ich_stimme_zu",
+   "fieldtype": "Check",
+   "label": "Ich stimme zu, dass meine Daten an Partner weitergegeben werden"
+  },
+  {
+   "fieldname": "firmen",
+   "fieldtype": "Small Text",
+   "label": "Firmen"
+  },
+  {
+   "fieldname": "source",
+   "fieldtype": "Data",
+   "label": "Source",
+   "read_only": 1
   }
  ],
- "modified": "2022-07-13 08:31:34.879498",
+ "modified": "2023-06-27 08:25:48.567785",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Registration",
