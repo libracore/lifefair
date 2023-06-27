@@ -11,7 +11,6 @@ var currentZeit = null;
 var currentThema = null;
 var currentFirma = null;
 var rechAdd = "notDone";
-//var datumFlag = 0;
 var inTheChekout = false;
 var userDefined = "No"
 var initialState = {
@@ -25,6 +24,7 @@ var initialState = {
     addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
     info: JSON.parse(localStorage.getItem("INFO")) || [],
     rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || "No",
+    ichStimmeZu: JSON.parse(localStorage.getItem("ICHSTIMMEZU")) || 0,
     stripe: JSON.parse(localStorage.getItem("STRIPE")) || 0,
     ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
     sinv: JSON.parse(localStorage.getItem("SINV")) || null,
@@ -77,16 +77,12 @@ function userSelection(c, button) {
     //~ document.getElementById("filterBtnContainerFIRMA").classList.remove("grey");
     document.getElementById("warenkorb").classList.remove("grey");
     document.querySelector(".display").classList.remove("grey");
-    //document.querySelector(".display").style.display = "block";
     btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
     btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
     btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
     btnContainerThree.forEach(btn => btn.classList.remove("active"));
     btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
     btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-    //FirmaFilter
-    //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-    //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
 
     var userMenu = document.getElementById("userMenu");
     var userMenuDiv = document.createElement('div');
@@ -107,7 +103,6 @@ function openDropdown() {
 }
 
 function filterDatum(date, button) {
-    //console.log("filterDatum", date, button);
     errorContainer.innerHTML = "";
     currentTimeSlot = "all";
     currentThema = null;
@@ -123,35 +118,20 @@ function filterDatum(date, button) {
         if (selectedFilterDiv.children.length == 2 && dayFlag == "all" ) {
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
-            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         } else if (selectedFilterDiv.children.length == 3) {
             btnContainerThree.forEach(btn => btn.classList.remove("active"));
             btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
-            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         }  else if (selectedFilterDiv.children.length == 4) {
             btnContainerThree.forEach(btn => btn.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild); 
-         } //~ else if (selectedFilterDiv.children.length == 5) {
-            //~ btnContainerThree.forEach(btn => btn.classList.remove("active"));
-            //~ btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-            //~ btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-        //~ }
+         }
             dayFlag = date;
             //if (c == "all") c = "";
 
@@ -188,18 +168,15 @@ function filterSelection(filter, button) {
               addClass(block_cards[i], "show");
           }
         }
-
-        currentThema = filter;
-        cardFilter(filter);
-
             
-        blueThemaActive(filter, button);
+			  currentThema = filter;
+			  cardFilter(filter);
+			  blueThemaActive(filter, button);
       }
 }
 
 // it shows all the cards and reset all the initial values
 function titleShowAll() {
-    //console.log("in the tittle showAll fuuunc")
     var localTitle;
     currentTimeSlot = "all";
     dayFlag = "all";
@@ -208,12 +185,12 @@ function titleShowAll() {
     initialState.addressOne = [];
     initialState.ticketNum = null;
     initialState.total = 0;
+    initialState.ichStimmeZu = 0;
     localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
     initialState.discountTotal = -1;
     localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
     initialState.stripe = 0;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
-    console.log(currentTimeSlot, dayFlag);
     initialState.rechCheck = "No";
     localStorage.setItem("RECHCHECK", JSON.stringify(initialState.rechCheck));
     
@@ -238,22 +215,12 @@ function titleShowAll() {
         }
     }
     
-    //Show all cards
-    //~ localTitle = document.querySelectorAll('.filterDiv');
-    //~ for ( var j = 0; j < localTitle.length; j++ ) {
-        //~ //if (localTitle[j].children.length > 1) {
-            //~ localTitle[j].style.display = "inline";
-            //~ console.log("initial")
-        //~ //}
-    //~ }
-    
     for (var i = 0; i < block_cards.length; i++) {
         addClass(block_cards[i], "show");
     }
 }
 
 function titleFilter(c) {
-    //console.log("c in titleFilter", c);
     var flag = 0;
     var localTitle;
     
@@ -275,23 +242,17 @@ function titleFilter(c) {
                 localTitle[j].style.display = "none";
                 }
             
-            //~ //Show all cards
-            //~ localTitle = document.querySelectorAll('.filterDiv');
-            //~ for ( var j = 0; j < localTitle.length; j++ ) {
-                //~ localTitle[j].style.display = "block";
-            //~ }
             for (var i = 0; i < block_cards.length; i++) {
                 addClass(block_cards[i], "show");
             }
         }
         
         if (c != "" && c != null) {
-            
 
             for (var i = 0; i < blocks.length; i++ ) {
                 
                 if ( currentTimeSlot == "all" && dayFlag == "all") {
-                    //console.log("both all")
+
                     for (var j = 0; j < tags.length; j++ ) {
                         if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${tags[j]}`) != null) {
                             if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${tags[j]}`).querySelector(`.${c}`) == null ) {
@@ -321,7 +282,7 @@ function titleFilter(c) {
                         }
                     }
                 } else {
-                    //console.log("in the else", dayName, c)
+
                     if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null) {
                         if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).querySelector(`.${c}`) == null) {
                             document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).style.display = "none";
@@ -367,15 +328,10 @@ function titleFilter(c) {
 }
 
 function cardFilter(c) {
-    //console.log("in cardFilter", c)
     var flag = 0;
     
     if (currentTimeSlot != "all" && dayFlag != "all") {
-        //Hidde all cards
-        //~ var localTitle = document.querySelectorAll('.filterDiv');
-        //~ for ( var j = 0; j < localTitle.length; j++ ) {
-            //~ localTitle[j].style.display = "none";
-        //~ }
+
         for (var i = 0; i < block_cards.length; i++) {
               removeClass(block_cards[i], "show");
             }
@@ -386,11 +342,10 @@ function cardFilter(c) {
                 for (var i = 0; i < vormittagCards.length; i++ ) {
                     
                     if ( vormittagCards[i].classList.contains(`${dayName}`) == false || vormittagCards[i].classList.contains(`${c}`) == false || vormittagCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
-                        //vormittagCards[i].style.display = "none";
                         removeClass(vormittagCards[i], "show");
                     } else {
                             flag = 1;
-                            //vormittagCards[i].style.display = "block";
+                            
                             addClass(vormittagCards[i], "show")
                             titleFilter(dayName)
                     }
@@ -401,11 +356,10 @@ function cardFilter(c) {
                 for (var i = 0; i < nachmittagCards.length; i++ ) {
                     
                     if ( nachmittagCards[i].classList.contains(`${dayName}`) == false || nachmittagCards[i].classList.contains(`${c}`) == false || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
-                        //nachmittagCards[i].style.display = "none";
                         removeClass(nachmittagCards[i], "show");
                     } else {
                             flag = 1;
-                            //nachmittagCards[i].style.display = "block";
+                            
                             addClass(nachmittagCards[i], "show")
                             titleFilter(dayName)
                     }
@@ -416,11 +370,9 @@ function cardFilter(c) {
                 for (var i = 0; i < abendCards.length; i++ ) {
                     
                     if ( abendCards[i].classList.contains(`${dayName}`) == false || abendCards[i].classList.contains(`${c}`) == false || abendCards[i].classList.contains(`${currentTimeSlot}`) == false ) {
-                        //abendCards[i].style.display = "none";
                         removeClass(abendCards[i], "show");
                     } else {
                             flag = 1;
-                            //abendCards[i].style.display = "block";
                             addClass(abendCards[i], "show")
                             titleFilter(dayName)
                     }
@@ -428,7 +380,6 @@ function cardFilter(c) {
             }
         
             if ( flag == 0) {
-                    //c = "none"
                     titleFilter(c)
                     errorContainer.innerHTML = "Keine Ereignisse gefunden";
             } else {
@@ -438,107 +389,7 @@ function cardFilter(c) {
     }
 }
 
-
-//~ function filterThemaAndFirma(currentThema, currentFirma) {
-    //~ //console.log("in filterThemaAndFirma", currentThema, currentFirma)
-    //~ var flag = 0;
-    
-    //~ if (currentThema && currentFirma) {
-		
-		//~ if (currentTimeSlot != "all" && dayFlag != "all") {
-            
-            //~ if ( currentTimeSlot == "vormittag" ) {
-                //~ var vormittagCards = document.querySelectorAll('.filterDiv.show');
-                //~ for (var i = 0; i < vormittagCards.length; i++ ) {
-                    
-                    //~ if ( vormittagCards[i].classList.contains(`${currentThema}`) == true && vormittagCards[i].classList.contains(`${currentFirma}`) == false || vormittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
-                        //~ //vormittagCards[i].style.display = "none";
-                        //~ removeClass(vormittagCards[i], "show");
-                    //~ } else if (vormittagCards[i].classList.contains(`${currentThema}`) == false && vormittagCards[i].classList.contains(`${currentFirma}`) == true || vormittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
-						//~ removeClass(vormittagCards[i], "show");
-                    //~ } else {
-                            //~ flag = 1;
-                            //~ //vormittagCards[i].style.display = "block";
-                            //~ addClass(vormittagCards[i], "show")
-                            //~ titleFilter(dayName)
-                    //~ }
-                //~ }
-            //~ }
-            //~ if ( currentTimeSlot == "nachmittag" ) {
-                //~ var nachmittagCards = document.querySelectorAll('.filterDiv.show');
-                //~ for (var i = 0; i < nachmittagCards.length; i++ ) {
-                    
-                    //~ if ( nachmittagCards[i].classList.contains(`${currentThema}`) == true && nachmittagCards[i].classList.contains(`${currentFirma}`) == false || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
-                        //~ //nachmittagCards[i].style.display = "none";
-                        //~ removeClass(nachmittagCards[i], "show");
-                    //~ } else if (nachmittagCards[i].classList.contains(`${currentThema}`) == false && nachmittagCards[i].classList.contains(`${currentFirma}`) == true || nachmittagCards[i].classList.contains(`${currentTimeSlot}`) == false) {
-						//~ removeClass(nachmittagCards[i], "show");
-                    //~ } else {
-                            //~ flag = 1;
-                            //~ //nachmittagCards[i].style.display = "block";
-                            //~ addClass(nachmittagCards[i], "show")
-                            //~ titleFilter(dayName)
-                    //~ }
-                //~ }
-            //~ }
-            //~ if ( currentTimeSlot == "abend") {
-                //~ var abendCards = document.querySelectorAll('.filterDiv.show');
-                //~ for (var i = 0; i < abendCards.length; i++ ) {
-                    
-                    //~ if ( abendCards[i].classList.contains(`${currentThema}`) == true && abendCards[i].classList.contains(`${currentFirma}`) == false || abendCards[i].classList.contains(`${currentTimeSlot}`) == false) {
-                        //~ //abendCards[i].style.display = "none";
-                        //~ removeClass(abendCards[i], "show");
-                    //~ } else if (abendCards[i].classList.contains(`${currentThema}`) == false && abendCards[i].classList.contains(`${currentFirma}`) == true || abendCards[i].classList.contains(`${currentTimeSlot}`) == false) {
-						//~ removeClass(abendCards[i], "show");
-                    //~ } else {
-                        //~ flag = 1;
-                        //~ //abendCards[i].style.display = "block";
-                        //~ addClass(abendCards[i], "show")
-                        //~ titleFilter(dayName)
-                    //~ }
-                //~ }
-            //~ }
-
-      //~ } else {
-			//~ for (var i = 0; i < block_cards.length; i++) {
-              //~ removeClass(block_cards[i], "show");
-            //~ }
-			//~ var displayedCards = document.querySelectorAll(`.${currentThema}.${currentFirma}`);
-			//~ if (displayedCards.length != 0) {
-				//~ for (var i = 0; i < displayedCards.length; i++) {
-				  //~ addClass(displayedCards[i], "show")
-				//~ }
-
-				//~ var timeSlotDivs = document.querySelectorAll('[id^="vormittag"], [id^="nachmittag"], [id^="abend"]');
-
-				//~ for (var i = 0; i < timeSlotDivs.length; i++) {
-
-					//~ if (document.getElementById(`${timeSlotDivs[i].id}`) != null ) {
-						//~ if (document.getElementById(`${timeSlotDivs[i].id}`).querySelector(`.${currentThema}.${currentFirma}`) != null ) {
-							//~ document.getElementById(`${timeSlotDivs[i].id}`).style.display = "block";
-							//~ flag = 1;
-						//~ }else {
-							//~ document.getElementById(`${timeSlotDivs[i].id}`).style.display = "none";
-						//~ }
-					//~ }
-				
-				//~ }
-			//~ } else {
-				//~ errorContainer.innerHTML = "Keine Ereignisse gefunden";
-			//~ }
-	  //~ }
-	  
-	//~ if ( flag == 0) {
-		//~ titleFilter("iAmNull")
-		//~ errorContainer.innerHTML = "Keine Ereignisse gefunden";
-	//~ } else {
-		//~ errorContainer.innerHTML = "";
-	//~ }
-  //~ }
-//~ }
-
 function filterTimeSlot(c) {
-    //console.log("c in filterTimeSlot", c);
     var flag = 0;
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
@@ -546,45 +397,27 @@ function filterTimeSlot(c) {
         document.getElementById("datum").classList.toggle("shake");
     } else {
         currentTimeSlot = c;
-		currentThema = null;
+		    currentThema = null;
 		
         if (selectedFilterDiv.children.length == 3 && currentZeit == null ) {
             errorContainer.innerHTML = "";
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
-            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         } else if (selectedFilterDiv.children.length == 4) {
             errorContainer.innerHTML = "";
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-        } //~ else if (selectedFilterDiv.children.length == 5) {
-			//~ errorContainer.innerHTML = "";
-            //~ btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-            //~ btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-            //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-			//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-        //~ }
+        }
+
         currentZeit = c;
-        
-        //Show all cards
-        //~ localTitle = document.querySelectorAll('.filterDiv');
-        //~ for ( var j = 0; j < localTitle.length; j++ ) {
-            //~ localTitle[j].style.display = "block";
-        //~ }
+
         for (var i = 0; i < block_cards.length; i++) {
             addClass(block_cards[i], "show");
         }
         
         for (var i = 0; i < blocks.length; i++ ) {
-        //var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ]; For Reference.
-        // var currentDatum = null; For Reference.
             switch (c) {
                 case 'vormittag':
                     if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null && document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).children.length > 1) {
@@ -642,7 +475,6 @@ function filterTimeSlot(c) {
         } else {
             errorContainer.innerHTML = "";
         }
-        //filterSelection("all");
     }
 }
 
@@ -677,7 +509,6 @@ function btnContainerOneFunc(c, button){
         orangeFilterBlock.classList.add('orangeFilter');
         selectedFilterDiv.replaceChild(orangeFilterBlock, userTypeChildLi);
     } else {
-    //    console.log("clicking orange answer false create new")
         orangeFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(1)">X</div>`;
         orangeFilterBlock.classList.add('orangeFilter');
         selectedFilterDiv.insertBefore(orangeFilterBlock, selectedFilterDiv.firstChild);
@@ -719,8 +550,6 @@ btnContainerThree.forEach((element) => {
 });
 
 function blueThemaActive(c, button = undefined) {
-    //~ console.log("in the blue thema c", c);
-    
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
     } else if (c != null && c.length != 0 && button != undefined) {
@@ -767,30 +596,7 @@ function blueThemaActive(c, button = undefined) {
                 blueFilterBlock.classList.add('filter');
                 selectedFilterDiv.appendChild(blueFilterBlock);
             }
-            
-        } //~ else if  (button.closest("#filterBtnContainerFIRMA")){
-            //~ document.getElementById("ichBin").classList.remove("shake");
-            //~ button.addEventListener("click", toggleAction(button, 5))
-            
-            //~ var blueFirma = document.querySelector(".firmaBlueFilter");
-            //~ var answer = selectedFilterDiv.contains(blueFirma);
-            //~ var blueFilterBlock;
-            //~ if (answer == true) {
-                //~ var firmaChildLi = selectedFilterDiv.lastChild;
-                //~ blueFilterBlock = document.createElement('li');
-                //~ blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(5)">X</div>`;
-                //~ blueFilterBlock.classList.add('firmaBlueFilter');
-                //~ blueFilterBlock.classList.add('filter');
-                //~ selectedFilterDiv.replaceChild(blueFilterBlock, firmaChildLi);
-            //~ } else {
-                //~ blueFilterBlock = document.createElement('li');
-                //~ blueFilterBlock.innerHTML += `${c} &nbsp;&nbsp; <div class="remove" onclick="removeFilter(5)">X</div>`;
-                //~ blueFilterBlock.classList.add('firmaBlueFilter');
-                //~ blueFilterBlock.classList.add('filter');
-                //~ selectedFilterDiv.appendChild(blueFilterBlock);
-            //~ }
-            
-        //~ }
+        } 
     }
 }
 
@@ -805,10 +611,7 @@ function toggleAction(button, num) {
             } else if (num == 4) {
                 btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
                 btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-            } //~  else if (num == 5) {
-                //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
-                //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-            //~ }
+            } 
             removeFilter(num);
         } else {
             if (num == 2) {
@@ -820,17 +623,13 @@ function toggleAction(button, num) {
             } else if (num == 4) {
                 btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
                 btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-             } //~ else if (num == 5) {
-                //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
-                //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
-            //~ }
+             } 
             button.classList.add("toggleFilter");
             button.classList.add("active");
         }
 } 
 
 function removeFilter(num) {
-    console.log('in the remove', num);
     errorContainer.innerHTML = "";
     
     if (num == 1 ){
@@ -861,12 +660,7 @@ function removeFilter(num) {
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-         } //~ else if (selectedFilterDiv.children.length == 5) {
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-        //~ }
+         } 
         
         btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
         btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"));
@@ -881,41 +675,29 @@ function removeFilter(num) {
 
     } else if ( num == 3) {
         currentZeit = null;
-        //selectedFilterDiv.children[2].remove();
         if (selectedFilterDiv.children.length == 3) {
 			 selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 		} else if (selectedFilterDiv.children.length == 4) {
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-		 } //~ else if (selectedFilterDiv.children.length == 5) {
-			//~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-            //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
-		//~ }
+		 } 
+
         btnContainerThree.forEach(btn => btn.classList.remove("active"));
         btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-		//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         filterDatum(dayName);
         
     } else if ( num == 4) {
         if (selectedFilterDiv.children.length == 4) selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
-        //selectedFilterDiv.children[3].remove();
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-		//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-        //~ console.log("currentZeit", currentZeit)
         if (currentZeit != null) {
             filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
         } else if (currentZeit == null && currentDatum != null) {
-            console.log("in the zeit null  but datum no")
             filterDatum(dayFlag);
             selectedFilterDiv.children[2].remove();
         } else if (currentZeit == null && currentDatum == null){
-            console.log("in the else where zeil null and time all")
             selectedFilterDiv.children[1].remove();
         }
     } else if ( num == 5) {
@@ -923,23 +705,7 @@ function removeFilter(num) {
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
         filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
-        //Firmafilter
-        //~ if (selectedFilterDiv.children.length == 5) selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
-        //selectedFilterDiv.children[3].remove();
-        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-        
-        //~ var text = selectedFilterDiv.children[3].textContent.split(" ")[0].toLowerCase();
-        //~ var capitalizedText = text.charAt(0).toUpperCase() + text.slice(1);
-        //~ cardFilter(capitalizedText);
-    } //~ else if ( num == 6) {
-        //~ selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild)
-        //~ //selectedFilterDiv.children[4].remove();
-        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-		//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-        //~ filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
-    //~ }
- 
+    }  
     
     if (selectedFilterDiv.children.length == 1) {
         titleShowAll();
@@ -1020,25 +786,27 @@ function checkItem(i, condition) {
 }
 
 function addToCart(i, ...priority) {
-	console.log("i and priority", i, priority[0])
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
     } else {
         if (initialState.cart.some((item) => item.short_name == blocks[i].short_name)) {
-            console.log("already there", blocks[i].short_name);
-            //document.getElementById("warenkorb").classList.add("shake");
         } else if (checkItem(i, "cart") == true) {
-            console.log("in the else if cart")
             popUp(i);
         } else {
-            if (blocks[i].official_title.includes('Firmenbesuch') && priority[0] != "done") {
-                // Show a pop-up/modal with the firmen
-                showFirmen(blocks[i], i);
-            } else {
-                initialState.cart.push({
-                 ...blocks[i], 
-                });
-            } 
+			
+          if (blocks[i].official_title.includes('Firmenbesuch') && !priority[0] ) {
+            // Show a pop-up/modal with the firmen
+            showFirmen(blocks[i], i);
+          } else if (blocks[i].official_title.includes('Firmenbesuch') && priority[0]) {
+            //Update cart with the new selection of fimen priority
+            initialState.cart.push({
+              ...priority[0], 
+            });
+          } else {
+            initialState.cart.push({
+                     ...blocks[i], 
+            });
+          } 
          }
       updateCart();
     } 
@@ -1046,7 +814,6 @@ function addToCart(i, ...priority) {
 
 function popUp(i) {
     var currentCartItem = checkItem(i, "popUp")
-    console.log("popUp currentCartItem", currentCartItem)
     
     popUpDiv.innerHTML = `
             <div class="popUp"> 
@@ -1068,22 +835,20 @@ function popUp(i) {
 }
 
 function popUpConfirm(i) {
-    console.log("popUpConfirm", i)
     var currentCartItem = checkItem(i, "popUp")
     console.log("currentCartItem", currentCartItem)
     popUpDiv.style.display = "none";
     var index = initialState.cart.findIndex(item => item.official_title == currentCartItem.official_title);
 
     initialState.cart[index] = blocks[i];
-    console.log("index", index)
-    
-    if (blocks[i].official_title.includes('Firmenbesuch')) {
-        // Show a pop-up/modal with the firmen
-        showFirmen(initialState.cart[index], i);
-    } else {
-        updateCart();
-    }
 
+		if (blocks[i].official_title.includes('Firmenbesuch')) {
+				// Show a pop-up/modal with the firmen
+				showFirmen(initialState.cart[index], i);
+		} else {
+			
+			updateCart();
+		}
 }
 
 function popUpCancel() {
@@ -1091,39 +856,54 @@ function popUpCancel() {
 }
 
 function showFirmen(block, i) {
-    console.log("showFirmen", block)
-    var blockfirmen = block.firmen.split(",");
-    console.log("Firmeeeen", blockfirmen)
-    
-    popUpDiv.innerHTML = `
-            <div class="popUp" id="firmenModal"> 
-              <div class="popUpContent">
-                <p class="popUpTittle">IN DER REIHENFOLGE DES VORRANGIGEN BESUCHS ZIEHEN</p>
-                <ol id="firmenList" class="firmen-list"></ol>
-                <div class="popUpBtnDiv"> 
-                    <button class="popUpCancel" onclick="popUpCancel()">ABBRECHEN</button> <button class="popUpConfirm" onclick="saveFirmenOrder(${i})">BESTÄTIGEN</button> 
-                </div>
-              </div>
-            </div>`;
+    var blockfirmen = block.firmen.split(/[;,]/);
 
-    var modal = document.getElementById('firmenModal');
-    var firmenList = document.getElementById('firmenList');
-    
-    firmenList.innerHTML = '';
-    blockfirmen.forEach(function(firma) {
-        var listItem = document.createElement('li');
-        listItem.textContent = firma;
-        listItem.classList.add('firmen-item');
-        firmenList.appendChild(listItem);
-    });
-    // add no interest divider
-    var listItem = document.createElement('li');
-    listItem.textContent = "-- kein Interesse --";
-    listItem.classList.add('firmen-item');
-    firmenList.appendChild(listItem);
-        
+    popUpDiv.innerHTML = `
+			<div class="popUp" id="firmenModal"> 
+			  <div class="popUpContent">
+				<p class="popUpTittle">
+					WÄHLEN SIE HIER IHRE PRIORISIERUNG DER FIRMENBESUCHE:</p>
+				<p style="margin: 6px 0px 0px 2px; font-size: 14px; color: #E94E26;">
+					DRAG & DROP; UM IN DIE GEWÜNSCHTE REIHENFOLGE ZU ZIEHEN <br>
+					X; UM EINEN FIRMENBESUCH AUSZUSCHLIESSEN
+				</p>
+				<ol id="firmenList" class="firmen-list"></ol>
+				<div class="popUpBtnDiv"> 
+					<button class="popUpCancel" onclick="popUpCancel()">ABBRECHEN</button> <button class="popUpConfirm" onclick="saveFirmenOrder(${i})">BESTÄTIGEN</button> 
+				</div>
+			  </div>
+			</div>`;
+
+	var firmenList = document.getElementById('firmenList');
+	firmenList.innerHTML = '';
+	
+	blockfirmen.forEach(function(firma) {
+		var listItem = document.createElement('li');
+		listItem.innerHTML = `<p class="firmaname" >${firma}</p>`;
+		listItem.classList.add('firmen-item');
+		
+		var toggleInput = document.createElement('button');
+		toggleInput.classList.add('scratchToggleLabel');
+		toggleInput.innerHTML = "X"
+		toggleInput.addEventListener('click', toggleScratch);
+		
+		listItem.appendChild(toggleInput);
+		firmenList.appendChild(listItem);
+	});
+
     popUpDiv.style.display = "block";
     enableDragging();
+}
+
+function toggleScratch(event) {
+	var firmenItemScratch = event.target.closest('.firmen-item');
+	if (firmenItemScratch.classList.contains('grey')) {
+		firmenItemScratch.classList.remove("grey");
+		firmenItemScratch.classList.remove('scratch');
+	} else {
+		firmenItemScratch.classList.add("grey");
+		firmenItemScratch.classList.add('scratch');
+	}
 }
 
 function enableDragging() {
@@ -1166,16 +946,39 @@ function enableDragging() {
 
 function saveFirmenOrder(i) {
 	var firmenList = document.getElementById('firmenList');
-	var firmenPriorityOrder = [];
-	var updatedblockFirmen = blocks[i];
-	var firmen = Array.from(firmenList.getElementsByClassName('firmen-item')).map(function(firmaname) {
-		//~ return item.textContent
-		firmenPriorityOrder.push(firmaname.textContent);
+	var firmenItems = Array.from(firmenList.getElementsByClassName('firmen-item'));
+	var updatedBlockFirmen = JSON.parse(JSON.stringify(blocks[i]));
+	var priority = []
+
+	// Check if all firmen items have the "grey" class
+	var allGrey = firmenItems.every(function(item) {
+		return item.classList.contains('grey');
 	});
-	updatedblockFirmen.firmen = firmenPriorityOrder.join(';')
-	blocks[i] = updatedblockFirmen;
-	console.log("blocks[i]", blocks[i])
-	addToCart(i, "done")
+
+	if (allGrey) {
+		return document.getElementById("firmenList").classList.toggle("shake");;
+	}
+
+	var firmenPriorityOrder = [];
+
+	firmenItems.forEach(function(firmaname) {
+		if (!firmaname.classList.contains('grey')) {
+		  firmenPriorityOrder.push(firmaname.textContent.split("X")[0]);
+		}
+	});
+	
+	updatedBlockFirmen.firmen = firmenPriorityOrder.join(';')
+	var index = initialState.cart.findIndex((item) => item.short_name === updatedBlockFirmen.short_name);
+	
+	if (index !== -1) {
+		//Updated existing item in cart
+		initialState.cart[index] = updatedBlockFirmen;
+		updateCart();
+	} else {
+		//Added new item to cart
+		addToCart(i, updatedBlockFirmen);
+	}
+
 	popUpDiv.style.display = "none";
 }
 
@@ -1231,28 +1034,7 @@ function updateItems() {
     
 }
 
-/*function changeNoOfUnits(action, i) {
-        console.log(action, i);
-        initialState.cart = initialState.cart.map((item, x) => {
-            var numberOfUnits = item.numberOfUnits;
-            if ( i == x || i == item.short_name ) {
-                if (action == "minus" && numberOfUnits > 1) {
-                    numberOfUnits--;
-                } else if (action == "plus") {
-                    numberOfUnits++;
-                }
-            }
-            return {
-                ...item,
-                numberOfUnits,
-                }
-        });
-        
-        updateCart();
-} */
-
 function removeCartItem(i) {
-    //console.log('removing', i, initialState.cart[i]);
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
     } else if (inTheChekout == true) {
@@ -1268,7 +1050,10 @@ function removeCartItem(i) {
 
 function start() {
     inTheChekout = false;
-    window.open(`/tickets?anlass=${anlass}`, "_self");
+    var currentURL = `/tickets?anlass=${anlass}`
+    window.location.href = currentURL;
+    checkWebSource(currentURL)
+    //~ window.open(`/tickets?anlass=${anlass}`, "_self");
     
     window.localStorage.removeItem("ADDRESSONE");
     initialState.addressOne = [];
@@ -1289,13 +1074,36 @@ function checkOut() {
             
             var country_option = document.getElementById("inputLand");
             getCountries(country_option)
+            var gender_menu = document.getElementById("inputHerrFrau");
+            getGender(gender_menu)
             
+            //~ document.querySelector(".privacyAgreement").style.display = "flex";
             document.getElementById("step0").style.display = "none";
             document.getElementById("step1").style.display = "block";
             document.querySelector(".warenkorbBtn").style.display = "block";
-            //document.getElementById("inputLand").value = "Schweiz";
             cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT KAUFEN</p>`
         }
+}
+
+// Creating the Herr/Frau/Sonstiges Dropdown List
+function getGender(gender_menu) {
+	frappe.call({
+		'method': "lifefair.lifefair.tickets.get_genders",
+		'callback': function (response) {
+			genders = response.message;
+			
+			gender_menu.innerHTML =`<option class="btnOrange" value=""></option>`;
+			for (var i = 0; i < genders.length; i++ ) {
+				if (genders[i].name == "Weiblich") {
+					gender_menu.innerHTML +=`<option class="btnOrange" selected="selected" value="Frau">Frau</option>`;
+				} else if (genders[i].name == "Männlich") {
+					gender_menu.innerHTML +=`<option class="btnOrange" selected="selected" value="Herr">Herr</option>`;
+				} else {
+					gender_menu.innerHTML +=`<option class="btnOrange" value="${genders[i].name}">${genders[i].name}</option>`;
+				}
+			}
+		}
+	})
 }
 
 // Creating the Country Dropdown List
@@ -1306,7 +1114,6 @@ function getCountries(country_option, country_in_addrss_two) {
 			countries = response.message;
 			
 			for (var i = 0; i < countries.length; i++ ) {
-				//console.log("countrieees", countries[i].name)
 				if (country_in_addrss_two) {
 					country_option.innerHTML +=`<option class="btnOrange" selected="selected" value="${country_in_addrss_two}">${country_in_addrss_two}</option>`;
 				} else if (countries[i].name == "Schweiz") {
@@ -1326,6 +1133,8 @@ rechnungAdresse.addEventListener('change', function(e){
         document.getElementById("step2").style.display = "block";
         var country_option = document.getElementById("inputLandTwo");
         getCountries(country_option)
+        var gender_menu = document.getElementById("inputHerrFrauTwo");
+        getGender(gender_menu)
         initialState.rechCheck = "Yes";
         localStorage.setItem("RECHCHECK", JSON.stringify(initialState.rechCheck));
     } else if (!rechnungAdresse.checked) {
@@ -1362,7 +1171,7 @@ function checkGiftCard(){
             
             if (res == -1) {
                 giftCard.value = "";
-                giftCard.placeholder = "Ungültiger Code"; 
+                giftCard.placeholder = "Gutscheincode eingeben"; 
             } else {
                 var discount = (res/100) * initialState.total;
                 var newTotal = initialState.total - discount;
@@ -1379,7 +1188,6 @@ function checkGiftCard(){
 
 //Cheking the Form Values after proceeding to pay
 function checkDataAndPay() {
-    //console.log("in the pay func");
     
     if (initialState.rechCheck == "No") {
         initialState.addressTwo = [];
@@ -1398,13 +1206,6 @@ function checkDataAndPay() {
     var land = document.getElementById("inputLand");
     var plzOrt = document.getElementById("inputOrt");
     var giftCard = document.getElementById("inputGutschein");
-    
-    //console.log(lastname, firstname, firma, funktion, phone, email, adresse, plzOrt);
-    //var inputsArr = [herrFrau, akademishTitle, lastname, firstname, funktion, phone, email, adresse, plzOrt]
-    
-    //~ if (inputsArr.some((input) => !input.value)) {
-        //~ checkValueField(inputsArr)
-    //~ } 
     
     if (!herrFrau.value) {
         herrFrau.style.border = "1px solid red;"
@@ -1449,9 +1250,6 @@ function checkDataAndPay() {
         var adresseTwo = document.getElementById("inputAdresseTwo");
         var landTwo = document.getElementById("inputLandTwo");
         var plzOrtTwo = document.getElementById("inputOrtTwo");
-        
-        //console.log(lastnameTwo, firstnameTwo, firmaTwo, phoneTwo, emailTwo, adresseTwo, plzOrtTwo)
-        //var inputsArrTwo = [herrFrauTwo, lastnameTwo, firstnameTwo, firmaTwo, funktionTwo, phoneTwo, emailTwo, adresseTwo, plzOrtTwo];
         
         if (!herrFrauTwo.value) {
             herrFrauTwo.style.border = "1px solid red;"
@@ -1510,7 +1308,9 @@ function checkDataAndPay() {
             checkDataAndPay();
         }
         
-    } else {
+    } else if (initialState.ichStimmeZu === 0) {
+		ichStimmeZuPopUp()
+	} else {
         
         var plz = plzOrt.value.split(" ")[0];
         var ort = plzOrt.value.split(" ").splice(1).join(" ");
@@ -1541,6 +1341,36 @@ function checkDataAndPay() {
     }
 }
 
+//Watching over the privacy agreement checkbox in the checkout
+function ichStimmeZuPopUp() {
+	popUpDiv.innerHTML = `
+		<div class="popUp">
+			<div class="privacyAgreement" id="ichstimmezu">
+				<input class="checkInput" type="checkbox" id="stimmezu" name="ich_stimme_zu" value="STIMMEZU">
+				<label class="checkLabel" for="stimmezu" style="font-size: 13px !important; color: #003764; margin-right: 8px !important;">Wir nehmen den Datenschutz sehr ernst. Bitte kreuzen Sie dieses Kästchen an, damit wir Ihre Kontaktdaten an unsere Partner weitergeben dürfen, sodass diese sich nach der Veranstaltung, mit Ihnen in Verbindung setzen können. <br><br> Für die Nutzung Ihrer Kontaktdaten gelten die Datenschutzbestimmungen der Partner.</label>
+			</div>
+			<div class="popUpBtnDiv" style="margin: 27px 0px 10px 15px !important;"> 
+				<button class="popUpCancel" onclick="popUpCancel()">SCHLIESSEN</button> 
+			</div>
+		</div>`;    
+	 popUpDiv.style.display = "block";
+
+	var ichstimmezu = document.getElementById("stimmezu");
+	ichstimmezu.checked = false;
+  
+	ichstimmezu.addEventListener('change', function(e) {
+		if (ichstimmezu.checked) {
+		  initialState.ichStimmeZu = 1;
+		  localStorage.setItem("ICHSTIMMEZU", JSON.stringify(initialState.ichStimmeZu));
+		} else {
+		  initialState.ichStimmeZu = 0;
+		  localStorage.setItem("ICHSTIMMEZU", JSON.stringify(initialState.ichStimmeZu));
+		}
+	});
+	
+	
+}
+
 // check if the field contains both mandatory information: postal code and city
 function checkPlzAndOrtVals(str) {
   var result = str.split(" ")
@@ -1555,7 +1385,7 @@ function checkPlzAndOrtVals(str) {
 
 function createTicket() {
 	var total = initialState.total
-    //console.log("in the caaaaalll")
+
     if (initialState.discountTotal >= 0) {
 		total = initialState.discountTotal
 	}
@@ -1567,6 +1397,7 @@ function createTicket() {
                 'addressTwo': initialState.addressTwo,
                 'warenkorb': initialState.cart,
                 'total': total,
+                'ichstimmezu': initialState.ichStimmeZu,
                 'source': initialState.source
             },
             'callback': function(response) {
@@ -1620,13 +1451,12 @@ function correctStripeValue() {
 	 
     splitValueString = stringNum.split(".")
     var floatTotal = splitValueString[0] + splitValueString[1]
-    //console.log("is splitValueString", splitValueString)
+
     if (splitValueString[1].length == 1) {
        fixedTotal = parseInt(floatTotal + "0");
 	} else {
 		fixedTotal = parseInt(floatTotal);
 	}
-    //console.log("stripetotal", fixedTotal)
     return fixedTotal
   }
 }
@@ -1652,13 +1482,13 @@ function loadBlocks(anlass) {
     frappe.call({
         'method': "lifefair.lifefair.tickets.get_blocks",
         'args': {
-            'meeting': anlass,
-            'source': initialState.source,
-            'usertype': initialState.userTypeValue
+            meeting: anlass,
+            source: initialState.source,
+            usertype: initialState.userTypeValue
         },
         'callback': function (response) {
             blocks = response.message;
-
+            
             var blocksContainer = document.querySelector(".display");
             blocksContainer.innerHTML = "";
             var currentDate = null;
@@ -1688,14 +1518,16 @@ function loadBlocks(anlass) {
                 }
                 
                 addClass(card, dayNameForCard);
-                card.innerHTML += `<div class='blockContainer'> <div class='blockTime'>  <div> ${block.short_name} </div><div> ${block.time}</div> </div> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  ${block.location} </p><div>`;
+                card.innerHTML += `<div class='blockContainer'> <div class='blockTime'>  <div> ${block.short_name} </div><div> ${block.time}</div> </div> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  </p><div>`;
                 card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png"/></a> <div class='cart' onclick="addToCart(${x})"><img class='cartImg' src="/assets/lifefair/images/cart.png"/></div> </div>`;
                 
                 //creating the filter thema buttons and adding the class to the card
                 if (block.interests) {
                     var blockInterest = block.interests.split(",");
                     blockInterest.forEach(function (interest) {
+
                         var clean_interest =  purifyInterest(interest);
+
                         addClass(card, clean_interest);
                         if (interests.indexOf(interest) == -1) { 
                             interests.push(interest);
@@ -1704,7 +1536,7 @@ function loadBlocks(anlass) {
                         }
                     });
                 }
-                
+               
                 if (block.time) {
                     var twoTimeRange = block.time.split("und");
                     
@@ -1790,12 +1622,15 @@ function nachbestellenBtn() {
     initialState.addressOne = [];
     initialState.ticketNum = null;
     initialState.stripe = 0;
+    initialState.ichStimmeZu = 0;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
     initialState.discountTotal = -1;
     localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
     
     var country_option = document.getElementById("inputLand");
     getCountries(country_option)
+    var gender_menu = document.getElementById("inputHerrFrau");
+    getGender(gender_menu)
     
     document.getElementById("step1").style.display = "block";
     document.querySelector(".warenkorbBtn").style.display = "block";
@@ -1807,6 +1642,8 @@ function nachbestellenBtn() {
 
         var country_option = document.getElementById("inputLandTwo");
         getCountries(country_option, initialState.addressTwo.land)
+        var gender_menu = document.getElementById("inputHerrFrauTwo");
+        getGender(gender_menu)
         
         document.getElementById("gleiche").checked = true;
         document.getElementById("step2").style.display = "block";
@@ -1821,8 +1658,6 @@ function nachbestellenBtn() {
         var adresseTwo = document.getElementById("inputAdresseTwo");
         var landTwo = document.getElementById("inputLandTwo");
         var plzOrtTwo = document.getElementById("inputOrtTwo");
-        
-        //console.log("initialState.addressTwo", initialState.addressTwo);
 
         herrFrauTwo.value = initialState.addressTwo.herrFrau;
         firstnameTwo.value = initialState.addressTwo.firstname;
@@ -1921,7 +1756,6 @@ function loadEndMsg() {
     `
 }
 
-
 document.addEventListener("DOMContentLoaded", function(event) {
     // add change triggers here
     // process command line arguments
@@ -1932,29 +1766,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
     container.classList.add("container-fluid");
 });
 
+function checkWebSource(currentURL) {
+	console.log("currentURL", currentURL)
+	// Check if the website is opened from sges.ch or how.ch
+	if (!currentURL.includes('source'))  {
+		if (currentURL.includes('sges.ch')) { //sges.ch
+		  currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=sges'; //'source=sges'
+		} else if (currentURL.includes('how.ch')) {
+		  currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how';
+		}
+		
+		// Create a URLSearchParams object from the URL
+		var urlParams = new URLSearchParams(currentURL);
+		if (urlParams.has("source")) {
+			// Get the value of the "source" parameter
+			var sourceValue = urlParams.get("source");
+			initialState.source = (sourceValue);
+			localStorage.setItem("SOURCE", JSON.stringify(initialState.source));
+			history.replaceState({}, '', currentURL);
+		} 
+	} 
+}
+
 function get_arguments() {
     var arguments = window.location.toString().split("?");
     var currentURL = window.location.href;
+    checkWebSource(currentURL)
 
-    // Check if the website is opened from sges.ch or how.ch
-    if (currentURL.includes('localhost:8000')) { //sges.ch
-      currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how'; //'source=sges'
-    } else if (currentURL.includes('how.ch')) {
-      currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how';
-    }
-    
-    if (currentURL.includes('source'))  {
-        // Create a URLSearchParams object from the URL
-        var urlParams = new URLSearchParams(currentURL);
-        if (urlParams.has("source")) {
-            // Get the value of the "source" parameter
-            var sourceValue = urlParams.get("source");
-            initialState.source = (sourceValue);
-            localStorage.setItem("SOURCE", JSON.stringify(initialState.source));
-        } 
-    } else {
-      window.location.href = currentURL;
-    }
 
     if (!arguments[arguments.length - 1].startsWith("http")) {
         var args_raw = arguments[arguments.length - 1].split("&");

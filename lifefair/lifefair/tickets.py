@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (c) 2017-2022, libracore and contributors
+# Copyright (c) 2017-2023, libracore and contributors
 # License: AGPL v3. See LICENCE
 
 # import definitions
@@ -72,7 +72,17 @@ def get_countries():
     return data
 
 @frappe.whitelist(allow_guest=True) 
-def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total, source=None):
+def get_genders():
+    sql_query = """
+        SELECT 
+            `tabGender`.`name`
+        FROM `tabGender`
+    """
+    data = frappe.db.sql(sql_query, as_dict = True)
+    return data
+
+@frappe.whitelist(allow_guest=True) 
+def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total, ichstimmezu, source=None):
     
     if isinstance(addressOne, str):
         addressOne = json.loads(addressOne)
@@ -168,6 +178,7 @@ def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total, sou
                     'date': today(),
                     'phone': addressOne['phone'],
                     'firmen': entry['firmen'],
+                    'ich_stimme_zu': ichstimmezu,
                     'source': source
                 })
                 registration.insert(ignore_permissions=True)
@@ -219,8 +230,7 @@ def create_person(addressOne, customer, full_name, source="from ticketing"):
         elif gender == "Frau":
             letter_salutation = "Sehr geehrte Frau"
         else:
-            gender = ""
-            letter_salutation = ""
+            letter_salutation = "Guten Tag"
         person = frappe.get_doc({
             'doctype': "Person",
             'first_name': addressOne['firstname'],
@@ -454,7 +464,7 @@ def create_data_changes(addressOne, person):
         data_changes = frappe.get_doc({
             'doctype': "Contact Data Change",
             'person': person.name,
-            'form_data': "<strong>Herr/Frau:</strong> {0}, <br> <strong>Akademische Titel:</strong>  {1},<br> <strong>Vorname:</strong>  {2},<br> <strong>Name:</strong>  {3},<br> <strong>Firma:</strong> {4},<br> <strong>Funktion:</strong>  {5},<br> <strong>Telefonnummer:</strong> {6},<br> <strong>E-mail:</strong>  {7},<br> <strong>Adresse:</strong>  {8},<br> <strong>PLZ und Ort:</strong>  {9} {10},<br> <strong>Land:</strong> {11}.".format(addressOne['herrFrau'], addressOne["akademishTitle"], addressOne["lastname"], addressOne["firstname"], addressOne["firma"], addressOne["funktion"], addressOne["phone"], addressOne["email"], addressOne["adresse"], addressOne["plz"], addressOne["ort"], addressOne["land"])
+            'form_data': "<strong>Herr/Frau/Sonstige:</strong> {0}, <br> <strong>Akademische Titel:</strong>  {1},<br> <strong>Vorname:</strong>  {2},<br> <strong>Name:</strong>  {3},<br> <strong>Firma:</strong> {4},<br> <strong>Funktion:</strong>  {5},<br> <strong>Telefonnummer:</strong> {6},<br> <strong>E-mail:</strong>  {7},<br> <strong>Adresse:</strong>  {8},<br> <strong>PLZ und Ort:</strong>  {9} {10},<br> <strong>Land:</strong> {11}.".format(addressOne['herrFrau'], addressOne["akademishTitle"], addressOne["lastname"], addressOne["firstname"], addressOne["firma"], addressOne["funktion"], addressOne["phone"], addressOne["email"], addressOne["adresse"], addressOne["plz"], addressOne["ort"], addressOne["land"])
         })
         data_changes.save(ignore_permissions=True)
         data_changes_name = data_changes.name

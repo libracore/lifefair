@@ -6,6 +6,7 @@
  "engine": "InnoDB",
  "field_order": [
   "person",
+  "ich_stimme_zu",
   "column_head",
   "person_name",
   "section_event",
@@ -206,6 +207,12 @@
    "label": "IF zweiter Tag offen"
   },
   {
+   "default": "0",
+   "fieldname": "ich_stimme_zu",
+   "fieldtype": "Check",
+   "label": "Ich stimme zu, dass meine Daten an Partner weitergegeben werden"
+  },
+  {
    "fieldname": "firmen",
    "fieldtype": "Small Text",
    "label": "Firmen"
@@ -217,7 +224,7 @@
    "read_only": 1
   }
  ],
- "modified": "2023-06-07 19:09:24.394111",
+ "modified": "2023-06-27 08:25:48.567785",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Registration",
