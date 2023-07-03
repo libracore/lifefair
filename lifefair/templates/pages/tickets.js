@@ -42,7 +42,6 @@ var btnContainerOne = document.getElementById("filterBtnContainerUSER");
 var btnContainerTwo = document.getElementById("filterBtnContainerDATUM");
 var btnContainerThree = document.getElementById("filterBtnContainerZEIT").querySelectorAll("button");
 var btnContainerFour = document.getElementById("filterBtnContainerTHEMA");
-//~ var btnContainerFive = document.getElementById("filterBtnContainerFIRMA");
 var clearFields = document.getElementById("clearField").querySelectorAll("input");
 var clearFieldsTwo = document.getElementById("clearFieldTwo").querySelectorAll("input");
 var popUpDiv = document.getElementById("modal");
@@ -74,7 +73,6 @@ function userSelection(c, button) {
     document.getElementById("filterBtnContainerDATUM").classList.remove("grey");
     document.getElementById("filterBtnContainerZEIT").classList.remove("grey");
     document.getElementById("filterBtnContainerTHEMA").classList.remove("grey");
-    //~ document.getElementById("filterBtnContainerFIRMA").classList.remove("grey");
     document.getElementById("warenkorb").classList.remove("grey");
     document.querySelector(".display").classList.remove("grey");
     btnContainerTwo.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
@@ -83,11 +81,11 @@ function userSelection(c, button) {
     btnContainerThree.forEach(btn => btn.classList.remove("active"));
     btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
     btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
-
+    
     var userMenu = document.getElementById("userMenu");
     var userMenuDiv = document.createElement('div');
     userMenuDiv.classList.add('userMenuDiv');
-    userMenuDiv.innerHTML = `<div class="userMenuClass" onclick="openDropdown()"><div></div><p>${c}</p> <img class='dropdownImg' src="/assets/lifefair/images/arrow.png"/ style="padding-top: 5px;"></div>`;
+    userMenuDiv.innerHTML = `<div class="userMenuClass" onclick="openDropdown()"><div></div><p>${c}</p> <img class='dropdownImg' src="/assets/lifefair/images/arrow.png?v=1"/ style="padding-top: 5px;"></div>`;
     userMenu.insertBefore(userMenuDiv, userMenu.firstChild)
     document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "none");
     
@@ -118,17 +116,20 @@ function filterDatum(date, button) {
         if (selectedFilterDiv.children.length == 2 && dayFlag == "all" ) {
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
+
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         } else if (selectedFilterDiv.children.length == 3) {
             btnContainerThree.forEach(btn => btn.classList.remove("active"));
             btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach((element) => element.classList.remove("toggleFilter"));
+
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         }  else if (selectedFilterDiv.children.length == 4) {
             btnContainerThree.forEach(btn => btn.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
+
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild); 
          }
@@ -152,6 +153,7 @@ function purifyInterest(interest) {
 }
 
 function filterSelection(filter, button) {
+    
     if ((userDefined == "No") && (filter != "all")) {
         document.getElementById("ichBin").classList.toggle("shake");
     } else {
@@ -162,16 +164,16 @@ function filterSelection(filter, button) {
             titleFilter(filter)
         } 
             
-        for (var i = 0; i < block_cards.length; i++) {
-          removeClass(block_cards[i], "show");
-          if ((filter === "all") || (block_cards[i].className.indexOf(filter) > -1)) {
-              addClass(block_cards[i], "show");
-          }
-        }
+            for (var i = 0; i < block_cards.length; i++) {
+              removeClass(block_cards[i], "show");
+              if ((filter === "all") || (block_cards[i].className.indexOf(filter) > -1)) {
+                  addClass(block_cards[i], "show");
+              }
+            }
             
-			  currentThema = filter;
-			  cardFilter(filter);
-			  blueThemaActive(filter, button);
+			currentThema = filter;
+			cardFilter(filter);
+			blueThemaActive(filter, button);
       }
 }
 
@@ -328,6 +330,7 @@ function titleFilter(c) {
 }
 
 function cardFilter(c) {
+
     var flag = 0;
     
     if (currentTimeSlot != "all" && dayFlag != "all") {
@@ -397,7 +400,7 @@ function filterTimeSlot(c) {
         document.getElementById("datum").classList.toggle("shake");
     } else {
         currentTimeSlot = c;
-		    currentThema = null;
+		currentThema = null;
 		
         if (selectedFilterDiv.children.length == 3 && currentZeit == null ) {
             errorContainer.innerHTML = "";
@@ -410,7 +413,6 @@ function filterTimeSlot(c) {
             btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
             selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
         }
-
         currentZeit = c;
 
         for (var i = 0; i < block_cards.length; i++) {
@@ -418,6 +420,8 @@ function filterTimeSlot(c) {
         }
         
         for (var i = 0; i < blocks.length; i++ ) {
+        //var tags = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag" ]; For Reference.
+        // var currentDatum = null; For Reference.
             switch (c) {
                 case 'vormittag':
                     if (document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`) != null && document.getElementById(`vormittag_${blocks[i].neues_datum}_${dayName}`).children.length > 1) {
@@ -550,6 +554,7 @@ btnContainerThree.forEach((element) => {
 });
 
 function blueThemaActive(c, button = undefined) {
+
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
     } else if (c != null && c.length != 0 && button != undefined) {
@@ -596,6 +601,7 @@ function blueThemaActive(c, button = undefined) {
                 blueFilterBlock.classList.add('filter');
                 selectedFilterDiv.appendChild(blueFilterBlock);
             }
+            
         } 
     }
 }
@@ -668,8 +674,6 @@ function removeFilter(num) {
         btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-        //~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
-		//~ btnContainerFive.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         document.getElementById("selectedFilters").querySelectorAll("li").forEach(li => console.log("li", li));
         titleShowAll();
 
@@ -681,7 +685,6 @@ function removeFilter(num) {
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 			selectedFilterDiv.removeChild(selectedFilterDiv.lastElementChild);
 		 } 
-
         btnContainerThree.forEach(btn => btn.classList.remove("active"));
         btnContainerThree.forEach(btn => btn.classList.remove("toggleFilter"));
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"));
@@ -705,7 +708,7 @@ function removeFilter(num) {
 		btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("active"))
         btnContainerFour.querySelectorAll("button").forEach(btn => btn.classList.remove("toggleFilter"))
         filterTimeSlot(selectedFilterDiv.children[2].textContent.split(" ")[0].toLowerCase());
-    }  
+    } 
     
     if (selectedFilterDiv.children.length == 1) {
         titleShowAll();
@@ -794,19 +797,19 @@ function addToCart(i, ...priority) {
             popUp(i);
         } else {
 			
-          if (blocks[i].official_title.includes('Firmenbesuch') && !priority[0] ) {
-            // Show a pop-up/modal with the firmen
-            showFirmen(blocks[i], i);
-          } else if (blocks[i].official_title.includes('Firmenbesuch') && priority[0]) {
-            //Update cart with the new selection of fimen priority
-            initialState.cart.push({
-              ...priority[0], 
-            });
-          } else {
-            initialState.cart.push({
-                     ...blocks[i], 
-            });
-          } 
+			if (blocks[i].official_title.includes('Firmenbesuch') && !priority[0] ) {
+				// Show a pop-up/modal with the firmen
+				showFirmen(blocks[i], i);
+			} else if (blocks[i].official_title.includes('Firmenbesuch') && priority[0]) {
+				//Update cart with the new selection of fimen priority
+				initialState.cart.push({
+					...priority[0], 
+				});
+			} else {
+				initialState.cart.push({
+                 ...blocks[i], 
+				});
+			} 
          }
       updateCart();
     } 
@@ -835,11 +838,10 @@ function popUp(i) {
 }
 
 function popUpConfirm(i) {
+
     var currentCartItem = checkItem(i, "popUp")
-    console.log("currentCartItem", currentCartItem)
     popUpDiv.style.display = "none";
     var index = initialState.cart.findIndex(item => item.official_title == currentCartItem.official_title);
-
     initialState.cart[index] = blocks[i];
 
 		if (blocks[i].official_title.includes('Firmenbesuch')) {
@@ -894,6 +896,7 @@ function showFirmen(block, i) {
     popUpDiv.style.display = "block";
     enableDragging();
 }
+
 
 function toggleScratch(event) {
 	var firmenItemScratch = event.target.closest('.firmen-item');
@@ -1419,7 +1422,10 @@ function createTicket() {
 
 
 function openStripe(){
+    //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+    //~ createTicket();
     var stripeTotal = correctStripeValue();
+    console.log("stripe total", stripeTotal)
     
     frappe.call({
         'method': "lifefair.lifefair.tickets.open_stripe",
@@ -1428,6 +1434,7 @@ function openStripe(){
             },
         'callback': function (response) {
             var response = response.message
+            console.log(response)
             window.open(response.url, "_blank"); 
         }
     })
@@ -1493,7 +1500,6 @@ function loadBlocks(anlass) {
             blocksContainer.innerHTML = "";
             var currentDate = null;
             blocks.forEach(function (block, x) {
-                //console.log("blooooocks", block.official_title, "interests", block.interests);
                 
                 var card = document.createElement('div');
                 card.classList.add('filterDiv');
@@ -1519,7 +1525,7 @@ function loadBlocks(anlass) {
                 
                 addClass(card, dayNameForCard);
                 card.innerHTML += `<div class='blockContainer'> <div class='blockTime'>  <div> ${block.short_name} </div><div> ${block.time}</div> </div> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  </p><div>`;
-                card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png"/></a> <div class='cart' onclick="addToCart(${x})"><img class='cartImg' src="/assets/lifefair/images/cart.png"/></div> </div>`;
+                card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png?v=1"/></a> <div class='cart' onclick="addToCart(${x})"><img class='cartImg' src="/assets/lifefair/images/cart.png?v=1"/></div> </div>`;
                 
                 //creating the filter thema buttons and adding the class to the card
                 if (block.interests) {
@@ -1792,7 +1798,6 @@ function get_arguments() {
     var arguments = window.location.toString().split("?");
     var currentURL = window.location.href;
     checkWebSource(currentURL)
-
 
     if (!arguments[arguments.length - 1].startsWith("http")) {
         var args_raw = arguments[arguments.length - 1].split("&");
