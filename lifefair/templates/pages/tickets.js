@@ -24,7 +24,7 @@ var initialState = {
     addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
     info: JSON.parse(localStorage.getItem("INFO")) || [],
     rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || "No",
-    ichStimmeZu: JSON.parse(localStorage.getItem("ICHSTIMMEZU")) || 0,
+    ichStimmeZu: JSON.parse(localStorage.getItem("ICHSTIMMEZU")) || null,
     stripe: JSON.parse(localStorage.getItem("STRIPE")) || 0,
     ticketNum: JSON.parse(localStorage.getItem("TICKETS")) || null,
     sinv: JSON.parse(localStorage.getItem("SINV")) || null,
@@ -187,7 +187,7 @@ function titleShowAll() {
     initialState.addressOne = [];
     initialState.ticketNum = null;
     initialState.total = 0;
-    initialState.ichStimmeZu = 0;
+    initialState.ichStimmeZu = null;
     localStorage.setItem("TOTAL", JSON.stringify(initialState.total));
     initialState.discountTotal = -1;
     localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
@@ -724,13 +724,13 @@ function checkTime(time) {
         var result = [];
         
         result.push(timeOfDay(timeSplitFrom));
-        result.push(timeOfDay(timeSplitTo));
-        if (result[0] == result[1]) {
-            result.pop();
+        //~ result.push(timeOfDay(timeSplitTo));
+        //~ if (result[0] == result[1]) {
+            //~ result.pop();
+            //~ return result;
+        //~ } else {
             return result;
-        } else {
-            return result;
-        }
+        //~ }
     } else {
         return time[0];
     }
@@ -797,10 +797,11 @@ function addToCart(i, ...priority) {
             popUp(i);
         } else {
 			
-			if (blocks[i].official_title.includes('Firmenbesuch') && !priority[0] ) {
+			if (blocks[i].firmen && !priority[0] ) {
 				// Show a pop-up/modal with the firmen
 				showFirmen(blocks[i], i);
-			} else if (blocks[i].official_title.includes('Firmenbesuch') && priority[0]) {
+			} else if (blocks[i].firmen  && priority[0]) {
+
 				//Update cart with the new selection of fimen priority
 				initialState.cart.push({
 					...priority[0], 
@@ -844,7 +845,7 @@ function popUpConfirm(i) {
     var index = initialState.cart.findIndex(item => item.official_title == currentCartItem.official_title);
     initialState.cart[index] = blocks[i];
 
-		if (blocks[i].official_title.includes('Firmenbesuch')) {
+		if (blocks[i].firmen ) {
 				// Show a pop-up/modal with the firmen
 				showFirmen(initialState.cart[index], i);
 		} else {
@@ -928,16 +929,17 @@ function enableDragging() {
   });
 
   // Handle dragover event
-  firmenList.addEventListener('dragover', function(event) {
-    event.preventDefault();
-    var targetItem = event.target;
+	  firmenList.addEventListener('dragover', function(event) {
+	  event.preventDefault();
+	  var targetItem = event.target;
 
-    // Move the dragged item
-    if (targetItem !== draggedItem && targetItem.classList.contains('firmen-item')) {
-      var rect = targetItem.getBoundingClientRect();
-      var offset = rect.y + rect.height / 2 > event.clientY ? 0 : 1;
-      firmenList.insertBefore(draggedItem, targetItem.nextSibling);
-    }
+  // Move the dragged item
+	  if (targetItem !== draggedItem && targetItem.classList.contains('firmen-item')) {
+		var rect = targetItem.getBoundingClientRect();
+		var offset = event.clientY - rect.top; // Calculate the offset from the top of the target item
+		var isDraggedAbove = offset < rect.height / 2;
+		firmenList.insertBefore(draggedItem, isDraggedAbove ? targetItem : targetItem.nextSibling);
+	  }
   });
 
   // Handle dragend event
@@ -1054,8 +1056,9 @@ function removeCartItem(i) {
 function start() {
     inTheChekout = false;
     var currentURL = `/tickets?anlass=${anlass}`
+    var parentDomain = document.referrer;
     window.location.href = currentURL;
-    checkWebSource(currentURL)
+    checkWebSource(currentURL, parentDomain)
     //~ window.open(`/tickets?anlass=${anlass}`, "_self");
     
     window.localStorage.removeItem("ADDRESSONE");
@@ -1311,7 +1314,7 @@ function checkDataAndPay() {
             checkDataAndPay();
         }
         
-    } else if (initialState.ichStimmeZu === 0) {
+    } else if (initialState.ichStimmeZu === null) {
 		ichStimmeZuPopUp()
 	} else {
         
@@ -1357,10 +1360,16 @@ function ichStimmeZuPopUp() {
 			</div>
 		</div>`;    
 	 popUpDiv.style.display = "block";
+	 enableIchStimmeZu() 
+}
 
+function enableIchStimmeZu() {
+	console.log("enableIchStimmeZu")
 	var ichstimmezu = document.getElementById("stimmezu");
-	ichstimmezu.checked = false;
-  
+	
+	initialState.ichStimmeZu = 0;
+	localStorage.setItem("ICHSTIMMEZU", JSON.stringify(initialState.ichStimmeZu));
+	
 	ichstimmezu.addEventListener('change', function(e) {
 		if (ichstimmezu.checked) {
 		  initialState.ichStimmeZu = 1;
@@ -1370,8 +1379,6 @@ function ichStimmeZuPopUp() {
 		  localStorage.setItem("ICHSTIMMEZU", JSON.stringify(initialState.ichStimmeZu));
 		}
 	});
-	
-	
 }
 
 // check if the field contains both mandatory information: postal code and city
@@ -1422,22 +1429,21 @@ function createTicket() {
 
 
 function openStripe(){
-    //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-    //~ createTicket();
-    var stripeTotal = correctStripeValue();
-    console.log("stripe total", stripeTotal)
+    window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+    //~ var stripeTotal = correctStripeValue();
+    //~ console.log("stripe total", stripeTotal)
     
-    frappe.call({
-        'method': "lifefair.lifefair.tickets.open_stripe",
-        'args': {
-                'total': stripeTotal
-            },
-        'callback': function (response) {
-            var response = response.message
-            console.log(response)
-            window.open(response.url, "_blank"); 
-        }
-    })
+    //~ frappe.call({
+        //~ 'method': "lifefair.lifefair.tickets.open_stripe",
+        //~ 'args': {
+                //~ 'total': stripeTotal
+            //~ },
+        //~ 'callback': function (response) {
+            //~ var response = response.message
+            //~ console.log(response)
+            //~ window.open(response.url, "_blank"); 
+        //~ }
+    //~ })
 }
 
 function checkFloat(stringNum) {
@@ -1628,7 +1634,7 @@ function nachbestellenBtn() {
     initialState.addressOne = [];
     initialState.ticketNum = null;
     initialState.stripe = 0;
-    initialState.ichStimmeZu = 0;
+    initialState.ichStimmeZu = null;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
     initialState.discountTotal = -1;
     localStorage.setItem("NEWTOTAL", JSON.stringify(initialState.discountTotal));
@@ -1752,7 +1758,7 @@ function loadEndMsg() {
     }
 
     endMsgContainer.innerHTML += `
-        <div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen. &nbsp;&nbsp; <a href="https://sges.ch/official-congress-hotel-2022/" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a></div>
+        <div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen PARKHOTEL </div>
         <div class="endMsgButtonsContainer">
         <a href="/api/method/erpnextswiss.erpnextswiss.guest_print.get_pdf_as_guest?doctype=Sales Invoice&name=${initialState.sinv}&key=${initialState.signature}&format=Sales Invoice - Ticket&no_letterhead=0" target="_blank" class="endMsgBtn downloadBtn">TICKET / RECHNUNG HERUNTERLADEN</a>
         <button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>
@@ -1767,21 +1773,20 @@ document.addEventListener("DOMContentLoaded", function(event) {
     // process command line arguments
     get_arguments();
     
-    var container = document.querySelector(".my-5");
-    container.classList.remove("container");
-    container.classList.add("container-fluid");
+    //~ var container = document.querySelector(".my-5");
+    //~ container.classList.remove("container");
+    //~ container.classList.add("container-fluid");
 });
 
-function checkWebSource(currentURL) {
-	console.log("currentURL", currentURL)
+function checkWebSource(currentURL, parentDomain) {
+	console.log("currentURL - parentDomain", currentURL, parentDomain)
 	// Check if the website is opened from sges.ch or how.ch
 	if (!currentURL.includes('source'))  {
-		if (currentURL.includes('sges.ch')) { //sges.ch
+		if (parentDomain.includes('sges.ch')) { //sges.ch
 		  currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=sges'; //'source=sges'
-		} else if (currentURL.includes('how.ch')) {
+		} else if (parentDomain.includes('how.ch')) {
 		  currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how';
 		}
-		
 		// Create a URLSearchParams object from the URL
 		var urlParams = new URLSearchParams(currentURL);
 		if (urlParams.has("source")) {
@@ -1796,8 +1801,9 @@ function checkWebSource(currentURL) {
 
 function get_arguments() {
     var arguments = window.location.toString().split("?");
+    var parentDomain = document.referrer;
     var currentURL = window.location.href;
-    checkWebSource(currentURL)
+    checkWebSource(currentURL, parentDomain)
 
     if (!arguments[arguments.length - 1].startsWith("http")) {
         var args_raw = arguments[arguments.length - 1].split("&");
