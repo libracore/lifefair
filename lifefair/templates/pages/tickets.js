@@ -801,6 +801,7 @@ function addToCart(i, ...priority) {
 				// Show a pop-up/modal with the firmen
 				showFirmen(blocks[i], i);
 			} else if (blocks[i].firmen  && priority[0]) {
+
 				//Update cart with the new selection of fimen priority
 				initialState.cart.push({
 					...priority[0], 
