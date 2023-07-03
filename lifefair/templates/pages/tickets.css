@@ -42,11 +42,16 @@ button:focus {
   width: 100% !important;
 } /**/
 
+
+.row{
+  width: 100%;
+  padding-left: 206px;
+}
+
 .firtsDiv {
   /*border: solid red;*/
   width: 100%;
   padding-top: 40px;
-  padding-bottom: 40px;
   /*z-index: 1;*/
 }
 
@@ -283,7 +288,7 @@ button:focus {
   border: 1.5px solid #003764;
   color: #003764;
   width: 345px;
-  height: 240px;
+  height: 205px;
   padding: 20px;
   padding-bottom: 0px;
   padding-right: 0px;
@@ -506,6 +511,7 @@ ul {
   cursor: pointer;
   margin-top: 245px;
   margin-bottom: 20px;
+  margin-left: 22px;
   min-width: 320px;
   max-width: 320px;
   /*  position: fixed;
@@ -723,7 +729,7 @@ ul {
 }
 
 .tableInput {
-  min-width: 525px;
+  min-width: 517px;
   height: 50px;
   border: 1.5px solid #ebecf1;
   padding: 20px;
@@ -765,7 +771,7 @@ ul {
   /*position: fixed;
   margin-top: 450px;*/
   margin-top: 0px;
-  margin-left: 0px;
+  margin-left: 22px;
   width: 320px;
   text-transform: uppercase;
 }
@@ -881,9 +887,12 @@ ul {
   margin-bottom: 76px;
 }
 
-@media all and (max-width: 1300px) {  
+@media all and (max-width: 1500px) {  
   .ticketsName, .dateName, .dateNum, .timeName  {
     font-size: 31px;
+  }
+  .row {
+    padding-left: 0px;
   }
 }
 
@@ -891,19 +900,25 @@ ul {
   .ticketsName, .dateName, .dateNum, .timeName  {
     font-size: 27px;
   }
+
 }
 
-@media all and (max-width: 990px) {
+@media all and (max-width: 975px) {
+  
   #warenkorb {
     /*column-count: 1 !important;*/
     position: static !important;
+    margin-top: 0px !important;
+    margin-left: 34px !important;
   }
+
   .scondDiv {
     align-items: baseline;
   }
 
   .warenkorbBtn  {
     margin-top: 30px;
+    margin-left: 0px;
   }
   
   .positionFixed {
@@ -916,15 +931,25 @@ ul {
 }
 
 @media all and (max-width: 1200px) {
-  .container-fluid {
-    padding-left: 0px;
+  .container {
+    max-width: 1885px;
   }
 }
 
-@media all and (max-width: 999px) {
-  .scondDiv {
-    margin-left: 20px;
+@media all and (max-width: 991px) {
+
+   #warenkorb {
+    /*column-count: 1 !important;*/
+    position: static !important;
+    margin-top: 0px !important;
+    margin-left: 34px !important;
   }
+
+    
+  .positionFixed {
+    position: static !important;
+   }
+
 }
 
 
@@ -946,10 +971,16 @@ ul {
   }
 }
 
-@media all and (max-width: 570px) {
+@media all and (max-width: 575px) {
    .btnOrange, .userMenuClass {
     width: 300px;
   }
+  
+  .row {
+    display: flex;
+    flex-wrap: wrap-reverse;
+  }
+
 }
 
 @media all and (max-width: 538px) {
@@ -962,7 +993,7 @@ ul {
   .container-fluid {padding: 0px !important;}
   .popUp {
     width: 500px;
-  }
+  }     
 }
 
 @media all and (max-width: 496px) {
@@ -972,11 +1003,33 @@ ul {
 
 }
 
-@media all and (max-width: 365px) {
-
+@media all and (max-width: 412px) {
+  .filterDiv {
+    width: 340px;
+  }
   .ticketsName, .dateName, .dateNum, .timeName  {
     font-size: 13px;
   }
-  .container-fluid {padding: 0px !important;}
+  
+  #warenkorb {
+    /*column-count: 1 !important;*/
+    margin-top: 10px !important;
+    margin-left: 21px !important;
+  }
+  
+  .
 
+}
+
+@media all and (max-width: 400px) {
+  .filterDiv {
+    width: 295px;
+  }
+
+}
+
+@media all and (max-width: 350px) {
+  .container {
+    padding-left: 0px !important;
+  }
 }

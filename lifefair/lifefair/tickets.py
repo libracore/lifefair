@@ -54,7 +54,7 @@ def get_blocks(meeting, usertype, source=None):
     """.format(meeting=meeting, usertype=usertype)
     
     if source == "how" and disable_company_visits == "1":
-        sql_query += " AND `tabBlock`.`official_title` NOT LIKE '%Firmenbesuch%'"
+        sql_query += " AND NOT EXISTS (SELECT 1 FROM `tabBlock Firma` WHERE `tabBlock Firma`.`parent` = `tabBlock`.`name`)"
 
     sql_query += " GROUP BY `tabBlock`.`name` ORDER BY `tabBlock`.`neues_datum` ASC;"
     
