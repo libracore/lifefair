@@ -85,7 +85,7 @@ function userSelection(c, button) {
     var userMenu = document.getElementById("userMenu");
     var userMenuDiv = document.createElement('div');
     userMenuDiv.classList.add('userMenuDiv');
-    userMenuDiv.innerHTML = `<div class="userMenuClass" onclick="openDropdown()"><div></div><p>${c}</p> <img class='dropdownImg' src="/assets/lifefair/images/arrow.png?v=1"/ style="padding-top: 5px;"></div>`;
+    userMenuDiv.innerHTML = `<div class="userMenuClass" onclick="openDropdown()"><div></div><p>${c}</p> <img class='dropdownImg' src="/assets/lifefair/images/arrow.png"/ style="padding-top: 5px;"></div>`;
     userMenu.insertBefore(userMenuDiv, userMenu.firstChild)
     document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "none");
     
@@ -1531,7 +1531,7 @@ function loadBlocks(anlass) {
                 
                 addClass(card, dayNameForCard);
                 card.innerHTML += `<div class='blockContainer'> <div class='blockTime'>  <div> ${block.short_name} </div><div> ${block.time}</div> </div> <p class='blockTitle'>  ${block.official_title} </p> <p class='blockText'>  </p><div>`;
-                card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png?v=1"/></a> <div class='cart' onclick="addToCart(${x})"><img class='cartImg' src="/assets/lifefair/images/cart.png?v=1"/></div> </div>`;
+                card.innerHTML += `<div class='buttonsContainer'> <a href="${block.website_link}" target="_blank" class='info'><img class='infoImg' src="/assets/lifefair/images/info.png"/></a> <div class='cart' onclick="addToCart(${x})"><img class='cartImg' src="/assets/lifefair/images/cart.png"/></div> </div>`;
                 
                 //creating the filter thema buttons and adding the class to the card
                 if (block.interests) {
@@ -1758,7 +1758,7 @@ function loadEndMsg() {
     }
 
     endMsgContainer.innerHTML += `
-        <div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen PARKHOTEL </div>
+        <div class="infoDiv innerInfoDiv infoDetails">Übernachtung empfohlen <a href="https://sges.ch/official-congress-hotel-2023/" target="_blank" class="hotelLink"> PARKHOTEL-LINK </a> </div>
         <div class="endMsgButtonsContainer">
         <a href="/api/method/erpnextswiss.erpnextswiss.guest_print.get_pdf_as_guest?doctype=Sales Invoice&name=${initialState.sinv}&key=${initialState.signature}&format=Sales Invoice - Ticket&no_letterhead=0" target="_blank" class="endMsgBtn downloadBtn">TICKET / RECHNUNG HERUNTERLADEN</a>
         <button class="endMsgBtn nachbestellenBtn" onclick="nachbestellenBtn()">TICKETS NACHBESTELLEN</button>

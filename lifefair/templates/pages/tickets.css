@@ -19,6 +19,10 @@ button:focus {
   display: none;
 }
 
+.container {
+    max-width: 1885px !important;
+  }
+
 .container-fluid {
   padding-left: 40px;
   margin: 20px;
