@@ -77,6 +77,7 @@ def get_genders():
         SELECT 
             `tabGender`.`name`
         FROM `tabGender`
+        WHERE `tabGender`.`name` <> 'Sonstige(s)'
     """
     data = frappe.db.sql(sql_query, as_dict = True)
     return data
