@@ -321,7 +321,7 @@ function titleFilter(c) {
             }
 
             if ( flag == 0) {
-                    errorContainer.innerHTML = "Keine Ereignisse gefunden";
+                    errorContainer.innerHTML = "Unter diesen Filtern wurden keine Ergebnisse gefunden";
             } else {
                     errorContainer.innerHTML = "";
             }
@@ -384,7 +384,7 @@ function cardFilter(c) {
         
             if ( flag == 0) {
                     titleFilter(c)
-                    errorContainer.innerHTML = "Keine Ereignisse gefunden";
+                    errorContainer.innerHTML = "Unter diesen Filtern wurden keine Ergebnisse gefunden";
             } else {
                     errorContainer.innerHTML = "";
             }
@@ -475,7 +475,7 @@ function filterTimeSlot(c) {
         }
         
         if ( flag == 0) {
-            errorContainer.innerHTML = "Keine Ereignisse gefunden";
+            errorContainer.innerHTML = "Unter diesen Filtern wurden keine Ergebnisse gefunden";
         } else {
             errorContainer.innerHTML = "";
         }
@@ -1317,7 +1317,7 @@ function checkDataAndPay() {
     } else if (initialState.ichStimmeZu === null) {
 		ichStimmeZuPopUp()
 	} else {
-        
+        ticketIsBeingProcessed();
         var plz = plzOrt.value.split(" ")[0];
         var ort = plzOrt.value.split(" ").splice(1).join(" ");
 
@@ -1381,6 +1381,19 @@ function enableIchStimmeZu() {
 	});
 }
 
+function ticketIsBeingProcessed() {
+    popUpDiv.innerHTML = `
+            <div class="popUp"> 
+                <div class="popUpContent"> 
+                    
+                    <table class="popUpTable">                     
+                        <tr><td style="width: 30%; font-size: 23px; padding-left: 40px; "><div class="loader"></div></td><td><p class="popUpTittle" style="font-size: 23px !important;"> BITTE WARTEN SIE EINEN KURZEN MOMENT, IHR TICKET WIRD ERSTELLT.</p></td></tr>                 
+                    </table>
+                </div>
+            </div> `;    
+    popUpDiv.style.display = "block";
+}
+
 // check if the field contains both mandatory information: postal code and city
 function checkPlzAndOrtVals(str) {
   var result = str.split(" ")
@@ -1429,21 +1442,21 @@ function createTicket() {
 
 
 function openStripe(){
-    window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-    //~ var stripeTotal = correctStripeValue();
-    //~ console.log("stripe total", stripeTotal)
+    //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+    var stripeTotal = correctStripeValue();
+    console.log("stripe total", stripeTotal)
     
-    //~ frappe.call({
-        //~ 'method': "lifefair.lifefair.tickets.open_stripe",
-        //~ 'args': {
-                //~ 'total': stripeTotal
-            //~ },
-        //~ 'callback': function (response) {
-            //~ var response = response.message
-            //~ console.log(response)
-            //~ window.open(response.url, "_blank"); 
-        //~ }
-    //~ })
+    frappe.call({
+        'method': "lifefair.lifefair.tickets.open_stripe",
+        'args': {
+                'total': stripeTotal
+            },
+        'callback': function (response) {
+            var response = response.message
+            console.log(response)
+            window.open(response.url, "_blank"); 
+        }
+    })
 }
 
 function checkFloat(stringNum) {

@@ -380,7 +380,7 @@
    "fieldname": "gender",
    "fieldtype": "Select",
    "label": "Gender",
-   "options": "\nHerr\nFrau\nSonstige(s)"
+   "options": "\nHerr\nFrau"
   },
   {
    "fieldname": "letter_salutation",
@@ -527,7 +527,7 @@
   }
  ],
  "image_field": "image",
- "modified": "2023-06-27 08:25:12.794166",
+ "modified": "2023-07-10 09:51:47.923134",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Person",
