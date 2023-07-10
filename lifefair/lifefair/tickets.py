@@ -11,6 +11,7 @@ from frappe.utils.data import today
 from frappe.utils.data import add_to_date
 from frappe.utils import cint
 import stripe
+from six import string_types
 
 @frappe.whitelist(allow_guest=True) 
 def get_visitor_type():
@@ -85,7 +86,7 @@ def get_genders():
 @frappe.whitelist(allow_guest=True) 
 def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total, ichstimmezu, source=None):
     
-    if isinstance(addressOne, str):
+    if isinstance(addressOne, string_types):
         addressOne = json.loads(addressOne)
     firma = addressOne['firma']
     # ticket is not in the database, create
@@ -158,7 +159,7 @@ def create_ticket(include_payment, addressOne, addressTwo, warenkorb, total, ich
         current_address = frappe.get_doc("Person", person_name).customer_address
         contact=None
     
-    if isinstance(warenkorb, str):
+    if isinstance(warenkorb, string_types):
         warenkorb = json.loads(warenkorb)
     registration = None
     for entry in warenkorb:
@@ -379,7 +380,7 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, inclu
     
     #frappe.log_error(contact_name)
 
-    if isinstance(addressTwo, str):
+    if isinstance(addressTwo, string_types):
         addressTwo = json.loads(addressTwo)
     if len(addressTwo) > 0:
         sinv_address = create_address(customer, check="Yes", info=addressTwo, person=person.name)
@@ -428,7 +429,7 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, inclu
             frappe.log_error(error, "Import Ticketing Error")
             return {'error': error}
         signature = sinv.get_signature()
-        sinv.submit()
+        #sinv.submit()
         sinv_name = sinv.name
         frappe.db.commit()
         return sinv_name, signature
