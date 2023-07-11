@@ -429,7 +429,7 @@ def create_invoice(addressOne, addressTwo, customer, total, ticket_number, inclu
             frappe.log_error(error, "Import Ticketing Error")
             return {'error': error}
         signature = sinv.get_signature()
-        #sinv.submit()
+        sinv.submit()
         sinv_name = sinv.name
         frappe.db.commit()
         return sinv_name, signature

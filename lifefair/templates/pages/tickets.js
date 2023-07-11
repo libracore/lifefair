@@ -1407,7 +1407,7 @@ function checkPlzAndOrtVals(str) {
 }
 
 function createTicket() {
-	console.log("addressOne", initialState.addressOne);
+	console.log("initialState addressOne", initialState.addressOne);
 	var total = initialState.total
 
     if (initialState.discountTotal >= 0) {
@@ -1443,21 +1443,23 @@ function createTicket() {
 
 
 function openStripe(){
-    window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-    //~ var stripeTotal = correctStripeValue();
-    //~ console.log("stripe total", stripeTotal)
+    var stripeTotal = correctStripeValue();
+    console.log("stripe total", stripeTotal)
     
-    //~ frappe.call({
-        //~ 'method': "lifefair.lifefair.tickets.open_stripe",
-        //~ 'args': {
-                //~ 'total': stripeTotal
-            //~ },
-        //~ 'callback': function (response) {
-            //~ var response = response.message
-            //~ console.log(response)
-            //~ window.open(response.url, "_blank"); 
-        //~ }
-    //~ })
+    frappe.call({
+        'method': "lifefair.lifefair.tickets.open_stripe",
+        'args': {
+                'total': stripeTotal
+            },
+        'callback': function (response) {
+            var response = response.message
+            
+            window.open(response.url, "_blank");
+            
+            // Pass the initialState to the child tab using postMessage()
+            //~ window.postMessage({ initialState }, '*');
+        }
+    })
 }
 
 function checkFloat(stringNum) {
@@ -1712,8 +1714,11 @@ function successPayment() {
     
     initialState.stripe = 1;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
-    console.log("addressOne successPayment", initialState.addressOne);
-    createTicket();
+    
+    //~ initialState = JSON.parse(localStorage.getItem("initialState"));
+    console.log("successPayment", initialState)
+    console.log("successPayment localStorage", localStorage)
+    createTicket()
 }
 
 function loadEndMsg() {
