@@ -20,8 +20,8 @@ var initialState = {
     total: JSON.parse(localStorage.getItem("TOTAL")) || 0,
     discountTotal: JSON.parse(localStorage.getItem("NEWTOTAL")) || -1,
     //cartTwo: JSON.parse(localStorage.getItem("CARTTWO")) || [],
-    addressOne: JSON.parse(localStorage.getItem("ADDRESSONE")) || [],
-    addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || [],
+    addressOne: JSON.parse(localStorage.getItem("ADDRESSONE")) || {},
+    addressTwo: JSON.parse(localStorage.getItem("ADDRESSTWO")) || {},
     info: JSON.parse(localStorage.getItem("INFO")) || [],
     rechCheck: JSON.parse(localStorage.getItem("RECHCHECK")) || "No",
     ichStimmeZu: JSON.parse(localStorage.getItem("ICHSTIMMEZU")) || null,
@@ -184,7 +184,7 @@ function titleShowAll() {
     dayFlag = "all";
     window.localStorage.removeItem("ADDRESSONE");
     window.localStorage.removeItem("TICKETS");
-    initialState.addressOne = [];
+    initialState.addressOne = {};
     initialState.ticketNum = null;
     initialState.total = 0;
     initialState.ichStimmeZu = null;
@@ -1062,9 +1062,9 @@ function start() {
     //~ window.open(`/tickets?anlass=${anlass}`, "_self");
     
     window.localStorage.removeItem("ADDRESSONE");
-    initialState.addressOne = [];
+    initialState.addressOne = {};
     window.localStorage.removeItem("ADDRESSTWO");
-    initialState.addressTwo = [];
+    initialState.addressTwo = {};
     
 }
 
@@ -1196,7 +1196,7 @@ function checkGiftCard(){
 function checkDataAndPay() {
     
     if (initialState.rechCheck == "No") {
-        initialState.addressTwo = [];
+        initialState.addressTwo = {};
         localStorage.setItem("ADDRESSTWO", JSON.stringify(initialState.addressTwo));
     }
     
@@ -1407,6 +1407,7 @@ function checkPlzAndOrtVals(str) {
 }
 
 function createTicket() {
+	console.log("addressOne", initialState.addressOne);
 	var total = initialState.total
 
     if (initialState.discountTotal >= 0) {
@@ -1442,21 +1443,21 @@ function createTicket() {
 
 
 function openStripe(){
-    //~ window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
-    var stripeTotal = correctStripeValue();
-    console.log("stripe total", stripeTotal)
+    window.open("https://buy.stripe.com/test_14k8Az0qtbPC8KseUW", "_self");
+    //~ var stripeTotal = correctStripeValue();
+    //~ console.log("stripe total", stripeTotal)
     
-    frappe.call({
-        'method': "lifefair.lifefair.tickets.open_stripe",
-        'args': {
-                'total': stripeTotal
-            },
-        'callback': function (response) {
-            var response = response.message
-            console.log(response)
-            window.open(response.url, "_blank"); 
-        }
-    })
+    //~ frappe.call({
+        //~ 'method': "lifefair.lifefair.tickets.open_stripe",
+        //~ 'args': {
+                //~ 'total': stripeTotal
+            //~ },
+        //~ 'callback': function (response) {
+            //~ var response = response.message
+            //~ console.log(response)
+            //~ window.open(response.url, "_blank"); 
+        //~ }
+    //~ })
 }
 
 function checkFloat(stringNum) {
@@ -1644,7 +1645,7 @@ function nachbestellenBtn() {
     inTheChekout = true;
     window.localStorage.removeItem("ADDRESSONE");
     window.localStorage.removeItem("TICKETS");
-    initialState.addressOne = [];
+    initialState.addressOne = {};
     initialState.ticketNum = null;
     initialState.stripe = 0;
     initialState.ichStimmeZu = null;
@@ -1711,6 +1712,7 @@ function successPayment() {
     
     initialState.stripe = 1;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
+    console.log("addressOne successPayment", initialState.addressOne);
     createTicket();
 }
 
