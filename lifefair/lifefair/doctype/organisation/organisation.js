@@ -8,6 +8,13 @@ frappe.ui.form.on('Organisation', {
 			
 			display_people(frm);
 		}
+	},
+    ist_ver(frm) {
+		// your code here
+		cur_frm.set_value("ist_kein_ver", 0);
+	},
+	ist_kein_ver(frm) {
+		cur_frm.set_value("ist_ver", 0);
 	}
 });
 

@@ -51,6 +51,47 @@ var active = document.querySelector(".active");
 updateCart();
 //~ filterSelection("all");
 
+//Dropdown Menu
+function openDropdown() {
+    document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "block");
+    document.querySelector(".userMenuDiv").innerHTML =  "";
+}
+
+function showDropdown(element) {
+	element.classList.add('show');
+    var dropdownMenu = element.querySelector('.dropdown-menu');
+    dropdownMenu.classList.add('show');
+}
+
+function hideDropdown(element) {
+    element.classList.remove('show');
+    var dropdownMenu = element.querySelector('.dropdown-menu');
+    dropdownMenu.classList.remove('show');
+}
+
+//handle that the scroll trigger doesnt affect the url
+document.getElementById('scroll-up').addEventListener('click', function(event) {
+  event.preventDefault();
+  document.querySelector('html').scrollTop = 0;
+});
+
+function searchPopUp() {
+    
+    popUpDiv.innerHTML = `
+            <div class="search"> 
+                <div class="">
+					<button class="fullscreen-close"  onclick="popUpCancel()"><svg style="height: 26px; fill: #fff;" data-cacheid="icon-64b501150cdd3" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M390.628 345.372l-45.256 45.256-89.372-89.373-89.373 89.372-45.255-45.255 89.373-89.372-89.372-89.373 45.254-45.254 89.373 89.372 89.372-89.373 45.256 45.255-89.373 89.373 89.373 89.372z"></path></svg></button>
+					<div>
+						<p class="search-text">Eingeben und Enter drücken zum Suchen</p>
+						<form class="search-field" method="get" id="mk-fullscreen-searchform" action="https://sges.ch/">
+							<input class="search-input" type="text" value="" name="s" id="mk-fullscreen-search-input">
+							<i class="search-icon"><svg data-cacheid="icon-64b501150d0f0" style=" height:25px; width: 23.214285714286px; " xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1664 1792"><path d="M1152 832q0-185-131.5-316.5t-316.5-131.5-316.5 131.5-131.5 316.5 131.5 316.5 316.5 131.5 316.5-131.5 131.5-316.5zm512 832q0 52-38 90t-90 38q-54 0-90-38l-343-342q-179 124-399 124-143 0-273.5-55.5t-225-150-150-225-55.5-273.5 55.5-273.5 150-225 225-150 273.5-55.5 273.5 55.5 225 150 150 225 55.5 273.5q0 220-124 399l343 343q37 37 37 90z"></path></svg></i>
+						</form>
+					</div>
+				</div>
+            </div> `;    
+    popUpDiv.style.display = "block";
+}
 
 function userSelection(c, button) {
     btnContainerOneFunc(c, button) // Creates the upper selected orange filter
@@ -92,12 +133,6 @@ function userSelection(c, button) {
     if ( document.getElementById("selectedFilters").contains(document.querySelector(".grey")) == true) document.getElementById("selectedFilters").classList.remove("grey");
     updateCart();
 
-}
-
-//Dropdown Menu
-function openDropdown() {
-    document.getElementById("dropdown").querySelectorAll("button").forEach((element) => element.style.display = "block");
-    document.querySelector(".userMenuDiv").innerHTML =  "";
 }
 
 function filterDatum(date, button) {
@@ -868,7 +903,10 @@ function showFirmen(block, i) {
 					WÄHLEN SIE HIER IHRE PRIORISIERUNG DER FIRMENBESUCHE:</p>
 				<p style="margin: 6px 0px 0px 2px; font-size: 14px; color: #E94E26;">
 					DRAG & DROP; UM IN DIE GEWÜNSCHTE REIHENFOLGE ZU ZIEHEN <br>
-					X; UM EINEN FIRMENBESUCH AUSZUSCHLIESSEN
+					X; UM EINEN FIRMENBESUCH AUSZUSCHLIESSEN <br>
+				</p>
+				<p style="margin: 6px 0px 4px 2px; font-size: 14px; color: #E94E26;">
+					SIE HABEN DIE MÖGLICHKEIT AN MAX. 3 FIRMENBESUCHEN TEILZUNEHMEN
 				</p>
 				<ol id="firmenList" class="firmen-list"></ol>
 				<div class="popUpBtnDiv"> 
@@ -1056,9 +1094,9 @@ function removeCartItem(i) {
 function start() {
     inTheChekout = false;
     var currentURL = `/tickets?anlass=${anlass}`
-    var parentDomain = document.referrer;
+    var previousURL = document.referrer;
     window.location.href = currentURL;
-    checkWebSource(currentURL, parentDomain)
+    checkWebSource(currentURL, previousURL)
     //~ window.open(`/tickets?anlass=${anlass}`, "_self");
     
     window.localStorage.removeItem("ADDRESSONE");
@@ -1077,7 +1115,6 @@ function checkOut() {
             shaketext.classList.add("shake");
         } else {
             inTheChekout = true;
-            
             var country_option = document.getElementById("inputLand");
             getCountries(country_option)
             var gender_menu = document.getElementById("inputHerrFrau");
@@ -1407,7 +1444,7 @@ function checkPlzAndOrtVals(str) {
 }
 
 function createTicket() {
-	console.log("initialState addressOne", initialState.addressOne);
+	console.log("initialState", initialState);
 	var total = initialState.total
 
     if (initialState.discountTotal >= 0) {
@@ -1453,11 +1490,7 @@ function openStripe(){
             },
         'callback': function (response) {
             var response = response.message
-            
-            window.open(response.url, "_blank");
-            
-            // Pass the initialState to the child tab using postMessage()
-            //~ window.postMessage({ initialState }, '*');
+            window.open(response.url, "_self");
         }
     })
 }
@@ -1711,13 +1744,12 @@ function successPayment() {
     document.getElementById("step1").style.display = "none";
     document.querySelector(".warenkorbBtn").style.display = "none";
     document.getElementById("step3").style.display = "block";
+    ticketIsBeingProcessed()
+    
     
     initialState.stripe = 1;
     localStorage.setItem("STRIPE", JSON.stringify(initialState.stripe));
-    
-    //~ initialState = JSON.parse(localStorage.getItem("initialState"));
-    console.log("successPayment", initialState)
-    console.log("successPayment localStorage", localStorage)
+
     createTicket()
 }
 
@@ -1798,13 +1830,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
     //~ container.classList.add("container-fluid");
 });
 
-function checkWebSource(currentURL, parentDomain) {
-	console.log("currentURL - parentDomain", currentURL, parentDomain)
+function checkWebSource(currentURL, previousURL) {
+	console.log("currentURL - previousURL", currentURL, previousURL)
 	// Check if the website is opened from sges.ch or how.ch
 	if (!currentURL.includes('source'))  {
-		if (parentDomain.includes('sges.ch')) { //sges.ch
+		if (previousURL.includes('sges.ch')) { //sges.ch
 		  currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=sges'; //'source=sges'
-		} else if (parentDomain.includes('how.ch')) {
+		} else if (previousURL.includes('how.ch')) {
 		  currentURL += (currentURL.includes('?') ? '&' : '?') + 'source=how';
 		}
 		// Create a URLSearchParams object from the URL
@@ -1821,9 +1853,9 @@ function checkWebSource(currentURL, parentDomain) {
 
 function get_arguments() {
     var arguments = window.location.toString().split("?");
-    var parentDomain = document.referrer;
+    var previousURL = document.referrer;
     var currentURL = window.location.href;
-    checkWebSource(currentURL, parentDomain)
+    checkWebSource(currentURL, previousURL)
 
     if (!arguments[arguments.length - 1].startsWith("http")) {
         var args_raw = arguments[arguments.length - 1].split("&");
