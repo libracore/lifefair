@@ -69,11 +69,12 @@ function hideDropdown(element) {
     dropdownMenu.classList.remove('show');
 }
 
-//handle that the scroll trigger doesnt affect the url
-document.getElementById('scroll-up').addEventListener('click', function(event) {
-  event.preventDefault();
-  document.querySelector('html').scrollTop = 0;
-});
+//ScrollUp Function
+function scrollToTop() {
+	var element = document.body;
+    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    window.scrollTo(0, 0);
+}
 
 function searchPopUp() {
     
@@ -1107,25 +1108,27 @@ function start() {
 }
 
 function checkOut() {
-    
     if (userDefined == "No") {
         document.getElementById("ichBin").classList.toggle("shake");
     } else if (initialState.cart.length == 0) {
         var shaketext = document.querySelector(".cartLeer")
             shaketext.classList.add("shake");
-        } else {
-            inTheChekout = true;
-            var country_option = document.getElementById("inputLand");
-            getCountries(country_option)
-            var gender_menu = document.getElementById("inputHerrFrau");
-            getGender(gender_menu)
-            
-            //~ document.querySelector(".privacyAgreement").style.display = "flex";
-            document.getElementById("step0").style.display = "none";
-            document.getElementById("step1").style.display = "block";
-            document.querySelector(".warenkorbBtn").style.display = "block";
-            cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT KAUFEN</p>`
-        }
+    } else {
+		var footer = document.getElementById("ticketing-footer").style.marginTop = "80px";
+		inTheChekout = true;
+		var country_option = document.getElementById("inputLand");
+		getCountries(country_option)
+		var gender_menu = document.getElementById("inputHerrFrau");
+		getGender(gender_menu)
+		
+		//~ document.querySelector(".privacyAgreement").style.display = "flex";
+		document.getElementById("step0").style.display = "none"; 
+		document.getElementById("step1").style.display = "block"; 
+		document.querySelector(".warenkorbBtn").style.display = "block";
+		
+		cartbButton.innerHTML = `<p class="cartBtnText" onclick="checkDataAndPay()">JETZT KAUFEN</p>`
+    }
+    scrollToTop()
 }
 
 // Creating the Herr/Frau/Sonstiges Dropdown List

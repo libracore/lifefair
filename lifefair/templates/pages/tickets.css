@@ -1120,6 +1120,7 @@ ul {
   text-decoration: none;
   display: block;
   fill: #fff !important;
+  border: none;
 }
 
 html {
