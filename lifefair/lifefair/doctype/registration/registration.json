@@ -9,6 +9,7 @@
   "ich_stimme_zu",
   "column_head",
   "person_name",
+  "deadline_daten_an_partner",
   "section_event",
   "meeting",
   "block",
@@ -222,9 +223,14 @@
    "fieldtype": "Data",
    "label": "Source",
    "read_only": 1
+  },
+  {
+   "fieldname": "deadline_daten_an_partner",
+   "fieldtype": "Date",
+   "label": "Deadline Daten an Partner"
   }
  ],
- "modified": "2023-06-27 08:25:48.567785",
+ "modified": "2023-08-02 09:46:49.006479",
  "modified_by": "Administrator",
  "module": "Lifefair",
  "name": "Registration",

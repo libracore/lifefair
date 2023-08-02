@@ -42,7 +42,8 @@ def execute(filters=None):
                "Ticketnummer::125",
                "Barcode::125",
                "IF erster Tag offen::50",
-               "IF zweiter Tag offen::50"
+               "IF zweiter Tag offen::50",
+               "Deadline Daten an Partner::80"
                ]
     if filters:
         data = get_data(meeting=filters.meeting, interests=filters.interests, as_list=True)
@@ -96,7 +97,8 @@ def get_data(meeting=None, interests=None, as_list=True):
          `tabRegistration`.`ticket_number` AS `Ticketnummer`,
          `tabRegistration`.`barcode` AS `Barcode`,
          `tabRegistration`.`erster_tag_offen` AS `IF erster Tag offen`,
-         `tabRegistration`.`zweiter_tag_offen` AS `IF zweiter Tag offen`
+         `tabRegistration`.`zweiter_tag_offen` AS `IF zweiter Tag offen`,
+         `tabRegistration`.`deadline_daten_an_partner` AS `Deadline Daten an Partner`
     FROM `tabRegistration`
     LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
     LEFT JOIN `tabPerson Interest` ON `tabPerson Interest`.`parent` = `tabPerson`.`name`
