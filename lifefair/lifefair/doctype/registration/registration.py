@@ -41,6 +41,9 @@ class Registration(Document):
         earliest = min(reg, met)
         self.meldedatum = earliest
         
+        deadline = date.today() + timedelta(days=7)
+        self.deadline_daten_an_partner = deadline
+        
         self.save(ignore_permissions=ignore_permissions)
         
         
