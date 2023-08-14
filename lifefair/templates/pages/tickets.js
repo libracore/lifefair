@@ -1253,36 +1253,53 @@ function checkDataAndPay() {
     var plzOrt = document.getElementById("inputOrt");
     var giftCard = document.getElementById("inputGutschein");
     
+    var inputs = document.querySelectorAll("input"); // Select all input fields
+
+    for (var i = 0; i < inputs.length; i++) {
+        if (inputs[i].value) {
+            inputs[i].style = "border: 1.5px solid #ebecf1";
+        }
+    }
+    
     if (!herrFrau.value) {
-        herrFrau.style.border = "1px solid red;"
+        herrFrau.style = "border: 1px solid #E94E26"
         herrFrau.focus();
     } else if (!lastname.value) {
-        lastname.style.border = "1px solid red;"
+		missingOrWrongFieldPopUp()
+        lastname.style = "border: 1px solid #E94E26"
         lastname.focus();
     } else if (!firstname.value) {
-        firstname.style.border = "1px solid red;"
+		missingOrWrongFieldPopUp()
+        firstname.style = "border: 1px solid #E94E26"
         firstname.focus();
     } else if (!funktion.value) {
-        funktion.style.border = "1px solid red;"
+		missingOrWrongFieldPopUp()
+        funktion.style = "border: 1px solid #E94E26"
         funktion.focus();
     }  else if (!phone.value) {
-        phone.style.border = "1px solid red;"
+		missingOrWrongFieldPopUp()
+        phone.style = "border: 1px solid #E94E26"
         phone.focus();
     } else if (!email.value) {
-        email.style.border = "1px solid red;"
+		missingOrWrongFieldPopUp()
+        email.style = "border: 1px solid #E94E26"
         email.focus();
     } else if (!adresse.value) {
-        adresse.style.border = "1px solid red;"
+		missingOrWrongFieldPopUp()
+        adresse.style = "border: 1px solid #E94E26"
         adresse.focus();
     } else if (!land.value) {
-        land.style.border = "1px solid red;"
+		missingOrWrongFieldPopUp()
+        land.style = "border: 1px solid #E94E26"
         land.focus();
     } else if (!plzOrt.value) {
-        plzOrt.style.border = "1px solid red;"
+		missingOrWrongFieldPopUp()
+        plzOrt.style = "border: 1px solid #E94E26"
         plzOrt.focus();
     } else if (checkPlzAndOrtVals(plzOrt.value) == false) {
+		missingOrWrongFieldPopUp()
         // check if the field contains both mandatory information: postal code and city
-        plzOrt.style.border = "1px solid red;"
+        plzOrt.style = "border: 1px solid #E94E26"
         plzOrt.focus();
     } else if ((rechnungAdresse.checked) && (rechAdd == "notDone")) {
         
@@ -1298,36 +1315,47 @@ function checkDataAndPay() {
         var plzOrtTwo = document.getElementById("inputOrtTwo");
         
         if (!herrFrauTwo.value) {
-            herrFrauTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            herrFrauTwo.style = "border: 1px solid #E94E26"
             herrFrauTwo.focus();
         } else if (!lastnameTwo.value) {
-            lastnameTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            lastnameTwo.style = "border: 1px solid #E94E26"
             lastnameTwo.focus();
         } else if (!firstnameTwo.value) {
-            firstnameTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            firstnameTwo.style = "border: 1px solid #E94E26"
             firstnameTwo.focus();
         } else if (!firmaTwo.value) {
-            firmaTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            firmaTwo.style = "border: 1px solid #E94E26"
             firmaTwo.focus();
         } else if (!funktionTwo.value) {
-            funktionTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            funktionTwo.style = "border: 1px solid #E94E26"
             funktionTwo.focus();
         }  else if (!phoneTwo.value) {
-            phoneTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            phoneTwo.style = "border: 1px solid #E94E26"
             phoneTwo.focus();
         } else if (!emailTwo.value) {
-            emailTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            emailTwo.style = "border: 1px solid #E94E26"
             emailTwo.focus();
         } else if (!adresseTwo.value) {
-            adresseTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            adresseTwo.style = "border: 1px solid #E94E26"
             adresseTwo.focus();
         } else if (!landTwo.value) {
-            landTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            landTwo.style = "border: 1px solid #E94E26"
             landTwo.focus();
         } else if (!plzOrtTwo.value) {
-            plzOrtTwo.style.border = "1px solid red;"
+			missingOrWrongFieldPopUp()
+            plzOrtTwo.style = "border: 1px solid #E94E26"
             plzOrtTwo.focus();
         } else if (checkPlzAndOrtVals(plzOrtTwo.value) == false) {
+			missingOrWrongFieldPopUp()
             // check if the field contains both mandatory information: postal code and city
             plzOrtTwo.style.border = "1px solid red;"
             plzOrtTwo.focus();
@@ -1385,6 +1413,22 @@ function checkDataAndPay() {
             //alert("Derzeit nicht verfügbar, bitte stellen Sie Ihren Kauf in Rechnung")
         }
     }
+}
+
+//Watching over the fields 
+function missingOrWrongFieldPopUp() {
+	popUpDiv.innerHTML = `
+		<div class="popUp">
+			<div class="privacyAgreement">
+				<div class="checkLabel" style="font-size: 24px !important; color: #003764; margin-right: 8px !important;">
+					Bitte stellen Sie sicher, dass alle Felder vollständig und korrekt ausgefüllt sind.
+				</div>
+			</div>
+			<div class="popUpBtnDiv" style="margin: 27px 0px 10px 15px !important;"> 
+				<button class="popUpCancel" onclick="popUpCancel()">SCHLIESSEN</button> 
+			</div>
+		</div>`;    
+	 popUpDiv.style.display = "block";
 }
 
 //Watching over the privacy agreement checkbox in the checkout
