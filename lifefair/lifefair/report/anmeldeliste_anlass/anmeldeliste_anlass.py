@@ -17,7 +17,6 @@ def execute(filters=None):
                "Geprüft von::50",
                "Meldedatum::80",
                "Email Clerk::100",
-               "Firmen::90",
                "Registrierung:Link/Registration:100",
                "Gutscheincode::170",
                "Anlass::200",
@@ -43,7 +42,8 @@ def execute(filters=None):
                "Barcode::125",
                "IF erster Tag offen::50",
                "IF zweiter Tag offen::50",
-               "Deadline Daten an Partner::80"
+               "Deadline Daten an Partner::80",
+               "Firmen::90"
                ]
     if filters:
         data = get_data(meeting=filters.meeting, interests=filters.interests, as_list=True)
@@ -66,7 +66,6 @@ def get_data(meeting=None, interests=None, as_list=True):
          (SELECT IF(`tabRegistration`.`is_checked` = 1, "Ja", "Nein")) AS `Geprüft von`,
          `tabRegistration`.`meldedatum` AS `Meldedatum`,
          `tabRegistration`.`email_clerk` AS `Email Clerk`,
-         `tabRegistration`.`firmen` AS `Firmen`,
          `tabRegistration`.`name` AS `Registrierung`,
          `tabRegistration`.`code` AS `Gutscheincode`,
          `tabRegistration`.`meeting` AS `Anlass`,
@@ -98,7 +97,8 @@ def get_data(meeting=None, interests=None, as_list=True):
          `tabRegistration`.`barcode` AS `Barcode`,
          `tabRegistration`.`erster_tag_offen` AS `IF erster Tag offen`,
          `tabRegistration`.`zweiter_tag_offen` AS `IF zweiter Tag offen`,
-         `tabRegistration`.`deadline_daten_an_partner` AS `Deadline Daten an Partner`
+         `tabRegistration`.`deadline_daten_an_partner` AS `Deadline Daten an Partner`,
+         `tabRegistration`.`firmen` AS `Firmen`
     FROM `tabRegistration`
     LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
     LEFT JOIN `tabPerson Interest` ON `tabPerson Interest`.`parent` = `tabPerson`.`name`
