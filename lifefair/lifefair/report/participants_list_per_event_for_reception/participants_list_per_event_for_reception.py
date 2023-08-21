@@ -18,7 +18,6 @@ def execute(filters=None):
                "Geprüft von::50",
                "Meldedatum::80",
                "Email Clerk::100",
-               "Firmen::90",
                "Registrierung:Link/Registration:170",
                "Gutscheincode::100",
                "Anlass::170",
@@ -43,7 +42,8 @@ def execute(filters=None):
                "Ticketnummer::125",
                "Barcode::125",
                "IF erster Tag offen::50",
-               "IF zweiter Tag offen::50"
+               "IF zweiter Tag offen::50",
+               "Firmen::90",
                ]
     if filters:
         data = get_data(meeting=filters.meeting, interests=filters.interests, with_details=filters.with_details, as_dict=True)
@@ -67,7 +67,6 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
              (SELECT IF(MAX(`tabRegistration`.`is_checked`) = 1, "Ja", "Nein")) AS `Geprüft von`,
              `tabRegistration`.`meldedatum` AS `Meldedatum`,
              `tabRegistration`.`email_clerk` AS `Email Clerk`,
-             `tabRegistration`.`firmen` AS `Firmen`,
              GROUP_CONCAT(`tabRegistration`.`name`, "-") AS `Registrierung`,
              GROUP_CONCAT(IFNULL(`tabRegistration`.`remarks`, "-")) AS `Bemerkungen`,
              GROUP_CONCAT(IFNULL(`tabRegistration`.`participation`, "-")) AS `Teilnahme`,
@@ -99,6 +98,7 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
              `tabRegistration`.`barcode` AS `Barcode`,
              MAX(`tabRegistration`.`erster_tag_offen`) AS `IF erster Tag offen`,
              MAX(`tabRegistration`.`zweiter_tag_offen`) AS `IF zweiter Tag offen`,
+             `tabRegistration`.`firmen` AS `Firmen`,
              0 AS `indent`
         FROM `tabRegistration`
         LEFT JOIN `tabPerson` ON `tabRegistration`.`person` = `tabPerson`.`name`
@@ -137,6 +137,7 @@ def get_data(meeting=None, interests=None, with_details=0, as_dict=True):
                  `tabRegistration`.`barcode` AS `Barcode`,
                  `tabRegistration`.`erster_tag_offen` AS `IF erster Tag offen`,
                  `tabRegistration`.`zweiter_tag_offen` AS `IF zweiter Tag offen`,
+                 `tabRegistration`.`firmen` AS `Firmen`,
                  1 AS `indent`
             FROM `tabRegistration`
             LEFT JOIN `tabBlock` ON `tabBlock`.`name` = `tabRegistration`.`block`
