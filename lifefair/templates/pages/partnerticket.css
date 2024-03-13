@@ -1,0 +1,46 @@
+.control-label {
+    font-weight: bold !important;
+}
+
+#login-section {
+    display: none;
+}
+
+#main-section {
+    display: block;
+}
+
+p {
+    color: #8d99a6;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+#first-column {
+    width: 1%;
+    white-space: nowrap;
+}
+
+table
+    input {
+        width: 100%;
+        padding: 0;
+        margin: 0;
+        border: none;
+        font-size: 12px;
+    }
+
+td {
+    padding: 5px !important; 
+}
+
+/* size of table should be fitted to section */
+table {
+    width: 100%;
+}
+
+.page-footer-actions-block {
+    text-align: right;
+}

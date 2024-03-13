@@ -1,0 +1,83 @@
+<h1>Partnerticket</h1>
+<div id="login-section">
+    <h2>Login</h2>
+    <form id="login-form">
+        <label for="username">Benutzername</label><br>
+        <input type="text" id="username" name="username" required><br><br>
+        <label for="password">Passwort</label><br>
+        <input type="password" id="password" name="password" required><br><br>
+        <button class="btn btn-primary btn-sm ml-2" type="submit" onclick="login()">Login</button>
+    </form>
+</div>
+<div id="main-section">
+    <section id="info-details">
+        <div class="d-flex justify-content-between align-items-center">
+			<div class="page-header">
+                <h2 id="ticket-name"></h2>
+			</div>
+			<div class="page-header-actions-block">
+                <div class="web-form-actions">
+                    <button class="btn btn-primary btn-sm ml-2" onclick="save_changes()">Speichern</button>
+                </div>
+			</div>
+		</div>
+        <p id="description">Bitte füllen Sie die Tabelle unten mit den Personen aus, die ein Partner-Ticket erhalten sollen. Ohne gültige Email-Adresse kann das Ticket nicht ausgestellt werden.</p>
+    </section>
+    <hr>
+    <section id="excel-upload">
+        <h3>Excel Upload</h3>
+        <p>Sie können hier eine Excel-Datei mit den Daten hochladen. Die Datei wird automatisch ausgelesen und die Daten in die Felder übertragen. Bitte verwenden Sie folgendes Fomat:</p>
+        <p>Vorname, Nachname, E-Mail, Funktion, Organisation, Telefonnummer, gewünschte IF Blocks</p>
+        <button class="btn btn-primary btn-sm ml-2" id="excel_upload" onclick="upload_file()">Excel hochladen</button>
+    </section>
+    <hr>
+    <section id="ticket-section">
+        <div class="form-group">
+            <div class="clearfix">
+                <label class="control-label" style="padding-right: 0px;">Name der Person</label>
+            </div>
+            <div class="control-input-wrapper">
+                <div class="control-input" style="display: none;"></div>
+                <div id="ticket-owner-name" class="control-value like-disabled-input">PartnerTicket Scienceindustries2023</div>
+                <p class="help-box small text-muted hidden-xs"></p>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="clearfix">
+                <label class="control-label" style="padding-right: 0px;">Anlass</label>
+            </div>
+            <div class="control-input-wrapper">
+                <div class="control-input" style="display: none;"></div>
+                <div id="ticket-anlass" class="control-value like-disabled-input">SGES2023</div>
+                <p class="help-box small text-muted hidden-xs"></p>
+            </div>
+        </div>
+        <section id="tickets">
+            <!-- Table for ticket data with numbers in the first row -->
+            <h3>Tickets</h3>
+            <table id="ticket-table" class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Vorname</th>
+                        <th>Nachname</th>
+                        <th>E-Mail</th>
+                        <th>Funktion</th>
+                        <th>Organisation</th>
+                        <th>Telefonnummer</th>
+                        <th>IF Blocks</th>
+                    </tr>
+                </thead>
+                <tbody id="ticket-table-body">
+                    <!-- Table body will be filled with data from the excel file -->
+                </tbody>
+            </table>
+        </section>
+    </section>
+    <div class="page-footer-actions-block">
+        <div class="web-form-actions">
+            <button class="btn btn-primary btn-sm ml-2" onclick="save_changes()">Speichern</button>
+        </div>
+    </div>
+   
+</div>

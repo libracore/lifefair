@@ -1,0 +1,62 @@
+/* remove data-fieldname from view */
+[data-fieldname="email"],
+[data-fieldname="function"],
+[data-fieldname="organisation"],
+[data-fieldname="phone"] {
+    display: none;
+}
+
+/* show data-fieldname in class form-area*/
+.form-area [data-fieldname="email"],
+.form-area [data-fieldname="function"],
+.form-area [data-fieldname="organisation"],
+.form-area [data-fieldname="phone"] {
+    display: block;
+}
+
+/* hide btn class in span class row-actions */
+.row-actions .btn {
+    display: none !important;
+}
+
+/* make data-fielname uneditable */
+[data-fieldname="first_name"],
+[data-fieldname="last_name"] {
+    pointer-events: none;
+}
+
+/* make data-fielname in class grid-row-open editable */
+.grid-row-open [data-fieldname="first_name"],
+.grid-row-open [data-fieldname="last_name"] {
+    pointer-events: auto;
+}
+
+/* hide the checkbox column in the table */
+.row-index.sortable-handle.col.col-xs-1 {
+    display: none;
+}
+
+/* change the width of the first_name column in the table */
+.data-row.row [data-fieldname="first_name"],
+.data-row.row [data-fieldname="last_name"] {
+    width: 40%; /* Adjust the width as needed */
+    flex: 0 0 400px;
+    max-width: 900px;
+}
+
+p {
+    color: #8d99a6;
+}
+
+.control-label {
+    font-weight: bold !important;
+}
+
+h3 {
+    font-size: 20px;
+}
+
+/* hide data fieldname name*/
+[data-fieldname="name"] {
+    display: none;
+}
