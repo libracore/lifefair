@@ -48,14 +48,3 @@ def save_changes(index, user, first_name, last_name, email, role=None, organizat
 
         return 'Success'
     return None
-
-@frappe.whitelist(allow_guest=True)
-def test_db(user):
-    sql_query_2 = """SELECT *
-            FROM `tabPartnershipticket` 
-            LEFT JOIN `tabPartnership Ticket Item` ON `tabPartnershipticket`.`name` = `tabPartnership Ticket Item`.`parent`
-            WHERE `responsible` = %s
-            AND `first_name` != 'null' limit 2"""
-    guests = frappe.db.sql(sql_query_2, user, as_dict=True)
-    if guests:
-        return guests
