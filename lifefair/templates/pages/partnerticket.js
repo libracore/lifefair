@@ -146,6 +146,7 @@ function fill_form(data_array) {
             set_values(first_free_row + i, first_name, last_name, email, role, organization, phone, if_blocks);
         }
     }
+	get_registrations();
 }
 
 function set_values(index, first_name, last_name, email, role, organization, phone, if_blocks) {
@@ -171,6 +172,42 @@ function set_value(element, fieldname, value){
 	} else {
 		console.log("Field not found: " + fieldname);
 	}
+}
+
+function get_registrations() {
+	frappe.call({
+		'method': 'lifefair.templates.pages.partnerticket.get_registrations',
+		'args': {
+			'user': frappe.session.user
+		},
+		'callback': function(response) {
+			if (response.message) {
+				var tickets = response.message.tickets;
+				for (var i = 0; i < tickets.length; i++) {
+					var ticket = tickets[i];
+					if (ticket.registration){
+						change_checkmark_color(ticket.idx-1);
+						make_row_readonly(ticket.idx-1);
+					}
+				}
+			}
+		}
+	});
+}
+
+function change_checkmark_color(index) {
+	var element = document.querySelector("[data-idx='" + index + "']");
+	var checkmark = element.querySelector(".grey-checkmark");
+	checkmark.classList.remove("grey-checkmark");
+	checkmark.classList.add("green-checkmark");
+}
+
+function make_row_readonly(index) {
+	var element = document.querySelector("[data-idx='" + index + "']");
+	var inputs = element.querySelectorAll("input");
+	inputs.forEach(function(input){
+		input.readOnly = true;
+	});
 }
 
 //upload excel file

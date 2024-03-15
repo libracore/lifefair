@@ -32,6 +32,16 @@ def get_partnerticket(user):
     return None
 
 @frappe.whitelist(allow_guest=True)
+def get_registrations(user):
+    if user:
+        partbershipticket_name = frappe.get_all('Partnershipticket', filters={'owner': user})
+        if partbershipticket_name:
+            partbershipticket = frappe.get_doc('Partnershipticket', partbershipticket_name[0]['name'])
+            return partbershipticket
+    return None
+
+
+@frappe.whitelist(allow_guest=True)
 def save_changes(index, user, first_name, last_name, email, role=None, organization=None, phone=None, if_blocks=None):
     if user:
         sql_query = """UPDATE `tabPartnership Ticket Item`

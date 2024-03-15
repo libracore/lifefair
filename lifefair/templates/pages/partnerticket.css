@@ -47,3 +47,11 @@ table {
     font-family: Impact, sans-serif !important;
     font-weight: 900;
 }
+
+/* green checkmark that is very very very fat */
+.green-checkmark {
+    color: green;
+    font-size: 18px;
+    font-family: Impact, sans-serif !important;
+    font-weight: 1200 !important;
+}
