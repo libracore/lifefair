@@ -2,10 +2,6 @@
     font-weight: bold !important;
 }
 
-#login-section {
-    display: none;
-}
-
 #main-section {
     display: block;
 }
@@ -43,4 +39,11 @@ table {
 
 .page-footer-actions-block {
     text-align: right;
+}
+
+.grey-checkmark {
+    color: lightgrey;
+    font-size: 16px;
+    font-family: Impact, sans-serif !important;
+    font-weight: 900;
 }

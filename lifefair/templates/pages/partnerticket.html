@@ -1,14 +1,4 @@
 <h1>Partnerticket</h1>
-<div id="login-section">
-    <h2>Login</h2>
-    <form id="login-form">
-        <label for="username">Benutzername</label><br>
-        <input type="text" id="username" name="username" required><br><br>
-        <label for="password">Passwort</label><br>
-        <input type="password" id="password" name="password" required><br><br>
-        <button class="btn btn-primary btn-sm ml-2" type="submit" onclick="login()">Login</button>
-    </form>
-</div>
 <div id="main-section">
     <section id="info-details">
         <div class="d-flex justify-content-between align-items-center">
@@ -55,6 +45,7 @@
         <section id="tickets">
             <!-- Table for ticket data with numbers in the first row -->
             <h3>Tickets</h3>
+            <p>Bereits ausgestellte Tickets sind in der Spalte rechts grün markiert und können nicht mehr bearbeitet werden.</p>
             <table id="ticket-table" class="table table-bordered">
                 <thead>
                     <tr>
@@ -66,6 +57,7 @@
                         <th>Organisation</th>
                         <th>Telefonnummer</th>
                         <th>IF Blocks</th>
+                        <th></th>
                     </tr>
                 </thead>
                 <tbody id="ticket-table-body">

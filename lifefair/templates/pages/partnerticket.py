@@ -2,36 +2,60 @@ import frappe
 from frappe import _
 import json
 
-
-# deprecated, will be dropped in future versions; refer to shop module
-@frappe.whitelist(allow_guest=True)
-def login(usr, pwd):
-    frappe.local.flags.redirect_location = "/partnershipticket"
-    frappe.log_error(usr, "usr")
-    frappe.db_commit()
-    from frappe.auth import LoginManager
-    frappe.local.login_manager = LoginManager()
-    frappe.local.login_manager.authenticate(usr, pwd)
-    frappe.local.login_manager.login()
-    frappe.local.response["type"] = "redirect"
-    frappe.local.response["location"] = "/partnershipticket"
-    frappe.log_error(usr)
-    return frappe.local.session
-
 @frappe.whitelist(allow_guest=True)
 def get_partnerticket(user):
     if user:
-        sql_query = """SELECT `owner`,
+        sql_query_1 = """SELECT `owner`,
             `person_name`,
             `title`,
             `meeting`,
             `ticket_count`
-            FROM `tabPartnershipticket` WHERE `responsible` = %s"""
-        partner_ticket = frappe.db.sql(sql_query, user, as_dict=True)
-        if partner_ticket:
-            return partner_ticket
+            FROM `tabPartnershipticket` 
+            WHERE `responsible` = %s"""
+        partner_ticket = frappe.db.sql(sql_query_1, user, as_dict=True)
+
+        sql_query_2 = """SELECT `first_name`,
+            `last_name`,
+            `email`,
+            `function`,
+            `organisation`,
+            `phone`,
+            `if_block`
+            FROM `tabPartnershipticket` 
+            LEFT JOIN `tabPartnership Ticket Item` ON `tabPartnershipticket`.`name` = `tabPartnership Ticket Item`.`parent`
+            WHERE `responsible` = %s
+            AND `first_name` != 'null'"""
+        guests = frappe.db.sql(sql_query_2, user, as_dict=True)
+
+        if partner_ticket and guests:
+            return partner_ticket, guests
     return None
 
 @frappe.whitelist(allow_guest=True)
-def save_changes(user, first_name, last_name, email, role, organization, phone, if_blocks):
+def save_changes(index, user, first_name, last_name, email, role=None, organization=None, phone=None, if_blocks=None):
+    if user:
+        sql_query = """UPDATE `tabPartnership Ticket Item`
+            SET `first_name` = %s,
+            `last_name` = %s,
+            `email` = %s,
+            `function` = %s,
+            `organisation` = %s,
+            `phone` = %s,
+            `if_block` = %s
+            WHERE `parent` = (SELECT `name` FROM `tabPartnershipticket` WHERE `responsible` = %s)
+            AND `idx` = %s"""
+        frappe.db.sql(sql_query, (first_name, last_name, email, role, organization, phone, if_blocks, user, index))
+
+        return 'Success'
     return None
+
+@frappe.whitelist(allow_guest=True)
+def test_db(user):
+    sql_query_2 = """SELECT *
+            FROM `tabPartnershipticket` 
+            LEFT JOIN `tabPartnership Ticket Item` ON `tabPartnershipticket`.`name` = `tabPartnership Ticket Item`.`parent`
+            WHERE `responsible` = %s
+            AND `first_name` != 'null' limit 2"""
+    guests = frappe.db.sql(sql_query_2, user, as_dict=True)
+    if guests:
+        return guests

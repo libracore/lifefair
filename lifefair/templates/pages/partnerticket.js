@@ -10,38 +10,8 @@ function check_for_login() {
     if (frappe.session.user !== "Guest"){
         get_ticket_data();
     } else {
-        display_login();
+        window.location.replace("/login?redirect-to=/partnerticket");
     }
-}
-
-function display_login() {
-    document.getElementById("login-section").style.display = "block";
-    document.getElementById("main-section").style.display = "none";
-}
-
-function login() {
-    var username = document.getElementById("username").value;
-    var password = document.getElementById("password").value;
-    frappe.call({
-        'method': 'lifefair.templates.pages.partnerticket.login',
-        'args': {
-            'usr': username,
-            'pwd': password
-        },
-        'callback': function(response) {
-			console.log(response);
-            if (response.message === "Success") {
-                console.log("Login successful");
-                console.log(frappe.session.user);
-                document.getElementById("login-section").style.display = "none";
-                document.getElementById("main-section").style.display = "block";
-                get_ticket_data();
-            } else {
-                frappe.msgprint("Login failed");
-            }
-        }
-    })
-
 }
 
 function get_ticket_data() {
@@ -53,35 +23,36 @@ function get_ticket_data() {
             'user': frappe.session.user
         },
         'callback': function(response) {
-			var data= response.message;
+			var ticket= response.message[0];
+			var guests = response.message[1];
 			var h2 = document.getElementById("ticket-name");
-			h2.innerHTML = data[0].person_name;
+			h2.innerHTML = ticket[0].person_name;
 			var owner = document.getElementById("ticket-owner-name");
-			owner.innerHTML = data[0].person_name;
+			owner.innerHTML = ticket[0].person_name;
 			var meeting = document.getElementById("ticket-anlass");
-			meeting.innerHTML = data[0].meeting;
-			add_rows(data[0].ticket_count);
+			meeting.innerHTML = ticket[0].meeting;
+			add_rows(ticket[0].ticket_count, guests);
 			//fill_form(data[0].name);
         }
     });
 }
 
-//dynamically add empty rows to <tbody id="ticket-table-body"></tbody>, the number of rows can be specified as an input
-function add_rows(number_of_rows) {
+//dynamically add empty rows to <tbody id="ticket-table-body"></tbody>
+function add_rows(number_of_rows, guests) {
     var tbody = document.getElementById("ticket-table-body");
     for (var i = 0; i < number_of_rows; i++) {
         var tr = document.createElement("tr");
         tr.setAttribute("data-idx", i);
 		// add rows using the following format: <tr><td id="first-column">1</td><td><input type="text" id="vorname1" name="vorname1" required></td><td><input type="text" id="nachname1" name="nachname1" required></td><td><input type="email" id="email1" name="email1" required></td><td><input type="text" id="funktion1" name="funktion1"></td><td><input type="text" id="organisation1" name="organisation1"></td><td><input type="text" id="telefonnummer1" name="telefonnummer1"></td><td><input type="text" id="ifblocks1" name="ifblocks1"></td></tr>
-		tr.innerHTML = "<td id='first-column'>" + (i+1) + "</td><td><input type='text' id='vorname" + i + "' name='vorname" + i + "' data-fieldname='first_name' required></td><td><input type='text' id='nachname" + i + "' name='nachname" + i + "' data-fieldname='last_name' required></td><td><input type='email' id='email" + i + "' name='email" + i + "' data-fieldname='email' required></td><td><input type='text' id='funktion" + i + "' name='funktion" + i + "' data-fieldname='role'></td><td><input type='text' id='organisation" + i + "' name='organisation" + i + "' data-fieldname='organization'></td><td><input type='text' id='telefonnummer" + i + "' name='telefonnummer" + i + "' data-fieldname='phone'></td><td><input type='text' id='ifblocks" + i + "' name='ifblocks" + i + "' data-fieldname='if_blocks'></td>";
+		tr.innerHTML = "<td id='first-column'>" + (i+1) + "</td><td><input type='text' id='vorname" + i + "' name='vorname" + i + "' data-fieldname='first_name' required></td><td><input type='text' id='nachname" + i + "' name='nachname" + i + "' data-fieldname='last_name' required></td><td><input type='email' id='email" + i + "' name='email" + i + "' data-fieldname='email' required></td><td><input type='text' id='funktion" + i + "' name='funktion" + i + "' data-fieldname='role'></td><td><input type='text' id='organisation" + i + "' name='organisation" + i + "' data-fieldname='organization'></td><td><input type='text' id='telefonnummer" + i + "' name='telefonnummer" + i + "' data-fieldname='phone'></td><td><input type='text' id='ifblocks" + i + "' name='ifblocks" + i + "' data-fieldname='if_blocks'></td><td><span class='grey-checkmark'>&#x2713;</span></td>";
         tbody.appendChild(tr);
     }
+	fill_form(guests);
 }
 
 //upload excel file
 function upload_file() {
-	save_changes();
-	var input = document.createElement('input');
+	var input = document.createElement("input");
 	input.type = 'file';
 	input.accept = '.xls,.xlsx';
 
@@ -119,7 +90,7 @@ function extract_data(contents){
 function convert_raw_data(csv) {
 	var lines = csv.split("\n");
 	var result = [];
-	var headers = ["Vorname", "Nachname", "E_Mail", "Funktion", "Organisation", "Telefonnummer", "IF Blocks"];
+	var headers = ["first_name", "last_name", "email", "function", "organisation", "phone", "if_block"];
 	for(var i = 1; i < lines.length; i++){
 		var obj = {};
 		var currentline = lines[i].split(",");
@@ -132,41 +103,40 @@ function convert_raw_data(csv) {
 }
 
 function fill_form(data_array) {
-	//get first free row
-	var table = document.getElementById("ticket-table");
-	var first_free_row = 0;
-	for (var i = 0; i < table.rows.length; i++) {
-		var row = table.rows[i];
+    var table = document.getElementById("ticket-table");
+    var first_free_row = 0;
+    var number_of_rows = document.querySelectorAll("[data-idx]").length;
 
-		var isEmpty = true;
-		for (var j = 0; j < row.cells.length; j++) {
-			if (row.cells[j].textContent.trim() !== "") {
-				isEmpty = false;
-				break;
-			}
-		}
+    // Find the first free row
+    for (var i = 1; i < table.rows.length; i++) {
+        var row = table.rows[i];
+        var email = row.querySelector("[data-fieldname='email']").value;
+        var first_name = row.querySelector("[data-fieldname='first_name']").value;
+        var last_name = row.querySelector("[data-fieldname='last_name']").value;
 
-		if (isEmpty) {
-			first_free_row = i;
-			break;
-		}
-	}
-	
-	var number_of_rows = document.querySelectorAll("[data-idx]").length;
+        if (email === "" && first_name === "" && last_name === "") {
+            first_free_row = i - 1;
+            break;
+        }
+    }
 
-	for (var i = 0; i < data_array.length; i++) {
-		var first_name = data_array[i].Vorname;
-		var last_name = data_array[i].Nachname;
-		var email = data_array[i].E_Mail;
-		var role = data_array[i].Funktion;
-		var organization = data_array[i].Organisation;
-		var phone = data_array[i].Telefonnummer;
-		var if_blocks = data_array[i]["IF Blocks"];
-		if (first_name && last_name && email && first_free_row + i < number_of_rows){
-			set_values(first_free_row, first_name, last_name, email, role, organization, phone, if_blocks);
-		}
-	}
+    // Fill the form with data from the data_array
+    for (var i = 0; i < data_array.length; i++) {
+        var data = data_array[i];
+        var first_name = data.first_name;
+        var last_name = data.last_name;
+        var email = data.email;
+        var role = data.function;
+        var organization = data.organisation;
+        var phone = data.phone;
+        var if_blocks = data.if_block;
+
+        if (first_name && last_name && email && (first_free_row + i < number_of_rows)) {
+            set_values(first_free_row + i, first_name, last_name, email, role, organization, phone, if_blocks);
+        }
+    }
 }
+
 
 function set_values(index, first_name, last_name, email, role, organization, phone, if_blocks) {
 	//get element with data-idx=index
@@ -195,22 +165,35 @@ function set_values(index, first_name, last_name, email, role, organization, pho
 }
 
 function save_changes() {
-	//TODO
-	console.log("saving changes");
+	for (var i = 0; i < document.getElementById("ticket-table").rows.length-1; i++) {
+		save_row(i);
+	}
+}
+
+function save_row(index) {
+	var first_name = document.getElementById("vorname" + index).value;
+	var last_name = document.getElementById("nachname" + index).value;
+	var email = document.getElementById("email" + index).value;
+	var role = document.getElementById("funktion" + index).value;
+	var organization = document.getElementById("organisation" + index).value;
+	var phone = document.getElementById("telefonnummer" + index).value;
+	var if_blocks = document.getElementById("ifblocks" + index).value;
 	frappe.call({
 		'method': 'lifefair.templates.pages.partnerticket.save_changes',
+		'async': false,
 		'args': {
+			'index': index+1,
 			'user': frappe.session.user,
-			'first_name': document.getElementById("vorname0").value,
-			'last_name': document.getElementById("nachname0").value,
-			'email': document.getElementById("email0").value,
-			'role': document.getElementById("funktion0").value,
-			'organization': document.getElementById("organisation0").value,
-			'phone': document.getElementById("telefonnummer0").value,
-			'if_blocks': document.getElementById("ifblocks0").value
+			'first_name': first_name,
+			'last_name': last_name,
+			'email': email,
+			'role': role,
+			'organization': organization,
+			'phone': phone,
+			'if_blocks': if_blocks
 		},
 		'callback': function(response) {
-			console.log(response);
+
 		}
 	})
 }
