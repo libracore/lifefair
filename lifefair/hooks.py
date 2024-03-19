@@ -81,24 +81,24 @@ doctype_list_js = {
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
+#doc_events = {
 # 	"*": {
 # 		"on_update": "method",
 # 		"on_cancel": "method",
 # 		"on_trash": "method"
 #	}
-# }
+#}
 
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
 # 	"all": [
 # 		"lifefair.tasks.all"
 # 	],
-# 	"daily": [
-# 		"lifefair.tasks.daily"
-# 	],
+	"daily": [
+ 		"lifefair.lifefair.doctype.partnershipticket.partnershipticket.create_registrations"
+ 	]
 # 	"hourly": [
 # 		"lifefair.tasks.hourly"
 # 	],
@@ -108,7 +108,7 @@ doctype_list_js = {
 # 	"monthly": [
 # 		"lifefair.tasks.monthly"
 # 	]
-# }
+}
 
 # Testing
 # -------
