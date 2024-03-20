@@ -133,83 +133,104 @@ def create_registrations():
     for partnershipticket in partnershiptickets:
         ticket = frappe.get_doc("Partnershipticket", partnershipticket['name'])
         meeting = ticket.meeting
+
         for ticket in ticket.tickets:
-            if ticket.first_name and ticket.last_name and ticket.email and ticket.email != "@":
-                if get_registrations(ticket, meeting) is not None:
-                    continue
-                else:
-                    if person_does_not_exist(ticket) is None:
-                        create_person(ticket)
-                    create_registration(ticket, meeting)
+            if is_valid_ticket(ticket):
+                 create_registration_if_needed(ticket, meeting)
     return
+
+# check if the ticket is valid
+def is_valid_ticket(ticket):
+    return ticket.first_name and ticket.last_name and ticket.email and ticket.email != "@"
+
+# create a registration if needed
+def create_registration_if_needed(ticket, meeting):
+     if not get_registrations(ticket, meeting):
+        if person_exists(ticket):
+            create_registration(ticket, meeting)
+        else:
+            create_person(ticket)
+            #set ticket.person
+            person_matches = frappe.get_all('Person', filters={'email': ticket.email}, fields=['name'])
+            if person_matches:
+                ticket.person = person_matches[0]['name']
+            create_registration(ticket, meeting)
 
 # create a person
 def create_person(ticket):
-    frappe.msgprint( _("Creating person {0} {1} {2} {3}").format(ticket.first_name, ticket.last_name, ticket.email, ticket.phone) )
     try:
         if ticket.organisation:
-            organisation = frappe.get_all('Organisation', filters={'official_name': ticket.organisation}, fields=['name'])
-            if organisation:
-                organisation = organisation[0]['name']
-            else:
-                organisation = frappe.get_doc({
-                    'doctype': 'Organisation',
-                    'official_name': ticket.organisation
-                })
-                organisation.insert(ignore_permissions=True)
-                frappe.db.commit()
-                organisation = organisation.name
-            new_person = frappe.get_doc({
-                'doctype': 'Person',
-                'full_name': ticket.first_name + ' ' + ticket.last_name,
-                'first_name': ticket.first_name,
-                'last_name': ticket.last_name,
-                'email': ticket.email,
-                'company_phone': ticket.phone,
-                'organisations': [{
-                    'reference_doctype': 'Person Organisation',
-                    'primary_organisation': organisation,
-                    'organisation': organisation,
-                    'function': ticket.function,
-                    'is_primary': 1
-                }]
-            })
+            organisation = get_or_create_organisation(ticket.organisation)
+            create_person_document(ticket, organisation)
         else:
-            organisation = None             
-            new_person = frappe.get_doc({
-                'doctype': 'Person',
-                'full_name': ticket.first_name + ' ' + ticket.last_name,
-                'first_name': ticket.first_name,
-                'last_name': ticket.last_name,
-                'email': ticket.email,
-                'company_phone': ticket.phone
-            })
-        
-        new_person.insert(ignore_permissions=True)
-        frappe.db.commit()
+            create_person_document(ticket)
+        return
     except Exception as err:
         frappe.log_error(err, "Person {0} {1}".format(ticket.first_name, ticket.last_name))
+
+# get or create an organisation
+def get_or_create_organisation(organisation_name):
+    organisation = frappe.get_all('Organisation', filters={'official_name': organisation_name}, fields=['name'])
+    if not organisation:
+        organisation = create_organisation(organisation_name)
+    else:
+        organisation = organisation[0]['name']
+    return organisation
+
+# create an organisation
+def create_organisation(organisation_name):
+    new_organisation = frappe.get_doc({
+        'doctype': 'Organisation',
+        'official_name': organisation_name
+    })
+    new_organisation.insert(ignore_permissions=True)
+    frappe.db.commit()
+    return new_organisation.name
+
+# create a new person
+def create_person_document(ticket, organisation=None):
+    person_doc = {
+        'doctype': 'Person',
+        'full_name': ticket.first_name + ' ' + ticket.last_name,
+        'first_name': ticket.first_name,
+        'last_name': ticket.last_name,
+        'email': ticket.email,
+        'company_phone': ticket.phone
+    }
+    if organisation:
+        person_doc['organisations'] = [{
+            'reference_doctype': 'Person Organisation',
+            'primary_organisation': organisation,
+            'organisation': organisation,
+            'function': ticket.function,
+            'is_primary': 1
+        }]
+    new_person = frappe.get_doc(person_doc)
+    new_person.insert(ignore_permissions=True)
+    frappe.db.commit()
     return
 
 # check if the person exists
-def person_does_not_exist(ticket):
-    person = None
-    if ticket.email != "@":
-        # try to find person by email address
-        person_matches = frappe.get_all('Person', filters={'email': ticket.email}, fields=['name'])
-        if person_matches:
-            person = person_matches[0]['name']
-        else:
-            # fallback to email 2
-            person_matches = frappe.get_all('Person', filters={'email2': ticket.email}, fields=['name'])
-            if person_matches:
-                person = person_matches[0]['name']
-            else:
-                # fallback to email 3
-                person_matches = frappe.get_all('Person', filters={'email3': ticket.email}, fields=['name'])
-                if person_matches:
-                    person = person_matches[0]['name']
-    return person
+def person_exists(ticket):
+    if ticket.email == "@":
+        return False
+        
+    # try to find person by email address
+    person_matches = frappe.get_all('Person', filters={'email': ticket.email}, fields=['name'])
+    if person_matches:
+        return True
+    
+    # try to find person by email address 2
+    person_matches = frappe.get_all('Person', filters={'email2': ticket.email}, fields=['name'])
+    if person_matches:
+        return True
+
+    # try to find person by email address 3
+    person_matches = frappe.get_all('Person', filters={'email3': ticket.email}, fields=['name'])
+    if person_matches:
+        return True
+
+    return False
 
 # check if the person is already registered for the meeting        
 def get_registrations(ticket, meeting):
@@ -239,27 +260,27 @@ def find_matching_block(if_block, meeting):
 # create a registration for the person
 def create_registration(ticket, meeting):
     try:
-        if ticket.person:
-            new_registration = frappe.get_doc({
-                'doctype': 'Registration',
-                'person': ticket.person,
-                'meeting': meeting,
-                'block': find_matching_block("Hauptprogramm", meeting)
-            })
-            new_registration.insert(ignore_permissions=True)
-            frappe.db.commit()
+        #create registration for main block
+        new_registration = frappe.get_doc({
+            'doctype': 'Registration',
+            'person': ticket.person,
+            'meeting': meeting,
+            'block': find_matching_block("Hauptprogramm", meeting)
+        })
+        new_registration.insert(ignore_permissions=True)
+        frappe.db.commit()
 
-            matching_if_blocks = find_matching_block(ticket.if_block, meeting)
-            if matching_if_blocks:
-                for block in matching_if_blocks:
-                    new_registration = frappe.get_doc({
-                        'doctype': 'Registration',
-                        'person': ticket.person,
-                        'meeting': meeting,
-                        'block': block.name,
-                    })
-                    new_registration.insert(ignore_permissions=True)
-                    frappe.db.commit()
+        #create registration for each if block
+        matching_if_blocks = find_matching_block(ticket.if_block, meeting)
+        if matching_if_blocks:
+            for matching_if_block in matching_if_blocks:
+                new_registration = frappe.get_doc({
+                    'doctype': 'Registration',
+                    'person': ticket.person,
+                    'meeting': meeting,
+                    'block': matching_if_block.name
+                })
+                new_registration.insert(ignore_permissions=True)
+                frappe.db.commit()
     except Exception as err:
         frappe.log_error(err, "Registration for {0} {1}".format(ticket.first_name, ticket.last_name))
-    return
